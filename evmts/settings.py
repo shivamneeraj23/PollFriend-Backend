@@ -74,11 +74,23 @@ WSGI_APPLICATION = 'evmts.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
+''' Ignore SQLite3 because we are using PostgreSQL
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.sqlite3',
 		'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+	}
+}
+'''
+
+DATABASES = {
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': 'evmts',
+		'USER': 'evmts',
+		'PASSWORD': 'superuser@evmts@nits',
+		'HOST': 'localhost',
+		'PORT': '',
 	}
 }
 
@@ -117,7 +129,4 @@ PASSWORD_HASHERS = (
 	'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 )
 
-LOGIN_URL = '/'
-LOGIN_REDIRECT_URL = '/'
-
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
