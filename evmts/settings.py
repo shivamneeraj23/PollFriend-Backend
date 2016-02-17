@@ -117,11 +117,6 @@ PASSWORD_HASHERS = (
 	'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 )
 
-AUTHENTICATION_BACKENDS = (
-	# Default backend
-	'django.contrib.auth.backends.ModelBackend',
-	'main.oauth_backend.PasswordlessAuthBackend'
-)
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
