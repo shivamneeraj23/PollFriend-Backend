@@ -82,3 +82,8 @@ class SOSUpdate(models.Model):
 		(2, 'DANGER'),
 	)
 	condition = models.SmallIntegerField(choices=CONDITIONS)
+
+
+class EVM(models.Model):
+	polling_station = models.ForeignKey(PollingStation)
+	unique_id = models.CharField(max_length=50)
