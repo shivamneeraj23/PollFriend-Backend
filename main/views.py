@@ -31,6 +31,9 @@ class PollingCond(View):
 
 class LoginPO(View):
 
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
 	def post(self, request):
 		poid = request.POST.get('poid')
 		psid = request.POST.get('psid')
