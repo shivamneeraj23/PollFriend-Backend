@@ -64,10 +64,10 @@ class EmergencyContact(models.Model):
 
 class POStatus(models.Model):
 	presiding_officer = models.OneToOneField(PresidingOfficer)
-	last_latitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True)
-	last_longitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True)
-	current_latitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True)
-	current_longitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True)
+	last_latitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
+	last_longitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
+	current_latitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
+	current_longitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
 	received_evm = models.BooleanField(default=False)
 	reached_polling_station = models.BooleanField(default=False)
 	sealed_evm = models.BooleanField(default=False)
