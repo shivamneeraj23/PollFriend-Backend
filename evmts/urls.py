@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from main.views import *
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^recieved_evm/', RecievedEvm.as_view() , name = 'recieved_evm'),
+    url(r'^reached_ps/' , ReachedPS.as_view() , name = 'reached_ps'),
+    url(r'^polling_cond/', PollingCond.as_view() , name = 'polling_cond')
 ]
