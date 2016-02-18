@@ -58,3 +58,27 @@ class EmergencyContact(models.Model):
 		(2, 'District Election Officer'),
 	)
 	designation = models.SmallIntegerField(choices=LEVELS)
+
+
+class POStatus(models.Model):
+	presiding_officer = models.OneToOneField(PresidingOfficer)
+	last_latitude = models.DecimalField(max_digits=13,  decimal_places=10)
+	last_longitude = models.DecimalField(max_digits=13,  decimal_places=10)
+	current_latitude = models.DecimalField(max_digits=13,  decimal_places=10)
+	current_longitude = models.DecimalField(max_digits=13,  decimal_places=10)
+	received_evm = models.BooleanField(default=False)
+	reached_polling_station = models.BooleanField(default=False)
+	sealed_evm = models.BooleanField(default=False)
+	received_release = models.BooleanField(default=False)
+
+
+class SOSUpdate(models.Model):
+	polling_station = models.ForeignKey(PollingStation)
+	message = models.TextField()
+	image = models.ImageField(upload_to='/static/sosimages/')
+	CONDITIONS = (
+		(0, 'GOOD'),
+		(1, 'BAD'),
+		(2, 'DANGER'),
+	)
+	condition = models.SmallIntegerField(choices=CONDITIONS)
