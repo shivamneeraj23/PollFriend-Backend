@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -25,10 +24,12 @@ class PollingStation(models.Model):
 
 class PresidingOfficer(models.Model):
 	# username can be used as presiding officers unique id format " 9/001 to 15/198 "
-	user = models.OneToOneField(User)
+	username = models.CharField(max_length=50, unique=True)
+	first_name = models.CharField(max_length=50)
+	last_name = models.CharField(max_length=50)
 
 	def _get_full_name(self):
-		return '%s %s' % (self.user.first_name, self.user.last_name)
+		return '%s %s' % (self.first_name, self.last_name)
 
 	full_name = property(_get_full_name)
 	polling_station = models.OneToOneField(PollingStation)
