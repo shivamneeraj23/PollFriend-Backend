@@ -15,7 +15,7 @@ class PollingStation(models.Model):
 	unique_id = models.CharField(max_length=10)
 	lac = models.ForeignKey(LAC)
 	name = models.CharField(max_length=100, unique=True)
-	total_voters = models.PositiveIntegerField()
+	total_voters = models.PositiveIntegerField(blank=True, null=True)
 	latitude = models.DecimalField(max_digits=13,  decimal_places=10)
 	longitude = models.DecimalField(max_digits=13,  decimal_places=10)
 
@@ -33,6 +33,7 @@ class PresidingOfficer(models.Model):
 	full_name = property(_get_full_name)
 	polling_station = models.OneToOneField(PollingStation)
 	mobile = models.BigIntegerField(unique=True)
+	api_key = models.CharField(max_length=70, null=True, blank=True)
 
 	def __str__(self):
 		return self.full_name
