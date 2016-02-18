@@ -8,23 +8,25 @@ from django.utils.decorators import method_decorator
 # Create your views here.
 
 
-class POStatus(View):
+class UpdatePOStatus(View):
 
 	def post(self, request):
 		flag = True
 		poid = request.POST.get('poid')
 		access_token = request.POST.get('access_token')
 		try:
-			presiding_officer = PresidingOfficer.objects.get(username=poid, access_token=access_token)
-			po_status = POStatus.objects.get(presiding_officer)
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			po_status = POStatus.objects.get(presiding_officer=presiding_officer)
 			if "received_evm" in request.POST:
 				if request.POST.get("received_evm") == "true":
 					po_status.received_evm = True
 					po_status.save()
-			if "reached_polling_station" in request.POST:
+			elif "reached_polling_station" in request.POST:
 				if request.POST.get("reached_polling_station") == "true":
 					po_status.reached_polling_station = True
 					po_status.save()
+			else:
+				flag = False
 
 		except PresidingOfficer.DoesNotExist:
 			flag = False
@@ -38,7 +40,7 @@ class POStatus(View):
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
-		return super(POStatus, self).dispatch(*args, **kwargs)
+		return super(UpdatePOStatus, self).dispatch(*args, **kwargs)
 
 
 class LoginPO(View):

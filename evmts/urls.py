@@ -20,5 +20,5 @@ from main.views import *
 urlpatterns = [
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^login/$', LoginPO.as_view(), name="loginPO"),
-	url(r'^po_status/$', POStatus.as_view(), name="POStatus"),
+	url(r'^po_status/$', UpdatePOStatus.as_view(), name="UpdatePOStatus"),
 ]
