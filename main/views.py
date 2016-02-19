@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.generic import View
-from main.models import PresidingOfficer, PollingStation, POStatus, EVM
+from main.models import PresidingOfficer, PollingStation, POStatus, EVM, PollUpdate
 from datetime import datetime
 import hashlib
 from django.views.decorators.csrf import csrf_exempt
@@ -112,3 +112,50 @@ class LogoutPO(View):
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
 		return super(LogoutPO, self).dispatch(*args, **kwargs)
+
+
+class UpdatePoll(View):
+
+	def post(self, request):
+		flag = True
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			polling_station = presiding_officer.polling_station
+			if "total_voters" in request.POST:
+				total_voters = int(request.POST.get("total_voters"))
+				if total_voters > 0:
+					polling_station.total_voters = total_voters
+					polling_station.save()
+				else:
+					flag = False
+			elif "current_voters" in request.POST:
+				current_voters = int(request.POST.get("current_voters"))
+				if current_voters > 0:
+					poll_update = PollUpdate()
+					poll_update.current_votes = current_voters
+					poll_update.polling_station = polling_station
+					poll_update.timestamp = datetime.now()
+					poll_update.save()
+				else:
+					flag = False
+			else:
+				flag = False
+
+		except PresidingOfficer.DoesNotExist:
+			flag = False
+		except PollingStation.DoesNotExist:
+			flag = False
+
+		if flag:
+			return JsonResponse({'result': 'ok'})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(UpdatePoll, self).dispatch(*args, **kwargs)
