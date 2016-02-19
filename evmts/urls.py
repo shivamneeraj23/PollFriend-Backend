@@ -21,4 +21,5 @@ urlpatterns = [
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^login/$', LoginPO.as_view(), name="loginPO"),
 	url(r'^po_status/$', UpdatePOStatus.as_view(), name="UpdatePOStatus"),
+	url(r'^logout/$', LogoutPO.as_view(), name="logoutPO"),
 ]

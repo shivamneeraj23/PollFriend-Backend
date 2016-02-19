@@ -92,3 +92,23 @@ class LoginPO(View):
 	def dispatch(self, *args, **kwargs):
 		return super(LoginPO, self).dispatch(*args, **kwargs)
 
+
+class LogoutPO(View):
+
+	def post(self, request):
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid)
+			presiding_officer.api_key = ""
+			presiding_officer.save()
+			return JsonResponse({'result': 'ok'})
+		except PresidingOfficer.DoesNotExist:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(LogoutPO, self).dispatch(*args, **kwargs)
