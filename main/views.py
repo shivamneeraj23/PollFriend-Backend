@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.generic import View
-from main.models import PresidingOfficer, PollingStation, POStatus
+from main.models import PresidingOfficer, PollingStation, POStatus, EVM
 from datetime import datetime
 import hashlib
 from django.views.decorators.csrf import csrf_exempt
@@ -17,6 +17,7 @@ class UpdatePOStatus(View):
 		try:
 			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
 			po_status = POStatus.objects.get(presiding_officer=presiding_officer)
+			polling_station = PollingStation.objects.get(presiding_officer=presiding_officer)
 			if "received_evm" in request.POST:
 				if request.POST.get("received_evm") == "true":
 					po_status.received_evm = True
@@ -25,10 +26,33 @@ class UpdatePOStatus(View):
 				if request.POST.get("reached_polling_station") == "true":
 					po_status.reached_polling_station = True
 					po_status.save()
+			elif "polling_station_condition" in request.POST:
+				condition = int(request.POST.get("polling_station_condition"))
+				# 0 for GOOD, 1 for BAD and 2 for DANGER
+				if 0 <= condition <= 2:
+					polling_station.condition = condition
+					polling_station.save()
+			elif "evm_number" in request.POST:
+				if request.POST.get("evm_number") != "":
+					evm = EVM.objects.get(polling_station=polling_station)
+					evm.unique_id = request.POST.get("evm_number")
+					evm.save()
+			elif "sealed_evm" in request.POST:
+				if request.POST.get("sealed_evm") == "true":
+					po_status.sealed_evm = True
+					po_status.save()
+			elif "received_release" in request.POST:
+				if request.POST.get("received_release") == "true":
+					po_status.reached_polling_station = True
+					po_status.save()
 			else:
 				flag = False
 
 		except PresidingOfficer.DoesNotExist:
+			flag = False
+		except POStatus.DoesNotExist:
+			flag = False
+		except PollingStation.DoesNotExist:
 			flag = False
 		if flag:
 			return JsonResponse({'result': 'ok'})
