@@ -17,6 +17,12 @@ class PollingStation(models.Model):
 	total_voters = models.PositiveIntegerField(blank=True, null=True)
 	latitude = models.DecimalField(max_digits=13,  decimal_places=10)
 	longitude = models.DecimalField(max_digits=13,  decimal_places=10)
+	CONDITIONS = (
+		(0, 'GOOD'),
+		(1, 'BAD'),
+		(2, 'DANGER'),
+	)
+	condition = models.SmallIntegerField(choices=CONDITIONS)
 
 	def __str__(self):
 		return '%s of LAC %s' % (self.name, self.lac)
@@ -84,6 +90,12 @@ class SOSUpdate(models.Model):
 		(2, 'DANGER'),
 	)
 	condition = models.SmallIntegerField(choices=CONDITIONS)
+	SUBJECTS = (
+		(0, 'EVM'),
+		(1, 'POLLING STATION'),
+		(2, 'OTHER'),
+	)
+	subject = models.SmallIntegerField(choices=SUBJECTS)
 
 
 class EVM(models.Model):
