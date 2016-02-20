@@ -186,5 +186,39 @@ class DashboardView(TemplateView):
 		return context
 		
 
-class base(TemplateView):
-	template_name = "base.html"
+class CheckEarlyStatus(View):
+
+	def post(self, request):
+		flag = True
+		received_evm = "false"
+		reached_polling_station = "false"
+		evm_number = "false"
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			polling_station = presiding_officer.polling_station
+			po_status = POStatus.objects.get(presiding_officer=presiding_officer)
+			evm = EVM.objects.filter(polling_station=polling_station)
+
+			if len(evm) > 0:
+				evm_number = "true"
+			if po_status.received_evm:
+				received_evm = "true"
+			if po_status.reached_polling_station:
+				reached_polling_station = "true"
+
+		except PresidingOfficer.DoesNotExist:
+			flag = False
+
+		if flag:
+			return JsonResponse({'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(CheckEarlyStatus, self).dispatch(*args, **kwargs)

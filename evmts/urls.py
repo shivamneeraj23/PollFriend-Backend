@@ -23,5 +23,6 @@ urlpatterns = [
 	url(r'^po_status/$', UpdatePOStatus.as_view(), name="UpdatePOStatus"),
 	url(r'^logout/$', LogoutPO.as_view(), name="logoutPO"),
 	url(r'^poll_update/$', UpdatePoll.as_view(), name="PollUpdate"),
-	url(r'^home/$' , DashboardView.as_view(), name = "Test"),
+	url(r'^home/$', DashboardView.as_view(), name="Test"),
+	url(r'^check_status/$', CheckEarlyStatus.as_view(), name="checkEarlyStatus"),
 ]
