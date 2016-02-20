@@ -37,7 +37,8 @@ class UpdatePOStatus(View):
 					polling_station.save()
 			elif "evm_number" in request.POST:
 				if request.POST.get("evm_number") != "":
-					evm = EVM.objects.get(polling_station=polling_station)
+					evm = EVM()
+					evm.polling_station = polling_station
 					evm.unique_id = request.POST.get("evm_number")
 					evm.save()
 			elif "sealed_evm" in request.POST:
