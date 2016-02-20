@@ -29,18 +29,24 @@ class UpdatePOStatus(View):
 				if request.POST.get("reached_polling_station") == "true":
 					po_status.reached_polling_station = True
 					po_status.save()
+				else:
+					flag = False
 			elif "polling_station_condition" in request.POST:
 				condition = int(request.POST.get("polling_station_condition"))
 				# 0 for GOOD, 1 for BAD and 2 for DANGER
 				if 0 <= condition <= 2:
 					polling_station.condition = condition
 					polling_station.save()
+				else:
+					flag = False
 			elif "evm_number" in request.POST:
 				if request.POST.get("evm_number") != "":
 					evm = EVM()
 					evm.polling_station = polling_station
 					evm.unique_id = request.POST.get("evm_number")
 					evm.save()
+				else:
+					flag = False
 			elif "sealed_evm" in request.POST:
 				if request.POST.get("sealed_evm") == "true":
 					po_status.sealed_evm = True
@@ -49,6 +55,8 @@ class UpdatePOStatus(View):
 				if request.POST.get("received_release") == "true":
 					po_status.reached_polling_station = True
 					po_status.save()
+				else:
+					flag = False
 			else:
 				flag = False
 
