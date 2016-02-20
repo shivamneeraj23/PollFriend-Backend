@@ -1,11 +1,14 @@
 from django.http import JsonResponse
 from django.views.generic import View
-from main.models import PresidingOfficer, PollingStation, POStatus, EVM, PollUpdate
+from main.models import PresidingOfficer, PollingStation, POStatus, EVM, PollUpdate, LAC
 from datetime import datetime
 import hashlib
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.views.generic.base import TemplateView
+from itertools import islice, chain
 # Create your views here.
+
 
 
 class UpdatePOStatus(View):
@@ -159,3 +162,16 @@ class UpdatePoll(View):
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
 		return super(UpdatePoll, self).dispatch(*args, **kwargs)
+
+
+class Test(TemplateView):
+	template_name = "test.html"
+
+	def get_context_data(self, **kwargs):
+		context = super(Test, self).get_context_data(**kwargs)
+		b = POStatus.objects.all()
+		context['all'] = b
+
+		return context
+		
+
