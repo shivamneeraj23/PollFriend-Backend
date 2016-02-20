@@ -45,11 +45,13 @@ class PresidingOfficer(models.Model):
 	def __str__(self):
 		return self.full_name
 
+	'''
 	def save(self, *args, **kwargs):
 		super(PresidingOfficer, self).save(*args, **kwargs)
 		po_status = POStatus()
 		po_status.presiding_officer = self
 		po_status.save()
+	'''
 
 
 class PollUpdate(models.Model):
