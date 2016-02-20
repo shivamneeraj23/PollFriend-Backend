@@ -20,7 +20,7 @@ class UpdatePOStatus(View):
 		try:
 			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
 			po_status = POStatus.objects.get(presiding_officer=presiding_officer)
-			polling_station = PollingStation.objects.get(presiding_officer=presiding_officer)
+			polling_station = presiding_officer.polling_station
 			if "received_evm" in request.POST:
 				if request.POST.get("received_evm") == "true":
 					po_status.received_evm = True
