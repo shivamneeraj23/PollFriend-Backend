@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block main_page %}
+	<section class="content-header">
+        <h1>
+            Dashboard
+        </h1>
+    </section>
+
+                <!-- Main content -->
+                
+    <section class="content">
+        <div class="row" id="content_area">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Presiding Officer Status</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body table-responsive">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>POID</th>
+                                    <th>Name</th>
+                                    <th>Received EVM</th>
+                                    <th>Reached Polling Station</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	{% for k in all %}
+                                <tr>
+                                    <td>{{ k.presiding_officer.username }}</td>
+                                    <td>{{k.presiding_officer.first_name}}</td>
+                                    <td>{{k.received_evm}}</td>
+									<td>{{k.reached_polling_station}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>POID</th>
+                                    <th>Name</th>
+                                    <th>Received EVM</th>
+                                    <th>Reached Polling Station</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div>
+        </div>
+
+    </section>
+{% endblock %}
+
+{% block page_js %}
+	<script type="text/javascript">
+    	$(function() {
+                $("#example1").dataTable();
+        });             
+    </script>
+{% endblock %}

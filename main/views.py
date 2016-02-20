@@ -173,16 +173,18 @@ class UpdatePoll(View):
 		return super(UpdatePoll, self).dispatch(*args, **kwargs)
 
 
-class Test(TemplateView):
-	template_name = "test.html"
+class DashboardView(TemplateView):
+	template_name = "dashboard.html"
 
 	def get_context_data(self, **kwargs):
-		context = super(Test, self).get_context_data(**kwargs)
-		b = POStatus.objects.all()
-		ob = PollUpdate.objects.all()
-		context['all'] = b
-		context['up'] = ob
+		context = super(DashboardView, self).get_context_data(**kwargs)
+		po_status = POStatus.objects.all()
+		poll_updates = PollUpdate.objects.order_by('timestamp')
+		context['all'] = po_status
+		context['up'] = poll_updates
 
 		return context
 		
 
+class base(TemplateView):
+	template_name = "base.html"
