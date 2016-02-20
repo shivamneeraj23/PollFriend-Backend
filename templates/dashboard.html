@@ -25,8 +25,11 @@
                                 <tr>
                                     <th>POID</th>
                                     <th>Name</th>
+                                    <th>Polling Station</th>                                   
                                     <th>Received EVM</th>
                                     <th>Reached Polling Station</th>
+                                    <th>Sealed EVM</th>
+                                    <th>Recieved Release</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -34,8 +37,28 @@
                                 <tr>
                                     <td>{{ k.presiding_officer.username }}</td>
                                     <td>{{k.presiding_officer.first_name}}</td>
-                                    <td>{{k.received_evm}}</td>
-									<td>{{k.reached_polling_station}}</td>
+                                    <td>{{k.presiding_officer.polling_station.name}}</td>
+									{% if k.received_evm %}
+									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok " style = "color:green; vertical-align:middle" ></span></td>
+									{% else %}
+										<td></td>
+									{% endif %}
+									{% if k.reached_polling_station %}
+									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
+									{% else %}
+										<td></td>
+									{% endif %}
+									{% if k.sealed_evm %}
+									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
+									{% else %}
+										<td></td>
+									{% endif %}
+									{% if k.received_release %}
+									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
+									{% else %}
+										<td></td>
+									{% endif %}
+	
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -43,8 +66,11 @@
                                 <tr>
                                     <th>POID</th>
                                     <th>Name</th>
+                                    <th>Polling Station</th>                                   
                                     <th>Received EVM</th>
                                     <th>Reached Polling Station</th>
+                                    <th>Sealed EVM</th>
+                                    <th>Recieved Release</th>
                                 </tr>
                             </tfoot>
                         </table>
