@@ -179,7 +179,9 @@ class Test(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(Test, self).get_context_data(**kwargs)
 		b = POStatus.objects.all()
+		ob = PollUpdate.objects.all()
 		context['all'] = b
+		context['up'] = ob
 
 		return context
 		
