@@ -6,9 +6,23 @@ import hashlib
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView
-from itertools import islice, chain
+import math
 from django.core.files.images import ImageFile
 # Create your views here.
+
+
+def degToRad(deg):
+	return deg*(math.pi/180)
+
+
+def getDistBetweenTwoPoints(lat1, long1, lat2, long2):
+	R = 6371000 # Radius of Earth in meter
+	dLat = degToRad(lat2-lat1) # degree to radian conversion
+	dLong = degToRad(long2-long1)
+	a = ((math.sin(dLat/2))**2) + ((math.sin(dLong/2))**2) * (math.cos(degToRad(lat1)) * math.cos(degToRad(lat2)))
+	b = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+	c = R * b # distance in meter
+	return c
 
 
 class UpdatePOStatus(View):
@@ -21,6 +35,12 @@ class UpdatePOStatus(View):
 			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
 			po_status = POStatus.objects.get(presiding_officer=presiding_officer)
 			polling_station = presiding_officer.polling_station
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
+				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
+				po_status.save()
+
 			if "received_evm" in request.POST:
 				if request.POST.get("received_evm") == "true":
 					po_status.received_evm = True
@@ -64,13 +84,25 @@ class UpdatePOStatus(View):
 					po_status.save()
 				else:
 					flag = False
+			elif "poll_starts" in request.POST:
+				if request.POST.get("poll_starts") == "true":
+					distance = getDistBetweenTwoPoints(polling_station.latitude, polling_station.longitude, po_status.current_latitude, po_status.current_longitude)
+					if distance < 100.00:
+						po_status.poll_starts = True
+						po_status.save()
+					else:
+						flag = False
+				else:
+					flag = False
+			elif "poll_ends" in request.POST:
+				if request.POST.get("poll_ends") == "true":
+					po_status.poll_ends = True
+					po_status.save()
+				else:
+					flag = False
 			else:
 				flag = False
 
-			if "latitude" in request.POST and "longitude" in request.POST:
-				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
-				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
-				po_status.save()
 
 		except PresidingOfficer.DoesNotExist:
 			flag = False
@@ -219,7 +251,7 @@ class DashboardView(TemplateView):
 		context['ps'] = po_ps
 
 		return context
-		
+
 
 class CheckEarlyStatus(View):
 
@@ -228,6 +260,10 @@ class CheckEarlyStatus(View):
 		received_evm = "false"
 		reached_polling_station = "false"
 		evm_number = "false"
+		poll_starts = "false"
+		poll_ends = "false"
+		sealed_evm = "false"
+		received_release = "false"
 		poid = request.POST.get('poid')
 		access_token = request.POST.get('access_token')
 		try:
@@ -242,6 +278,14 @@ class CheckEarlyStatus(View):
 				received_evm = "true"
 			if po_status.reached_polling_station:
 				reached_polling_station = "true"
+			if po_status.poll_starts:
+				poll_starts = "true"
+			if po_status.poll_ends:
+				poll_ends = "true"
+			if po_status.sealed_evm:
+				sealed_evm = "true"
+			if po_status.received_release:
+				received_release = "true"
 
 			if "latitude" in request.POST and "longitude" in request.POST:
 				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
@@ -252,7 +296,7 @@ class CheckEarlyStatus(View):
 			flag = False
 
 		if flag:
-			return JsonResponse({'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number})
+			return JsonResponse({'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number, 'poll_starts': poll_starts, 'poll_ends': poll_ends, 'sealed_evm': sealed_evm, 'received_release': received_release})
 		else:
 			return JsonResponse({'result': 'fail'})
 

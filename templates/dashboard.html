@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-
+{% load main_extras %}
 {% block title %} Dashboard {% endblock %}
 
 {% block main_page %}
@@ -49,13 +49,14 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>POID</th>
+                                    <th>ID</th>
                                     <th>Name</th>
-                                    <th>Polling Station</th>                                   
+                                    <th>Polling Station</th>
+                                    <th>Vote %age</th>
                                     <th>Received EVM</th>
                                     <th>Reached Polling Station</th>
                                     <th>Sealed EVM</th>
-                                    <th>Recieved Release</th>
+                                    <th>Received Release</th>
                                 </tr>
                             </thead>
                            
@@ -65,6 +66,7 @@
                                     <td>{{ k.presiding_officer.username }}</td>
                                     <td>{{k.presiding_officer.first_name}}</td>
                                     <td>{{k.presiding_officer.polling_station.name}}</td>
+                                    <td>{% current_vote_percentage k.presiding_officer.polling_station %}%</td>
 									{% if k.received_evm %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok " style = "color:green; vertical-align:middle" ></span></td>
 									{% else %}
@@ -91,13 +93,14 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>POID</th>
+                                    <th>ID</th>
                                     <th>Name</th>
-                                    <th>Polling Station</th>                                   
+                                    <th>Polling Station</th>
+                                    <th>Vote %age</th>
                                     <th>Received EVM</th>
                                     <th>Reached Polling Station</th>
                                     <th>Sealed EVM</th>
-                                    <th>Recieved Release</th>
+                                    <th>Received Release</th>
                                 </tr>
                             </tfoot>
                         </table>

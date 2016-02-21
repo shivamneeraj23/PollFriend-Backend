@@ -84,6 +84,8 @@ class POStatus(models.Model):
 	current_longitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
 	received_evm = models.BooleanField(default=False)
 	reached_polling_station = models.BooleanField(default=False)
+	poll_starts = models.BooleanField(default=False)
+	poll_ends = models.BooleanField(default=False)
 	sealed_evm = models.BooleanField(default=False)
 	received_release = models.BooleanField(default=False)
 
