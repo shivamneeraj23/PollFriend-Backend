@@ -100,9 +100,14 @@ class UpdatePOStatus(View):
 					po_status.save()
 				else:
 					flag = False
+			elif "reached_dc" in request.POST:
+				if request.POST.get("reached_dc") == "true":
+					po_status.reached_dc = True
+					po_status.save()
+				else:
+					flag = False
 			else:
 				flag = False
-
 
 		except PresidingOfficer.DoesNotExist:
 			flag = False
@@ -264,6 +269,7 @@ class CheckEarlyStatus(View):
 		poll_ends = "false"
 		sealed_evm = "false"
 		received_release = "false"
+		reached_dc = "false"
 		poid = request.POST.get('poid')
 		access_token = request.POST.get('access_token')
 		try:
@@ -286,6 +292,8 @@ class CheckEarlyStatus(View):
 				sealed_evm = "true"
 			if po_status.received_release:
 				received_release = "true"
+			if po_status.reached_dc:
+				reached_dc = "true"
 
 			if "latitude" in request.POST and "longitude" in request.POST:
 				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
@@ -296,7 +304,7 @@ class CheckEarlyStatus(View):
 			flag = False
 
 		if flag:
-			return JsonResponse({'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number, 'poll_starts': poll_starts, 'poll_ends': poll_ends, 'sealed_evm': sealed_evm, 'received_release': received_release})
+			return JsonResponse({'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number, 'poll_starts': poll_starts, 'poll_ends': poll_ends, 'sealed_evm': sealed_evm, 'received_release': received_release, 'reached_dc': reached_dc})
 		else:
 			return JsonResponse({'result': 'fail'})
 

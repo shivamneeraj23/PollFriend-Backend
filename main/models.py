@@ -88,6 +88,7 @@ class POStatus(models.Model):
 	poll_ends = models.BooleanField(default=False)
 	sealed_evm = models.BooleanField(default=False)
 	received_release = models.BooleanField(default=False)
+	reached_dc = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.presiding_officer.full_name
