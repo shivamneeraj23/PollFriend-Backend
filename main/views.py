@@ -26,6 +26,8 @@ class UpdatePOStatus(View):
 				if request.POST.get("received_evm") == "true":
 					po_status.received_evm = True
 					po_status.save()
+				else:
+					flag = False
 			elif "reached_polling_station" in request.POST:
 				if request.POST.get("reached_polling_station") == "true":
 					po_status.reached_polling_station = True
@@ -52,6 +54,8 @@ class UpdatePOStatus(View):
 				if request.POST.get("sealed_evm") == "true":
 					po_status.sealed_evm = True
 					po_status.save()
+				else:
+					flag = False
 			elif "received_release" in request.POST:
 				if request.POST.get("received_release") == "true":
 					po_status.reached_polling_station = True
@@ -60,6 +64,11 @@ class UpdatePOStatus(View):
 					flag = False
 			else:
 				flag = False
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
+				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
+				po_status.save()
 
 		except PresidingOfficer.DoesNotExist:
 			flag = False
@@ -95,6 +104,13 @@ class LoginPO(View):
 			key = hashlib.sha256(password)
 			presiding_officer.api_key = key.hexdigest()
 			presiding_officer.save()
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				po_status = POStatus.objects.get(presiding_officer=presiding_officer)
+				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
+				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
+				po_status.save()
+
 			return JsonResponse({'result': 'ok', 'access_token': presiding_officer.api_key})
 		except PresidingOfficer.DoesNotExist:
 			return JsonResponse({'result': 'fail'})
@@ -115,6 +131,12 @@ class LogoutPO(View):
 			presiding_officer = PresidingOfficer.objects.get(username=poid)
 			presiding_officer.api_key = ""
 			presiding_officer.save()
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				po_status = POStatus.objects.get(presiding_officer=presiding_officer)
+				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
+				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
+				po_status.save()
 			return JsonResponse({'result': 'ok'})
 		except PresidingOfficer.DoesNotExist:
 			return JsonResponse({'result': 'fail'})
@@ -155,6 +177,12 @@ class UpdatePoll(View):
 					flag = False
 			else:
 				flag = False
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				po_status = POStatus.objects.get(presiding_officer=presiding_officer)
+				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
+				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
+				po_status.save()
 
 		except PresidingOfficer.DoesNotExist:
 			flag = False
@@ -209,6 +237,11 @@ class CheckEarlyStatus(View):
 			if po_status.reached_polling_station:
 				reached_polling_station = "true"
 
+			if "latitude" in request.POST and "longitude" in request.POST:
+				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
+				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
+				po_status.save()
+
 		except PresidingOfficer.DoesNotExist:
 			flag = False
 
@@ -249,6 +282,12 @@ class SOSUpdateView(View):
 					flag = False
 			else:
 				flag = False
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				po_status = POStatus.objects.get(presiding_officer=presiding_officer)
+				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
+				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
+				po_status.save()
 
 		except PresidingOfficer.DoesNotExist:
 			flag = False
