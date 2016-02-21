@@ -94,7 +94,7 @@ class POStatus(models.Model):
 class SOSUpdate(models.Model):
 	polling_station = models.ForeignKey(PollingStation)
 	message = models.TextField()
-	image = models.ImageField(upload_to='/static/sosimages/')
+	image = models.ImageField(upload_to='sosimages/', null=True, blank=True)
 	CONDITIONS = (
 		(0, 'GOOD'),
 		(1, 'BAD'),
