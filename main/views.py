@@ -211,8 +211,12 @@ class DashboardView(TemplateView):
 		context = super(DashboardView, self).get_context_data(**kwargs)
 		po_status = POStatus.objects.all()
 		poll_updates = PollUpdate.objects.order_by('timestamp')
+		po_evm = len(POStatus.objects.filter(received_evm = True))
+		po_ps = len(POStatus.objects.filter(reached_polling_station = True))
 		context['all'] = po_status
 		context['up'] = poll_updates
+		context['no'] = po_evm
+		context['ps'] = po_ps
 
 		return context
 		
@@ -344,3 +348,13 @@ class AllEVMofPO(View):
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
 		return super(AllEVMofPO, self).dispatch(*args, **kwargs)
+
+class Maps(TemplateView):
+	template_name = "maps.html"
+
+	def get_context_data(self, **kwargs):
+		context = super(Maps, self).get_context_data(**kwargs)
+		po_status = POStatus.objects.all()
+		context['all'] = po_status
+
+		return context

@@ -27,4 +27,5 @@ urlpatterns = [
 	url(r'^check_status/$', CheckEarlyStatus.as_view(), name="checkEarlyStatus"),
 	url(r'^sos_update/$', SOSUpdateView.as_view(), name="SOSUpdate"),
 	url(r'^get_evms/$', AllEVMofPO.as_view(), name="AllEVM"),
+	url(r'^map/$' , Maps.as_view() , name = "Maps"),
 ]
