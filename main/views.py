@@ -297,10 +297,48 @@ class SOSUpdateView(View):
 		else:
 			return JsonResponse({'result': 'fail'})
 
-
 	def get(self, request):
 		return JsonResponse({'result': 'fail'})
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
 		return super(SOSUpdateView, self).dispatch(*args, **kwargs)
+
+
+class AllEVMofPO(View):
+
+	def post(self, request):
+		flag = True
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		evms = []
+		total_evms = 0
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			polling_station = presiding_officer.polling_station
+			evm_objects = EVM.objects.values('unique_id').filter(polling_station=polling_station)
+			for evm in evm_objects:
+				evms.append(evm['unique_id'])
+
+			total_evms = len(evms)
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				po_status = POStatus.objects.get(presiding_officer=presiding_officer)
+				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
+				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
+				po_status.save()
+
+		except PresidingOfficer.DoesNotExist:
+			flag = False
+
+		if flag:
+			return JsonResponse({'result': 'ok', 'evms': evms, 'total_evms': total_evms})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(AllEVMofPO, self).dispatch(*args, **kwargs)
