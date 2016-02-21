@@ -49,10 +49,9 @@ coverage.xml
 
 # Django stuff:
 *.log
-migrations/*
+migrations/
 */migrations/*
-mdeia/*
-media
+media/
 */media/*
 static/admin
 static/admin/*
@@ -70,3 +69,4 @@ db.sqlite3
 .idea
 .idea/*
 /.idea/*
+.idea/
