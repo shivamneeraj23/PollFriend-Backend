@@ -11,7 +11,6 @@ from django.core.files.images import ImageFile
 # Create your views here.
 
 
-
 class UpdatePOStatus(View):
 
 	def post(self, request):
@@ -44,10 +43,13 @@ class UpdatePOStatus(View):
 					flag = False
 			elif "evm_number" in request.POST:
 				if request.POST.get("evm_number") != "":
-					evm = EVM()
-					evm.polling_station = polling_station
-					evm.unique_id = request.POST.get("evm_number")
-					evm.save()
+					try:
+						evm = EVM()
+						evm.polling_station = polling_station
+						evm.unique_id = request.POST.get("evm_number")
+						evm.save()
+					except Exception:
+						flag = False
 				else:
 					flag = False
 			elif "sealed_evm" in request.POST:
