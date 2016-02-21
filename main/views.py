@@ -256,6 +256,10 @@ class CheckEarlyStatus(View):
 		received_evm = "false"
 		reached_polling_station = "false"
 		evm_number = "false"
+		poll_starts = "false"
+		poll_ends = "false"
+		sealed_evm = "false"
+		received_release = "false"
 		poid = request.POST.get('poid')
 		access_token = request.POST.get('access_token')
 		try:
@@ -270,6 +274,14 @@ class CheckEarlyStatus(View):
 				received_evm = "true"
 			if po_status.reached_polling_station:
 				reached_polling_station = "true"
+			if po_status.poll_starts:
+				poll_starts = "true"
+			if po_status.poll_ends:
+				poll_ends = "true"
+			if po_status.sealed_evm:
+				sealed_evm = "true"
+			if po_status.received_release:
+				received_release = "true"
 
 			if "latitude" in request.POST and "longitude" in request.POST:
 				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
@@ -280,7 +292,7 @@ class CheckEarlyStatus(View):
 			flag = False
 
 		if flag:
-			return JsonResponse({'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number})
+			return JsonResponse({'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number, 'poll_starts': poll_starts, 'poll_ends': poll_ends, 'sealed_evm': sealed_evm, 'received_release': received_release})
 		else:
 			return JsonResponse({'result': 'fail'})
 
