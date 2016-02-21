@@ -426,6 +426,12 @@ class AllPollUpdateofPO(View):
 					else:
 						current_voters[(pu.timestamp.hour + 5) % 24] = pu.current_votes
 
+			if "latitude" in request.POST and "longitude" in request.POST:
+				po_status = POStatus.objects.get(presiding_officer=presiding_officer)
+				po_status.last_latitude, po_status.last_longitude = po_status.current_latitude, po_status.current_longitude
+				po_status.current_latitude, po_status.current_longitude = request.POST.get("latitude"), request.POST.get("longitude")
+				po_status.save()
+
 		except PresidingOfficer.DoesNotExist:
 			flag = False
 
