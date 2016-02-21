@@ -7,6 +7,8 @@ register = template.Library()
 @register.simple_tag
 def current_vote_percentage(polling_station):
 	pu = PollUpdate.objects.order_by('-timestamp').filter(polling_station=polling_station)
-	pu = pu[0]
-	percentage = (pu.current_votes * 100)/polling_station.total_voters
+	percentage = 0
+	if len(pu) > 0:
+		pu = pu[0]
+		percentage = (pu.current_votes * 100)/polling_station.total_voters
 	return percentage
