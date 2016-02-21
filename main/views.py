@@ -401,12 +401,3 @@ class AllEVMofPO(View):
 	def dispatch(self, *args, **kwargs):
 		return super(AllEVMofPO, self).dispatch(*args, **kwargs)
 
-class Maps(TemplateView):
-	template_name = "maps.html"
-
-	def get_context_data(self, **kwargs):
-		context = super(Maps, self).get_context_data(**kwargs)
-		po_status = POStatus.objects.all()
-		context['all'] = po_status
-
-		return context
