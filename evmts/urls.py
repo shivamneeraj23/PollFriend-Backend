@@ -25,4 +25,5 @@ urlpatterns = [
 	url(r'^poll_update/$', UpdatePoll.as_view(), name="PollUpdate"),
 	url(r'^home/$', DashboardView.as_view(), name="Test"),
 	url(r'^check_status/$', CheckEarlyStatus.as_view(), name="checkEarlyStatus"),
+	url(r'^sos_update/$', SOSUpdateView.as_view(), name="SOSUpdate"),
 ]

@@ -1,12 +1,13 @@
 from django.http import JsonResponse
 from django.views.generic import View
-from main.models import PresidingOfficer, PollingStation, POStatus, EVM, PollUpdate, LAC
+from main.models import PresidingOfficer, PollingStation, POStatus, EVM, PollUpdate, LAC, SOSUpdate
 from datetime import datetime
 import hashlib
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView
 from itertools import islice, chain
+from django.core.files.images import ImageFile
 # Create your views here.
 
 
@@ -222,3 +223,45 @@ class CheckEarlyStatus(View):
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
 		return super(CheckEarlyStatus, self).dispatch(*args, **kwargs)
+
+
+class SOSUpdateView(View):
+
+	def post(self, request):
+		flag = True
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			polling_station = presiding_officer.polling_station
+			if "message" in request.POST and "subject" in request.POST and "condition" in request.POST and "image" in request.FILES:
+				subject = int(request.POST.get("subject"))
+				condition = int(request.POST.get("condition"))
+				if 0 <= subject <= 2 and 0 <= condition <= 2:
+					sos = SOSUpdate()
+					sos.polling_station = polling_station
+					sos.subject = subject
+					sos.message = request.POST.get("message")
+					sos.condition = condition
+					sos.image = ImageFile(request.FILES["image"])
+					sos.save()
+				else:
+					flag = False
+			else:
+				flag = False
+
+		except PresidingOfficer.DoesNotExist:
+			flag = False
+
+		if flag:
+			return JsonResponse({'result': 'ok'})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(SOSUpdateView, self).dispatch(*args, **kwargs)
