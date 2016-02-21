@@ -401,3 +401,42 @@ class AllEVMofPO(View):
 	def dispatch(self, *args, **kwargs):
 		return super(AllEVMofPO, self).dispatch(*args, **kwargs)
 
+
+class AllPollUpdateofPO(View):
+
+	def post(self, request):
+		flag = True
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		total_voters = 0
+		current_count = 0
+		current_voters = dict()
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			polling_station = presiding_officer.polling_station
+			if polling_station.total_voters:
+				total_voters = polling_station.total_voters
+			poll_update = PollUpdate.objects.order_by('-timestamp').filter(polling_station=polling_station)
+
+			if len(poll_update) > 0:
+				current_count = len(poll_update)
+				for pu in poll_update:
+					if pu.timestamp.minute > 30:
+						current_voters[(pu.timestamp.hour + 6) % 24] = pu.current_votes
+					else:
+						current_voters[(pu.timestamp.hour + 5) % 24] = pu.current_votes
+
+		except PresidingOfficer.DoesNotExist:
+			flag = False
+
+		if flag:
+			return JsonResponse({'result': 'ok', 'total_voters': total_voters, 'current_count': current_count, 'current_voters': current_voters})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(AllPollUpdateofPO, self).dispatch(*args, **kwargs)
