@@ -12,7 +12,7 @@ from django.core.files.images import ImageFile
 
 
 def degToRad(deg):
-	return deg*(math.pi/180)
+	return deg*(math.pi/180.00)
 
 
 def getDistBetweenTwoPoints(lat1, long1, lat2, long2):
