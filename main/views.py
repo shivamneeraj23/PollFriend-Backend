@@ -146,6 +146,7 @@ class LoginPO(View):
 			password = (psid+'@#'+poid+str(datetime.date(datetime.now()))).encode('utf-8')
 			key = hashlib.sha256(password)
 			presiding_officer.api_key = key.hexdigest()
+			presiding_officer.last_login = datetime.now()
 			presiding_officer.save()
 
 			if "latitude" in request.POST and "longitude" in request.POST:
@@ -173,6 +174,7 @@ class LogoutPO(View):
 		try:
 			presiding_officer = PresidingOfficer.objects.get(username=poid)
 			presiding_officer.api_key = ""
+			presiding_officer.last_logout = datetime.now()
 			presiding_officer.save()
 
 			if "latitude" in request.POST and "longitude" in request.POST:
