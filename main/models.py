@@ -82,10 +82,6 @@ class EmergencyContact(models.Model):
 
 class POStatus(models.Model):
 	presiding_officer = models.OneToOneField(PresidingOfficer)
-	last_latitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
-	last_longitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
-	current_latitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
-	current_longitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
 	received_evm = models.BooleanField(default=False)
 	reached_polling_station = models.BooleanField(default=False)
 	poll_starts = models.BooleanField(default=False)
@@ -119,3 +115,10 @@ class SOSUpdate(models.Model):
 class EVM(models.Model):
 	polling_station = models.ForeignKey(PollingStation)
 	unique_id = models.CharField(max_length=50, unique=True)
+
+
+class POLocation(models.Model):
+	presiding_officer = models.ForeignKey(PresidingOfficer)
+	latitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
+	longitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
+	timestamp = models.DateTimeField(auto_now=True)

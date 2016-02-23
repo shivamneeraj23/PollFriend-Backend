@@ -193,16 +193,15 @@
 
 
 		{% for k in all %}
-		  var a = {{k.current_latitude}};
-		  var b = {{k.current_longitude}};
-		  myLatLng = { lat: a , lng: b };
+		  var a = {% get_current_location k.presiding_officer %};
+		  myLatLng = { lat: a[0] , lng: a[1] };
 		  var marker = new google.maps.Marker({
 		    position: myLatLng,
 		    map: map,
 		    title: '{{k.presiding_officer.first_name}}\n{{k.presiding_officer.polling_station.name}}'
 		  });
 
-		  {% endfor %}
+        {% endfor %}
 }
 
     </script>
