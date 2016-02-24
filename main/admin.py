@@ -13,4 +13,5 @@ admin.site.register(POStatus)
 admin.site.register(SOSUpdate)
 admin.site.register(EVM)
 admin.site.register(POLocation)
+admin.site.register(PSImage)
 

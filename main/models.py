@@ -135,3 +135,9 @@ class POLocation(models.Model):
 	latitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
 	longitude = models.DecimalField(max_digits=13, decimal_places=10, blank=True, null=True)
 	timestamp = models.DateTimeField(auto_now=True)
+
+
+class PSImage(models.Model):
+	polling_station = models.ForeignKey(PollingStation)
+	image = models.ImageField(upload_to='psimages/', null=True, blank=True)
+	timestamp = models.DateTimeField(auto_now=True)

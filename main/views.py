@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.generic import View
-from main.models import PresidingOfficer, PollingStation, POStatus, EVM, PollUpdate, POLocation, SOSUpdate
+from main.models import *
 from datetime import datetime
 import hashlib
 from django.views.decorators.csrf import csrf_exempt
@@ -461,3 +461,37 @@ class AllPollUpdateofPO(View):
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
 		return super(AllPollUpdateofPO, self).dispatch(*args, **kwargs)
+
+
+class UploadPSImage(View):
+
+	def post(self, request):
+		flag = False
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			polling_station = presiding_officer.polling_station
+			if "image" in request.FILES:
+				ps_image = PSImage()
+				ps_image.polling_station = polling_station
+				ps_image.image = ImageFile(request.FILES["image"])
+				ps_image.save()
+				flag = True
+			if "latitude" in request.POST and "longitude" in request.POST:
+				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+
+		except PresidingOfficer.DoesNotExist:
+			pass
+
+		if flag:
+			return JsonResponse({'result': 'ok'})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(UploadPSImage, self).dispatch(*args, **kwargs)

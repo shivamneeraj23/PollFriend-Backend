@@ -28,4 +28,5 @@ urlpatterns = [
 	url(r'^sos_update/$', SOSUpdateView.as_view(), name="SOSUpdate"),
 	url(r'^get_evms/$', AllEVMofPO.as_view(), name="AllEVM"),
 	url(r'^check_poll_update/$', AllPollUpdateofPO.as_view(), name="AllPollUpdatesPO"),
+	url(r'^upload_ps_image/$', UploadPSImage.as_view(), name="PSImages"),
 ]
