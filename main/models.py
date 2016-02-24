@@ -83,15 +83,25 @@ class EmergencyContact(models.Model):
 class POStatus(models.Model):
 	presiding_officer = models.OneToOneField(PresidingOfficer)
 	received_evm = models.BooleanField(default=False)
+	received_evm_timestamp = models.DateTimeField(blank=True, null=True)
 	reached_polling_station = models.BooleanField(default=False)
+	reached_polling_station_timestamp = models.DateTimeField(blank=True, null=True)
 	mock_poll_starts = models.BooleanField(default=False)
+	mock_poll_starts_timestamp = models.DateTimeField(blank=True, null=True)
 	mock_poll_ends = models.BooleanField(default=False)
+	mock_poll_ends_timestamp = models.DateTimeField(blank=True, null=True)
 	mock_poll_resetted = models.BooleanField(default=False)
+	mock_poll_resetted_timestamp = models.DateTimeField(blank=True, null=True)
 	poll_starts = models.BooleanField(default=False)
+	poll_starts_timestamp = models.DateTimeField(blank=True, null=True)
 	poll_ends = models.BooleanField(default=False)
+	poll_ends_timestamp = models.DateTimeField(blank=True, null=True)
 	sealed_evm = models.BooleanField(default=False)
+	sealed_evm_timestamp = models.DateTimeField(blank=True, null=True)
 	received_release = models.BooleanField(default=False)
+	received_release_timestamp = models.DateTimeField(blank=True, null=True)
 	reached_dc = models.BooleanField(default=False)
+	reached_dc_timestamp = models.DateTimeField(blank=True, null=True)
 
 	def __str__(self):
 		return self.presiding_officer.full_name

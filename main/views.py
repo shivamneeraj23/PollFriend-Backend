@@ -35,12 +35,14 @@ class UpdatePOStatus(View):
 			if "received_evm" in request.POST:
 				if request.POST.get("received_evm") == "true":
 					po_status.received_evm = True
+					po_status.received_evm_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
 			elif "reached_polling_station" in request.POST:
 				if request.POST.get("reached_polling_station") == "true":
 					po_status.reached_polling_station = True
+					po_status.reached_polling_station_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
@@ -66,12 +68,14 @@ class UpdatePOStatus(View):
 			elif "sealed_evm" in request.POST:
 				if request.POST.get("sealed_evm") == "true":
 					po_status.sealed_evm = True
+					po_status.sealed_evm_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
 			elif "received_release" in request.POST:
 				if request.POST.get("received_release") == "true":
-					po_status.reached_polling_station = True
+					po_status.received_release = True
+					po_status.received_release_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
@@ -81,7 +85,8 @@ class UpdatePOStatus(View):
 					longitude = request.POST.get("longitude")
 					distance = getDistBetweenTwoPoints(polling_station.latitude, polling_station.longitude, latitude, longitude)
 					if distance < 200.00:
-						po_status.poll_starts = True
+						po_status.mock_poll_starts = True
+						po_status.mock_poll_starts_timestamp = datetime.now()
 						po_status.save()
 					else:
 						flag = False
@@ -89,13 +94,15 @@ class UpdatePOStatus(View):
 					flag = False
 			elif "mock_poll_ends" in request.POST:
 				if request.POST.get("mock_poll_ends") == "true":
-					po_status.poll_ends = True
+					po_status.mock_poll_ends = True
+					po_status.mock_poll_ends_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
 			elif "mock_poll_resetted" in request.POST:
 				if request.POST.get("mock_poll_resetted") == "true":
-					po_status.poll_ends = True
+					po_status.mock_poll_resetted = True
+					po_status.mock_poll_resetted_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
@@ -106,6 +113,7 @@ class UpdatePOStatus(View):
 					distance = getDistBetweenTwoPoints(polling_station.latitude, polling_station.longitude, latitude, longitude)
 					if distance < 200.00:
 						po_status.poll_starts = True
+						po_status.poll_starts_timestamp = datetime.now()
 						po_status.save()
 					else:
 						flag = False
@@ -114,12 +122,14 @@ class UpdatePOStatus(View):
 			elif "poll_ends" in request.POST:
 				if request.POST.get("poll_ends") == "true":
 					po_status.poll_ends = True
+					po_status.poll_ends_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
 			elif "reached_dc" in request.POST:
 				if request.POST.get("reached_dc") == "true":
 					po_status.reached_dc = True
+					po_status.reached_dc_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
