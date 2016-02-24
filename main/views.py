@@ -353,15 +353,21 @@ class SOSUpdateView(View):
 				sos.message = request.POST.get("message")
 				flag = True
 			if "subject" in request.POST:
-				subject = int(request.POST.get("subject"))
-				if 0 <= subject <= 2:
-					sos.subject = subject
-					flag = True
+				try:
+					subject = int(request.POST.get("subject"))
+					if 0 <= subject <= 2:
+						sos.subject = subject
+						flag = True
+				except ValueError:
+					flag = False
 			if "condition" in request.POST:
-				condition = int(request.POST.get("condition"))
-				if 0 <= condition <= 2:
-					sos.condition = condition
-					flag = True
+				try:
+					condition = int(request.POST.get("condition"))
+					if 0 <= condition <= 2:
+						sos.condition = condition
+						flag = True
+				except ValueError:
+					flag = False
 
 			sos.save()
 
