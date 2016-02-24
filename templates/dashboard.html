@@ -143,7 +143,7 @@
                                     <td>{{k.polling_station.name}}</td>
                                     <td>{{k.polling_station.total_voters}}</td>
                                     <td>{{k.current_votes}}</td>
-                                    <td></td>
+                                    <td>{% get_percentage k.polling_station.total_voters k.current_votes %}</td>
                                     <td>{{k.timestamp|time:"h A"}}</td>
 	
                                 </tr>
