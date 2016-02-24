@@ -38,4 +38,7 @@ def get_current_location(presiding_officer):
 
 @register.simple_tag
 def get_percentage(total, current):
-	return (current * 100)/total
+	if total and current:
+		return (current * 100)/total
+	else:
+		return 0
