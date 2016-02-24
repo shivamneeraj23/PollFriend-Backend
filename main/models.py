@@ -109,20 +109,20 @@ class POStatus(models.Model):
 
 class SOSUpdate(models.Model):
 	polling_station = models.ForeignKey(PollingStation)
-	message = models.TextField()
+	message = models.TextField(null=True, blank=True)
 	image = models.ImageField(upload_to='sosimages/', null=True, blank=True)
 	CONDITIONS = (
 		(0, 'GOOD'),
 		(1, 'BAD'),
 		(2, 'DANGER'),
 	)
-	condition = models.SmallIntegerField(choices=CONDITIONS)
+	condition = models.SmallIntegerField(choices=CONDITIONS, null=True, blank=True)
 	SUBJECTS = (
 		(0, 'EVM'),
 		(1, 'POLLING STATION'),
 		(2, 'OTHER'),
 	)
-	subject = models.SmallIntegerField(choices=SUBJECTS)
+	subject = models.SmallIntegerField(choices=SUBJECTS, null=True, blank=True)
 
 
 class EVM(models.Model):

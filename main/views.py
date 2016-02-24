@@ -338,27 +338,32 @@ class CheckEarlyStatus(View):
 class SOSUpdateView(View):
 
 	def post(self, request):
-		flag = True
+		flag = False
 		poid = request.POST.get('poid')
 		access_token = request.POST.get('access_token')
 		try:
 			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
 			polling_station = presiding_officer.polling_station
-			if "message" in request.POST and "subject" in request.POST and "condition" in request.POST and "image" in request.FILES:
+			sos = SOSUpdate()
+			sos.polling_station = polling_station
+			if "image" in request.FILES:
+				sos.image = ImageFile(request.FILES["image"])
+				flag = True
+			if "message" in request.POST:
+				sos.message = request.POST.get("message")
+				flag = True
+			if "subject" in request.POST:
 				subject = int(request.POST.get("subject"))
-				condition = int(request.POST.get("condition"))
-				if 0 <= subject <= 2 and 0 <= condition <= 2:
-					sos = SOSUpdate()
-					sos.polling_station = polling_station
+				if 0 <= subject <= 2:
 					sos.subject = subject
-					sos.message = request.POST.get("message")
+					flag = True
+			if "condition" in request.POST:
+				condition = int(request.POST.get("condition"))
+				if 0 <= condition <= 2:
 					sos.condition = condition
-					sos.image = ImageFile(request.FILES["image"])
-					sos.save()
-				else:
-					flag = False
-			else:
-				flag = False
+					flag = True
+
+			sos.save()
 
 			if "latitude" in request.POST and "longitude" in request.POST:
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
