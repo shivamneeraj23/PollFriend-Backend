@@ -288,6 +288,9 @@ class CheckEarlyStatus(View):
 		evm_number = "false"
 		poll_starts = "false"
 		poll_ends = "false"
+		mock_poll_starts = "false"
+		mock_poll_ends = "false"
+		mock_poll_resetted = "false"
 		sealed_evm = "false"
 		received_release = "false"
 		reached_dc = "false"
@@ -305,6 +308,12 @@ class CheckEarlyStatus(View):
 				received_evm = "true"
 			if po_status.reached_polling_station:
 				reached_polling_station = "true"
+			if po_status.mock_poll_starts:
+				mock_poll_starts = "true"
+			if po_status.mock_poll_resetted:
+				mock_poll_resetted = "true"
+			if po_status.mock_poll_ends:
+				mock_poll_ends = "true"
 			if po_status.poll_starts:
 				poll_starts = "true"
 			if po_status.poll_ends:
@@ -323,7 +332,8 @@ class CheckEarlyStatus(View):
 			flag = False
 
 		if flag:
-			return JsonResponse({'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number, 'poll_starts': poll_starts, 'poll_ends': poll_ends, 'sealed_evm': sealed_evm, 'received_release': received_release, 'reached_dc': reached_dc})
+			response = {'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number, 'mock_poll_starts': mock_poll_starts, 'mock_poll_ends': mock_poll_ends, 'mock_poll_resetted': mock_poll_resetted, 'poll_starts': poll_starts, 'poll_ends': poll_ends, 'sealed_evm': sealed_evm, 'received_release': received_release, 'reached_dc': reached_dc}
+			return JsonResponse(response)
 		else:
 			return JsonResponse({'result': 'fail'})
 
