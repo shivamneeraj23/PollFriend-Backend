@@ -141,3 +141,9 @@ class PSImage(models.Model):
 	polling_station = models.ForeignKey(PollingStation)
 	image = models.ImageField(upload_to='psimages/', null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=True)
+
+
+class PODevice(models.Model):
+	presiding_officer = models.ForeignKey(PresidingOfficer)
+	device = models.CharField(max_length=50, unique=True,null=True, blank=True)
+	timestamp = models.DateTimeField(auto_now=True)
