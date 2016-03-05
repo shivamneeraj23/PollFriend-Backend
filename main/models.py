@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -41,6 +42,7 @@ class PresidingOfficer(models.Model):
 	polling_station = models.OneToOneField(PollingStation)
 	mobile = models.BigIntegerField(unique=True)
 	api_key = models.CharField(max_length=70, null=True, blank=True)
+	device_key = models.CharField(max_length=50, unique=True, null=True, blank=True)
 	last_login = models.DateTimeField(blank=True, null=True)
 	last_logout = models.DateTimeField(blank=True, null=True)
 
@@ -142,7 +144,7 @@ class PSImage(models.Model):
 	timestamp = models.DateTimeField(auto_now=True)
 
 
-class PODevice(models.Model):
-	presiding_officer = models.ForeignKey(PresidingOfficer)
-	device = models.CharField(max_length=50, unique=True,null=True, blank=True)
+class WebDevice(models.Model):
+	user = models.OneToOneField(User)
+	device_key = models.CharField(max_length=50, unique=True, null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=True)
