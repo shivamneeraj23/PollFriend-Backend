@@ -4,42 +4,87 @@
 {% block title %} Dashboard {% endblock %}
 {% block main_page_title %} Dashboard {% endblock %}
 {% block main_page %}
-    	 <div class="row">
-            <div class="col-xs-6">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Quick Statistics</h3>
-                    </div><!-- /.box-header -->
-                    <div  class="box-body table-responsive">
-                        <table id="example3" class="table table-bordered table-striped">
-                           <tbody>
-                                <tr>
-                                    <td>Total Presiding Officers recieved EVM</td><td>{{received_evm}}</td>                                    
-                                </tr>
-                                <tr>
-                                	<td>Total Presiding Officers reached Polling Station</td><td>{{reached_polling_station}}</td>
-                                </tr>
-                                <tr>
-                                	<td>Total places where poll starts</td><td>{{poll_starts}}</td>
-                                </tr>
-                                <tr>
-                                	<td>Total places where poll has ended</td><td>{{poll_ends}}</td>
-                                </tr>
-                                <tr>
-                                	<td>Total No of sealed EVM checked</td><td>{{sealed_evm}}</td>
-                                </tr>
-                                <tr>
-                                	<td>Total no of recieived release</td><td>{{received_release}}</td>
-                                </tr>
-                                <tr>
-                                	<td>Total number that have reached DC</td><td>{{reached_dc}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div><!-- /.box-body -->
-                </div><!-- /.box -->
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Presiding Officers</span>
+                  <span class="info-box-number">{{ received_evm }} <small>Registered</small></span>
+                  <span class="info-box-number">{{ received_evm }} <small>Online</small></span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
             </div>
-       </div> 
+
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="ion ion-android-done-all"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Overall Poll</span>
+                  <span class="info-box-number">90<small>%</small></span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Received EVM</span>
+                  <span class="info-box-number">{{ received_evm }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Poll Started</span>
+                  <span class="info-box-number">{{ poll_starts }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Poll Ended</span>
+                  <span class="info-box-number">{{ poll_ends }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Sealed EVM</span>
+                  <span class="info-box-number">{{ sealed_evm }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">
