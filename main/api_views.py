@@ -7,6 +7,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from functions.haversine_formula import getDistBetweenTwoPoints
 from django.core.files.images import ImageFile
+import requests
+import json
+from django.conf import settings
 # Create your views here.
 
 
@@ -368,6 +371,25 @@ class SOSUpdateView(View):
 					flag = False
 
 			sos.save()
+			# Multi-Cast SOS to all WEB ADMINS
+			# Set header
+			headers = dict()
+			headers['Authorization'] = "key="+settings.GCM_AUTH_KEY
+			headers['Content-Type'] = "application/json"
+			# get all admin web devices
+			web_devices = WebDevice.objects.filter()
+			device_keys = []
+			for wd in web_devices:
+				device_keys.append(wd.device_key)
+			# Set POST data
+			data = dict()
+			data['registration_ids'] = device_keys
+			# JSON serialize the dict data-type
+			data = json.dumps(data)
+			# initiate the request
+			r = requests.post(settings.GCM_URL, data=data, headers=headers)
+			if r.status_code == 200:
+				pass
 
 			if "latitude" in request.POST and "longitude" in request.POST:
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
