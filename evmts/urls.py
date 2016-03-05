@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from main.views import *
+from main.api_views import *
+from main.web_views import *
 
 urlpatterns = [
 	url(r'^admin/', include(admin.site.urls)),
@@ -30,5 +31,5 @@ urlpatterns = [
 	url(r'^check_poll_update/$', AllPollUpdateofPO.as_view(), name="AllPollUpdatesPO"),
 	url(r'^upload_ps_image/$', UploadPSImage.as_view(), name="PSImages"),
 	url(r'^message/$', MessageView.as_view(), name = 'MessagingView'),
-	url(r'^signin/$', AdminLogin.as_view(), name = 'AdminLoginView'),
+	url(r'^$', AdminLogin.as_view(), name = 'AdminLoginView'),
 ]
