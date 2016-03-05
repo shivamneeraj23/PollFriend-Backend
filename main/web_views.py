@@ -1,5 +1,9 @@
 from main.models import *
 from django.views.generic.base import TemplateView
+from django.views.generic import View
+from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
@@ -45,3 +49,32 @@ class MessageView(TemplateView):
 
 class AdminLogin(TemplateView):
 	template_name = "login.html"
+
+
+class RegisterWebDevice(View):
+	def post(self, request):
+		flag = False
+		user = request.user
+		if user.is_authenticated():
+			try:
+				web_device = WebDevice.objects.get(user=user)
+			except WebDevice.DoesNotExist:
+				web_device = WebDevice()
+				web_device.user = user
+			web_device.device_key = request.POST.get('device_key')
+			web_device.save()
+			flag = True
+		else:
+			return JsonResponse({'result': 'user_prob'})
+		if flag:
+			return JsonResponse({'result': 'ok'})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(RegisterWebDevice, self).dispatch(*args, **kwargs)
+
