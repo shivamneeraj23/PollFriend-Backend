@@ -29,5 +29,6 @@ urlpatterns = [
 	url(r'^get_evms/$', AllEVMofPO.as_view(), name="AllEVM"),
 	url(r'^check_poll_update/$', AllPollUpdateofPO.as_view(), name="AllPollUpdatesPO"),
 	url(r'^upload_ps_image/$', UploadPSImage.as_view(), name="PSImages"),
-	url(r'message/$' , MessageView.as_view() , name = 'MessagingView'),
+	url(r'^message/$', MessageView.as_view(), name = 'MessagingView'),
+	url(r'^signin/$', AdminLogin.as_view(), name = 'AdminLoginView'),
 ]

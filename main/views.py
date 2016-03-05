@@ -539,3 +539,6 @@ class MessageView(TemplateView):
 		context['po_status'] = po_status
 
 		return context
+
+class AdminLogin(TemplateView):
+	template_name = "login.html"
