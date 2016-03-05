@@ -2,23 +2,9 @@
 {% load staticfiles %}
 {% load main_extras %}
 {% block title %} Dashboard {% endblock %}
-
+{% block main_page_title %} Dashboard {% endblock %}
 {% block main_page %}
-	<section class="content-header">
-        <h1>
-            Dashboard
-        </h1>
-    </section>
-
-                <!-- Main content -->
-     <!-- <div class = "info">
-     	Total PO recieved EVM = {{no}}<br />
-     	Total PO reached PS = {{ps}}
-
-     </div> --> 
-             
-    <section class="content">
-    	 <div class="row" id="content_area">
+    	 <div class="row">
             <div class="col-xs-6">
                 <div class="box">
                     <div class="box-header">
@@ -54,7 +40,7 @@
                 </div><!-- /.box -->
             </div>
        </div> 
-        <div class="row" id="content_area">
+        <div class="row">
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
@@ -89,7 +75,7 @@
                             	{% for k in all %}
                                 <tr>
                                     <td>{{ k.presiding_officer.username }}</td>
-                                    <td>{{k.presiding_officer.first_name}}</td>
+                                    <td>{{k.presiding_officer.full_name}}</td>
                                     <td>{{k.presiding_officer.polling_station.name}}</td>
                                     <td>{% current_vote_percentage k.presiding_officer.polling_station %}%</td>
 									{% if k.received_evm %}
@@ -121,6 +107,7 @@
 									{% else %}
 										<td></td>
 									{% endif %}
+                                    <td>{{k.poll_starts.timestamp}}</td>
 									{% if k.poll_ends %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
 									{% else %}
@@ -166,7 +153,7 @@
             </div>
         </div>
 
-        <div class="row" id="content_area">
+        <div class="row">
             <div class="col-xs-6">
                 <div class="box">
                     <div class="box-header">
@@ -222,18 +209,14 @@
             </div>
         </div>
 
-    </section>
-    <div id="map"></div>
-
 
 {% endblock %}
 
 {% block page_js %}
 	<script type="text/javascript">
-    	$(function() {
-                $("#example1").dataTable();
-                $("#example2").dataTable();
-                $("#example3").dataTable();
+    	$(document).ready(function() {
+                $("#example1").DataTable();
+                $("#example2").DataTable();
         });             
     </script>
 
