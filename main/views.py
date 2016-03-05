@@ -48,9 +48,9 @@ class UpdatePOStatus(View):
 					flag = False
 			elif "polling_station_condition" in request.POST:
 				condition = int(request.POST.get("polling_station_condition"))
-				# 0 for GOOD, 1 for BAD and 2 for DANGER
+				# 0 for GOOD, 1 for OK and 2 for BAD
 				if 0 <= condition <= 2:
-					polling_station.condition = condition
+					polling_station.condition = condition + 1
 					polling_station.save()
 				else:
 					flag = False
@@ -317,7 +317,7 @@ class CheckEarlyStatus(View):
 			evm = EVM.objects.filter(polling_station=polling_station)
 
 			if polling_station.condition:
-				polling_station_condition = polling_station.condition
+				polling_station_condition = polling_station.condition - 1
 			if polling_station.total_voters:
 				total_voters = "true"
 			if len(evm) > 0:
@@ -384,7 +384,7 @@ class SOSUpdateView(View):
 				try:
 					subject = int(request.POST.get("subject"))
 					if 0 <= subject <= 2:
-						sos.subject = subject
+						sos.subject = subject + 1
 						flag = True
 				except ValueError:
 					flag = False
@@ -530,6 +530,7 @@ class UploadPSImage(View):
 	def dispatch(self, *args, **kwargs):
 		return super(UploadPSImage, self).dispatch(*args, **kwargs)
 
+
 class MessageView(TemplateView):
 	template_name = "messaging.html"
 
@@ -539,6 +540,7 @@ class MessageView(TemplateView):
 		context['po_status'] = po_status
 
 		return context
+
 
 class AdminLogin(TemplateView):
 	template_name = "login.html"

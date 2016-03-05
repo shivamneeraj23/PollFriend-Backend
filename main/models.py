@@ -18,9 +18,9 @@ class PollingStation(models.Model):
 	latitude = models.DecimalField(max_digits=13,  decimal_places=10)
 	longitude = models.DecimalField(max_digits=13,  decimal_places=10)
 	CONDITIONS = (
-		(0, 'GOOD'),
-		(1, 'BAD'),
-		(2, 'DANGER'),
+		(1, 'GOOD'),
+		(2, 'OK'),
+		(3, 'BAD'),
 	)
 	condition = models.SmallIntegerField(choices=CONDITIONS)
 
@@ -73,9 +73,9 @@ class EmergencyContact(models.Model):
 	mobile = models.BigIntegerField(unique=True)
 	# higher the level value higher is priority used to contact.
 	LEVELS = (
-		(0, 'Police'),
-		(1, 'Sector Officer'),
-		(2, 'District Election Officer'),
+		(1, 'Police'),
+		(2, 'Sector Officer'),
+		(3, 'District Election Officer'),
 	)
 	designation = models.SmallIntegerField(choices=LEVELS)
 
@@ -112,15 +112,14 @@ class SOSUpdate(models.Model):
 	message = models.TextField(null=True, blank=True)
 	image = models.ImageField(upload_to='sosimages/', null=True, blank=True)
 	CONDITIONS = (
-		(0, 'GOOD'),
 		(1, 'BAD'),
 		(2, 'DANGER'),
 	)
 	condition = models.SmallIntegerField(choices=CONDITIONS, null=True, blank=True)
 	SUBJECTS = (
-		(0, 'EVM'),
-		(1, 'POLLING STATION'),
-		(2, 'OTHER'),
+		(1, 'EVM'),
+		(2, 'POLLING STATION'),
+		(3, 'OTHER'),
 	)
 	subject = models.SmallIntegerField(choices=SUBJECTS, null=True, blank=True)
 
