@@ -28,10 +28,25 @@
                         <table id="example3" class="table table-bordered table-striped">
                            <tbody>
                                 <tr>
-                                    <td>Total Presiding Officers recieved EVM</td><td>{{no}}</td>                                    
+                                    <td>Total Presiding Officers recieved EVM</td><td>{{received_evm}}</td>                                    
                                 </tr>
                                 <tr>
-                                	<td>Total Presiding Officers reached Polling Station</td><td>{{ps}}</td>
+                                	<td>Total Presiding Officers reached Polling Station</td><td>{{reached_polling_station}}</td>
+                                </tr>
+                                <tr>
+                                	<td>Total places where poll starts</td><td>{{poll_starts}}</td>
+                                </tr>
+                                <tr>
+                                	<td>Total places where poll has ended</td><td>{{poll_ends}}</td>
+                                </tr>
+                                <tr>
+                                	<td>Total No of sealed EVM checked</td><td>{{sealed_evm}}</td>
+                                </tr>
+                                <tr>
+                                	<td>Total no of recieived release</td><td>{{received_release}}</td>
+                                </tr>
+                                <tr>
+                                	<td>Total number that have reached DC</td><td>{{reached_dc}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -54,9 +69,19 @@
                                     <th>Polling Station</th>
                                     <th>Vote %age</th>
                                     <th>Received EVM</th>
+                                    <th>Timestamp</th>
                                     <th>Reached Polling Station</th>
+                                    <th>Timestamp</th>
                                     <th>Sealed EVM</th>
+                                    <th>Timestamp</th>
                                     <th>Received Release</th>
+                                    <th>Timestamp</th>
+                                    <th>Poll Starts</th>
+                                    <th>Timestamp</th>
+                                    <th>Poll Ends</th>
+                                    <th>Timestamp</th>
+                                    <th>Reached DC</th>
+                                    <th>Timestamp</th>
                                 </tr>
                             </thead>
                            
@@ -72,21 +97,43 @@
 									{% else %}
 										<td></td>
 									{% endif %}
+									<td>{{k.received_evm.timestamp}}</td>
 									{% if k.reached_polling_station %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
 									{% else %}
 										<td></td>
 									{% endif %}
+									<td>{{k.reached_polling_station.timestamp}}</td>
 									{% if k.sealed_evm %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
 									{% else %}
 										<td></td>
 									{% endif %}
+									<td>{{k.sealed_evm.timestamp}}</td>
 									{% if k.received_release %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
 									{% else %}
 										<td></td>
 									{% endif %}
+									<td>{{k.received_release.timestamp}}</td>
+									{% if k.poll_starts %}
+									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
+									{% else %}
+										<td></td>
+									{% endif %}
+									{% if k.poll_ends %}
+									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
+									{% else %}
+										<td></td>
+									{% endif %}
+									<td>{{k.poll_ends.timestamp}}</td>
+									{% if k.reached_dc %}
+									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span></td>
+									{% else %}
+										<td></td>
+									{% endif %}
+									<td>{{k.reached_dc.timestamp}}</td>
+
 	
                                 </tr>
                                 {% endfor %}
@@ -98,9 +145,19 @@
                                     <th>Polling Station</th>
                                     <th>Vote %age</th>
                                     <th>Received EVM</th>
+                                    <th>Timestamp</th>
                                     <th>Reached Polling Station</th>
+                                    <th>Timestamp</th>
                                     <th>Sealed EVM</th>
+                                    <th>Timestamp</th>
                                     <th>Received Release</th>
+                                    <th>Timestamp</th>
+                                    <th>Poll Starts</th>
+                                    <th>Timestamp</th>
+                                    <th>Poll Ends</th>
+                                    <th>Timestamp</th>
+                                    <th>Reached DC</th>
+                                    <th>Timestamp</th>
                                 </tr>
                             </tfoot>
                         </table>

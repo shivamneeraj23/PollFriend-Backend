@@ -23,10 +23,11 @@ urlpatterns = [
 	url(r'^po_status/$', UpdatePOStatus.as_view(), name="UpdatePOStatus"),
 	url(r'^logout/$', LogoutPO.as_view(), name="logoutPO"),
 	url(r'^poll_update/$', UpdatePoll.as_view(), name="PollUpdate"),
-	url(r'^home/$', DashboardView.as_view(), name="Test"),
+	url(r'^home/$', DashboardView.as_view(), name="DashboardView"),
 	url(r'^check_status/$', CheckEarlyStatus.as_view(), name="checkEarlyStatus"),
 	url(r'^sos_update/$', SOSUpdateView.as_view(), name="SOSUpdate"),
 	url(r'^get_evms/$', AllEVMofPO.as_view(), name="AllEVM"),
 	url(r'^check_poll_update/$', AllPollUpdateofPO.as_view(), name="AllPollUpdatesPO"),
 	url(r'^upload_ps_image/$', UploadPSImage.as_view(), name="PSImages"),
+	url(r'message/$' , MessageView.as_view() , name = 'MessagingView'),
 ]
