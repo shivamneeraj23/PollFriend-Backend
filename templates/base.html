@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
+{% load main_extras %}
 <html>
   <head>
     <meta charset="utf-8">
@@ -66,12 +67,7 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
           <!-- Sidebar Menu -->
-          <ul class="sidebar-menu">
-            <li class="header">MENU</li>
-            <!-- Optionally, you can add icons to the links -->
-            <li><a href="#"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-            <li><a href="#"><i class="fa fa-weixin"></i> <span>Message Center</span></a></li>
-          </ul><!-- /.sidebar-menu -->
+          {% get_sidebar %}
         </section>
         <!-- /.sidebar -->
       </aside>

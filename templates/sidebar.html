@@ -1,0 +1,24 @@
+<ul class="sidebar-menu">
+    <li class="header">MENU</li>
+    <li {% if page == "/home/" %} class="active" {% endif %}>
+        <a href="/home/"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+    </li>
+    <li {% if page == "/messages/" %} class="active" {% endif %}>
+        <a href="/messages/"><i class="fa fa-envelope"></i> <span>Message Center</span></a>
+    </li>
+    <li {% if page == "/polling-stations/" %} class="active" {% endif %}>
+        <a href="/polling-stations/"><i class="fa fa-archive"></i> <span>Polling Stations</span></a>
+    </li>
+    <li {% if page == "/presiding-officers/" %} class="active" {% endif %}>
+        <a href="/presiding-officers/"><i class="fa fa-group"></i> <span>Presiding Officers</span></a>
+    </li>
+    <li {% if page == "/analytics/" %} class="active" {% endif %}>
+        <a href="/analytics/"><i class="fa fa-pie-chart"></i> <span>Analytics</span></a>
+    </li>
+    <li {% if page == "/documentation/" %} class="active" {% endif %}>
+        <a href="/documentation/"><i class="fa fa-book"></i> <span>Documentation</span></a>
+    </li>
+    <li>
+        <a href="/signout/"><i class="fa fa-external-link"></i> <span>Sign Out</span></a>
+    </li>
+</ul><!-- /.sidebar-menu -->

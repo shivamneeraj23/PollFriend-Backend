@@ -37,7 +37,7 @@ class DashboardView(TemplateView):
 
 
 class MessageView(TemplateView):
-	template_name = "messaging.html"
+	template_name = "messages.html"
 
 	def get_context_data(self, **kwargs):
 		context = super(MessageView, self).get_context_data(**kwargs)
