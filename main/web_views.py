@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse_lazy
+from django.views.generic.list import ListView
 # Create your views here.
 
 
@@ -93,4 +94,12 @@ class RegisterWebDevice(View):
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
 		return super(RegisterWebDevice, self).dispatch(*args, **kwargs)
+
+class PollingStationListView(ListView):
+	template_name = "pollingstation_list.html"
+	model = PollingStation
+
+	def get_context_data(self, **kwargs):
+		context = super(PollingStationListView, self).get_context_data(**kwargs)
+		return context
 

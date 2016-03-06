@@ -10,6 +10,7 @@ from django.core.files.images import ImageFile
 import requests
 import json
 from django.conf import settings
+
 # Create your views here.
 
 
