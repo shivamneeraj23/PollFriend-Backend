@@ -37,4 +37,7 @@ urlpatterns = [
 	url(r'^register_web_device/$', RegisterWebDevice.as_view(), name='RegisterWebDevice'),
 	url(r'^polling-station/view/$', PollingStationListView.as_view(), name='PollingStation'),
 	url(r'^get_sos_notification/$', GetSOSNotification.as_view(), name='GetSOSNotification'),
+	url(r'^polling-station/add/$', PollingStationListAddView.as_view(), name='PollingStationAdd'),
+	url(r'^presiding-officer/view/$', PresidingOfficerListView.as_view(), name='PresidingOfficer'),
+	url(r'^presiding-officer/add/$', PresidingOfficerListAddView.as_view(), name='PresidingOfficerAdd'),
 ]

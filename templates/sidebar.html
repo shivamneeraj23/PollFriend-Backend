@@ -22,11 +22,19 @@
         <ul class="treeview-menu">
             <li {% if page = "#" %} class = "active" {% endif%} >
                 <a href= "/polling-station/view"><i class="fa fa-eye"></i><span>View</span></a>
-
+                <li {% if page = "#" %} class="active" {% endif %} >
+                <a href="/polling-station/add"><i class = "fa fa-plus"></i><span>Add</span></a>
         </ul>
     </li>
     <li {% if page == "/presiding-officers/" %} class="active" {% endif %}>
-        <a href="/presiding-officers/"><i class="fa fa-group"></i> <span>Presiding Officers</span></a>
+        <a href="/presiding-officers/"><i class="fa fa-group"></i> <span>Presiding Officers</span><i class = "fa fa-angle-left pull-right"></i></a>
+        <ul class="treeview-menu">
+            <li {% if page = "#" %} class = "active" {% endif%} >
+                <a href= "/presiding-officer/view"><i class="fa fa-eye"></i><span>View</span></a>
+        
+            <li {% if page = "#" %} class="active" {% endif %} >
+                <a href="/presiding-officer/add"><i class = "fa fa-plus"></i><span>Add</span></a>    
+        </ul>
     </li>
     <li {% if page == "/analytics/" %} class="active" {% endif %}>
         <a href="/analytics/"><i class="fa fa-pie-chart"></i> <span>Analytics</span></a>
