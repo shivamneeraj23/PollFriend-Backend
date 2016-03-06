@@ -30,7 +30,9 @@ urlpatterns = [
 	url(r'^get_evms/$', AllEVMofPO.as_view(), name="AllEVM"),
 	url(r'^check_poll_update/$', AllPollUpdateofPO.as_view(), name="AllPollUpdatesPO"),
 	url(r'^upload_ps_image/$', UploadPSImage.as_view(), name="PSImages"),
-	url(r'^messages/$', MessageView.as_view(), name='MessagingView'),
+	url(r'^messages/$', MessageView.as_view(), name='Message'),
+	url(r'^messages/inbox/$', MessageInboxView.as_view(), name='MessageInbox'),
+	url(r'^messages/sent/$', MessageSentView.as_view(), name='MessageSent'),
 	url(r'^$', AdminLogin.as_view(), name='AdminLoginView'),
 	url(r'^register_web_device/$', RegisterWebDevice.as_view(), name='RegisterWebDevice'),
 ]

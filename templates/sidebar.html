@@ -3,8 +3,19 @@
     <li {% if page == "/home/" %} class="active" {% endif %}>
         <a href="/home/"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
     </li>
-    <li {% if page == "/messages/" %} class="active" {% endif %}>
-        <a href="/messages/"><i class="fa fa-envelope"></i> <span>Message Center</span></a>
+    <li {% if parent == 'messages' %} class="treeview active" {% else %} class="treeview" {% endif %}>
+        <a href="#"><i class="fa fa-envelope"></i> <span>Message Center</span> <i class="fa fa-angle-left pull-right"></i></a></a>
+         <ul class="treeview-menu">>
+            <li {% if page == "/messages/inbox/" %} class="active" {% endif %} >
+                <a href="/messages/inbox/"><i class="fa fa-inbox"></i> <span>Inbox</span></a>
+            </li>
+            <li {% if page == "/messages/compose/" %} class="active" {% endif %} >
+                <a href="/messages/compose/"><i class="fa fa-pencil"></i> <span>Compose</span></a>
+            </li>
+            <li {% if page == "/messages/sent/" %} class="active" {% endif %} >
+                <a href="/messages/sent/"><i class="fa fa-envelope-o"></i> <span>Sent</span></a>
+            </li>
+         </ul>
     </li>
     <li {% if page == "/polling-stations/" %} class="active" {% endif %}>
         <a href="/polling-stations/"><i class="fa fa-archive"></i> <span>Polling Stations</span></a>

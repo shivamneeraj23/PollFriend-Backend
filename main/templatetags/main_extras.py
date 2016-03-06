@@ -47,4 +47,5 @@ def get_percentage(total, current):
 @register.inclusion_tag('sidebar.html', takes_context=True)
 def get_sidebar(context):
 	request = context['request']
-	return {'page': request.path}
+	parent_page = request.path.split('/')[1]
+	return {'page': request.path, 'parent': parent_page}

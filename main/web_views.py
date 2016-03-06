@@ -1,9 +1,10 @@
 from main.models import *
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic import View
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.core.urlresolvers import reverse_lazy
 # Create your views here.
 
 
@@ -36,13 +37,28 @@ class DashboardView(TemplateView):
 		return context
 
 
-class MessageView(TemplateView):
+class MessageView(RedirectView):
+	url = reverse_lazy("MessageInbox")
+
+
+class MessageInboxView(TemplateView):
 	template_name = "messages.html"
 
 	def get_context_data(self, **kwargs):
-		context = super(MessageView, self).get_context_data(**kwargs)
-		po_status = POStatus.objects.all()
-		context['po_status'] = po_status
+		context = super(MessageInboxView, self).get_context_data(**kwargs)
+		sos = SOSUpdate.objects.order_by('-timestamp').filter()
+		context['sos_messages'] = sos
+
+		return context
+
+
+class MessageSentView(TemplateView):
+	template_name = "messages.html"
+
+	def get_context_data(self, **kwargs):
+		context = super(MessageInboxView, self).get_context_data(**kwargs)
+		sos = SOSUpdate.objects.order_by('-timestamp').filter()
+		context['sos_messages'] = sos
 
 		return context
 
