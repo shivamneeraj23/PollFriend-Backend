@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load main_extras %}
+{% block title %} Dashboard {% endblock %}last
+{% block main_page_title %} Presiding Officers Details {% endblock %}
+{% block main_page %}
+<div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title"></h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body table-responsive">
+                        <table id="example1" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Name</th>
+                                    <th>Polling Station</th>
+                                    <th>Last Login</th>
+                                    <th>Last Logout</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for o in object_list %}
+                            	<tr>
+                                    <td>{{ o.username }}</td>
+                                    <td>{{ o.full_name }}</td>
+                                    <td>{{ o.polling_station }}</td>
+                                    <td>{{ o.last_login }}</td>
+                                    <td>{{ o.last_logout }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+{% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript">
+    	$(document).ready(function() {
+                $("#example1").DataTable();
+        });
+    </script>
+{% endblock %}

@@ -103,3 +103,28 @@ class PollingStationListView(ListView):
 		context = super(PollingStationListView, self).get_context_data(**kwargs)
 		return context
 
+
+class PollingStationListAddView(ListView):
+	template_name = "pollingstation_add.html"
+	model = PollingStation
+
+	def get_context_data(self, **kwargs):
+		context = super(PollingStationListAddView, self).get_context_data(**kwargs)
+		return context
+
+class PresidingOfficerListView(ListView):
+	template_name = "presidingofficer_list.html"
+	model = PresidingOfficer
+
+	def get_context_data(self, **kwargs):
+		context = super(PresidingOfficerListView, self).get_context_data(**kwargs)
+		return context
+
+
+class PresidingOfficerListAddView(ListView):
+	template_name = "presidingofficer_add.html"
+	model = PresidingOfficer
+
+	def get_context_data(self, **kwargs):
+		context = super(PresidingOfficerListAddView, self).get_context_data(**kwargs)
+		return context
