@@ -135,4 +135,4 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Google Cloud Messaging
 GCM_AUTH_KEY = "AIzaSyAHhqsPCetC2f0YAb1qu2Kv6v1_FXdbvcI"
-GCM_URL = "https://android.googleapis.com/gcm/send"
+GCM_URL = "https://gcm-http.googleapis.com/gcm/send"
