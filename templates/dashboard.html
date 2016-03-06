@@ -84,7 +84,20 @@
               </div>
               <!-- /.info-box -->
             </div>
+             <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Reached DC</span>
+                  <span class="info-box-number">{{ reached_dc }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
         </div>
+        <div class="col-md-3 col-sm-6 col-xs-12" id="donut-example" style="height: 200px;"></div>
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">
@@ -257,6 +270,19 @@
 {% endblock %}
 
 {% block page_js %}
+
+<script type="text/javascript">
+	  Morris.Donut({
+  element: 'donut-example',
+  data: [
+    {label: "Good", value: {{good}}},
+    {label: "OK", value: {{ok}}},
+    {label: "Bad", value: {{bad}}}
+  ]
+});
+
+</script>
+
 	<script type="text/javascript">
     	$(document).ready(function() {
                 $("#example1").DataTable();
@@ -308,5 +334,7 @@
     </script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAteM4P82ZpVfZHUA-greFhVVphVI9UcI0&signed_in=true&callback=initMap"></script>
+
+
 
 {% endblock %}

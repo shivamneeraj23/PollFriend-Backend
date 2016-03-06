@@ -23,6 +23,9 @@ class DashboardView(TemplateView):
 		sealed_evm = len(POStatus.objects.filter(sealed_evm = True))
 		received_release = len(POStatus.objects.filter(received_release = True))
 		reached_dc = len(POStatus.objects.filter(reached_dc = True))
+		good = len(PollingStation.objects.filter(condition = 1))
+		ok = len(PollingStation.objects.filter(condition = 2))
+		bad = len(PollingStation.objects.filter(condition = 3))
 
 
 		context['all'] = po_status
@@ -34,6 +37,9 @@ class DashboardView(TemplateView):
 		context['sealed_evm'] = sealed_evm
 		context['received_release'] = received_release
 		context['reached_dc'] = reached_dc
+		context['good'] = good
+		context['ok'] = ok
+		context['bad'] = bad
 
 		return context
 
