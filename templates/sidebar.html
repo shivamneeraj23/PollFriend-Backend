@@ -4,8 +4,8 @@
         <a href="/home/"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
     </li>
     <li {% if parent == 'messages' %} class="treeview active" {% else %} class="treeview" {% endif %}>
-        <a href="#"><i class="fa fa-envelope"></i> <span>Message Center</span> <i class="fa fa-angle-left pull-right"></i></a></a>
-         <ul class="treeview-menu">>
+        <a href="#"><i class="fa fa-envelope"></i> <span>Message Center</span> <i class="fa fa-angle-left pull-right"></i></a>
+         <ul class="treeview-menu">
             <li {% if page == "/messages/inbox/" %} class="active" {% endif %} >
                 <a href="/messages/inbox/"><i class="fa fa-inbox"></i> <span>Inbox</span></a>
             </li>
@@ -22,7 +22,7 @@
         <ul class="treeview-menu">
             <li {% if page = "#" %} class = "active" {% endif%} >
                 <a href= "/polling-station/view"><i class="fa fa-eye"></i><span>View</span></a>
-            
+
         </ul>
     </li>
     <li {% if page == "/presiding-officers/" %} class="active" {% endif %}>

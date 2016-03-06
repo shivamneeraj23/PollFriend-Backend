@@ -95,6 +95,7 @@ class RegisterWebDevice(View):
 	def dispatch(self, *args, **kwargs):
 		return super(RegisterWebDevice, self).dispatch(*args, **kwargs)
 
+
 class PollingStationListView(ListView):
 	template_name = "pollingstation_list.html"
 	model = PollingStation
@@ -103,3 +104,34 @@ class PollingStationListView(ListView):
 		context = super(PollingStationListView, self).get_context_data(**kwargs)
 		return context
 
+
+class GetSOSNotification(View):
+	notif_id = 0
+
+	def get(self, request):
+		if 'last_notif_id' in request.COOKIES:
+			notif_id = request.COOKIES.get('last_notif_id') + 1
+			sos = SOSUpdate.objects.get(id=notif_id)
+		else:
+			sos = SOSUpdate.objects.order_by('-timestamp').filter()[0]
+			notif_id = sos.id
+
+		data = dict()
+		data['notification'] = dict()
+		if sos.get_condition_display() and sos.get_subject_display():
+			data['notification']['title'] = sos.polling_station.name + " " + sos.get_subject_display() + " " + sos.get_condition_display()
+		elif sos.get_condition_display():
+			data['notification']['title'] = sos.polling_station.name + " " + sos.get_condition_display()
+		elif sos.get_subject_display():
+			data['notification']['title'] = sos.polling_station.name + " " + sos.get_subject_display()
+		else:
+			data['notification']['title'] = sos.polling_station.name + " SOS Alert!"
+
+		if sos.message:
+			data['notification']['message'] = sos.message
+		else:
+			data['notification']['message'] = "Please click here to check the details."
+
+		data['notification']['notif_id'] = notif_id
+
+		return JsonResponse(data)

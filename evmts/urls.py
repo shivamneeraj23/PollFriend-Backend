@@ -35,5 +35,6 @@ urlpatterns = [
 	url(r'^messages/sent/$', MessageSentView.as_view(), name='MessageSent'),
 	url(r'^$', AdminLogin.as_view(), name='AdminLoginView'),
 	url(r'^register_web_device/$', RegisterWebDevice.as_view(), name='RegisterWebDevice'),
-	 url(r'^polling-station/view/$', PollingStationListView.as_view(), name='PollingStation'),
+	url(r'^polling-station/view/$', PollingStationListView.as_view(), name='PollingStation'),
+	url(r'^get_sos_notification/$', GetSOSNotification.as_view(), name='GetSOSNotification'),
 ]
