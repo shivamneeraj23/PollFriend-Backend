@@ -40,4 +40,5 @@ urlpatterns = [
 	url(r'^polling-station/add/$', PollingStationListAddView.as_view(), name='PollingStationAdd'),
 	url(r'^presiding-officer/view/$', PresidingOfficerListView.as_view(), name='PresidingOfficer'),
 	url(r'^presiding-officer/add/$', PresidingOfficerListAddView.as_view(), name='PresidingOfficerAdd'),
+	url(r'^messages/compose/$', MessageComposeView.as_view(), name='MessageCompose'),
 ]

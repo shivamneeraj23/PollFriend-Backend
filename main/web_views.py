@@ -169,3 +169,12 @@ class PresidingOfficerListAddView(ListView):
 		context = super(PresidingOfficerListAddView, self).get_context_data(**kwargs)
 		return context
 
+
+class MessageComposeView(TemplateView):
+	template_name = "messages_compose.html"
+
+	def get_context_data(self, **kwargs):
+		context = super(MessageComposeView, self).get_context_data(**kwargs)
+		presiding_officers = PresidingOfficer.objects.filter()
+		context['presiding_officers'] = presiding_officers
+		return context

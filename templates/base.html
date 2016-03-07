@@ -16,12 +16,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{% static 'main/css/AdminLTE.min.css' %}">
-    <link rel="stylesheet" href="{% static 'main/css/skin-blue.min.css' %}">
+    {% block page_css %}{% endblock %}
      <!-- DataTables -->
     <link href="{% static 'main/css/dataTables.bootstrap.css' %}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'main/css/AdminLTE.min.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/skin-blue.min.css' %}">
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
