@@ -136,3 +136,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Google Cloud Messaging
 GCM_AUTH_KEY = "AIzaSyAHhqsPCetC2f0YAb1qu2Kv6v1_FXdbvcI"
 GCM_URL = "https://gcm-http.googleapis.com/gcm/send"
+
+# SMS API
+SMS_URL = "http://message.bizgrow.in/app/smsapi/index.php"
+SMS_KEY = "54abc98a9428a"
+SMS_SENDER = "NITSMS"
