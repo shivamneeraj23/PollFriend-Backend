@@ -15,4 +15,5 @@ admin.site.register(EVM)
 admin.site.register(POLocation)
 admin.site.register(PSImage)
 admin.site.register(WebDevice)
+admin.site.register(Message)
 

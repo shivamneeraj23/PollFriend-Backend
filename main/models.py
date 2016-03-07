@@ -149,3 +149,11 @@ class WebDevice(models.Model):
 	user = models.OneToOneField(User)
 	device_key = models.CharField(max_length=300, unique=True, null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=True)
+
+
+class Message(models.Model):
+	user = models.ForeignKey(User)
+	count_id = models.IntegerField()
+	message = models.TextField()
+	presiding_officer = models.ForeignKey(PresidingOfficer)
+	timestamp = models.DateTimeField(auto_now=True)
