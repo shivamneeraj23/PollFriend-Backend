@@ -187,7 +187,7 @@ class MessageComposeView(View):
 		msg = Message.objects.order_by('-count_id').filter()
 		if msg:
 			msg = msg[0]
-			count = msg.count + 1
+			count = msg.count_id + 1
 		for po in presiding_officers:
 			PO = PresidingOfficer.objects.get(id=po)
 			msg = Message()
