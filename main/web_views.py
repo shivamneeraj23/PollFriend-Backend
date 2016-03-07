@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
+from django.shortcuts import render
 # Create your views here.
 
 
@@ -170,11 +171,34 @@ class PresidingOfficerListAddView(ListView):
 		return context
 
 
-class MessageComposeView(TemplateView):
+class MessageComposeView(View):
 	template_name = "messages_compose.html"
 
-	def get_context_data(self, **kwargs):
-		context = super(MessageComposeView, self).get_context_data(**kwargs)
+	def get(self, request):
 		presiding_officers = PresidingOfficer.objects.filter()
+		context = dict()
 		context['presiding_officers'] = presiding_officers
-		return context
+		return render(request, self.template_name, context)
+
+	def post(self, request):
+		presiding_officers = request.POST.getlist('presiding_officers[]')
+		message = request.POST.get('message')
+		count = 1
+		msg = Message.objects.order_by('-count_id').filter()
+		if msg:
+			msg = msg[0]
+			count = msg.count + 1
+		for po in presiding_officers:
+			PO = PresidingOfficer.objects.get(id=po)
+			msg = Message()
+			msg.user = request.user
+			msg.count_id = count
+			msg.message = message
+			msg.presiding_officer = PO
+			msg.save()
+
+		presiding_officers = PresidingOfficer.objects.filter()
+		context = dict()
+		context['presiding_officers'] = presiding_officers
+		context['success'] = True
+		return render(request, self.template_name, context)

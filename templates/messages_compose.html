@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="{% static 'main/css/icheck.blue.min.css' %}">
 {% endblock %}
 {% block main_page %}
+
+          <form role="form" method="post" action="{% url 'MessageCompose' %}">
+           {% csrf_token %}
           <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
@@ -18,9 +21,9 @@
                 </div><!-- /.box-header -->
                 <div class="box-body">
                    <div class="form-group">
-                    <select class="form-control select2" multiple="multiple" data-placeholder="Select a Presiding Officer(s)" style="width: 100%;">
+                    <select name="presiding_officers[]" class="form-control select2" multiple="multiple" data-placeholder="Select a Presiding Officer(s)" style="width: 100%;">
                       {% for ps in presiding_officers %}
-                        <option>{{ ps.username }} - {{ ps.full_name }} - {{ ps.polling_station.unique_id }} - {{ ps.polling_station.name }}</option>
+                        <option value="{{ ps.id }}">{{ ps.username }} - {{ ps.full_name }} - {{ ps.polling_station.unique_id }} - {{ ps.polling_station.name }}</option>
                       {% endfor %}
                     </select>
                   </div>
@@ -30,7 +33,7 @@
                       <input type="radio" name="r1" class="form-control minimal"> Unselect All &nbsp;
                   </div>
                   <div class="form-group">
-                    <textarea class="form-control" style="height: 300px">Your message here!</textarea>
+                    <textarea name="message" class="form-control" style="height: 300px">Your message here!</textarea>
                   </div>
                 </div><!-- /.box-body -->
                 <div class="box-footer">
@@ -41,6 +44,7 @@
               </div><!-- /. box -->
             </div><!-- /.col -->
           </div><!-- /.row -->
+          </form>
 
 {% endblock %}
 {% block page_js %}
