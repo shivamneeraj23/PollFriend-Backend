@@ -267,7 +267,7 @@ class MessageComposeView(View):
 
 		notification = dict()
 		notification['title'] = "Broadcast Message"
-		notification['message'] = message
+		notification['body'] = message
 		# Multi-Cast SOS to all WEB ADMINS
 		# Set header
 		headers = dict()
