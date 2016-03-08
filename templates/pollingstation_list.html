@@ -11,7 +11,8 @@
                         <h3 class="box-title">Inbox</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body table-responsive">
-                        <table id="example1" class="table">
+                    
+                        <table id="example2" class="table">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -30,18 +31,12 @@
                             	<tr>
                                     <td>{{ poll.unique_id }}</td>
                                     <td>{{ poll.lac.name }}</td>
-                                    <td>{{ poll.name }}</td>
+                                    <td><a href = "{% url 'PollingStationView' ps_id=poll.id %}" >{{ poll.name }}</a></td>
                                     <td>{{ poll.total_voters }}</td>
                                     <td>{{ poll.latitude }}</td>
                                     <td>{{ poll.longitude }}</td>
-                                    <td>{% if poll.condition == 1 %}
-                                    		Good
-                                    	{% endif %}
-                                    	{% if poll.condition == 2 %}
-                                    		OK
-                                    	{% endif %}
-                                    	{% if poll.condition == 3 %}
-                                    		Bad
+                                    <td>{% if poll.condition %}
+                                    		poll.get_condition_display
                                     	{% endif %}
                                     </td>
                                 </tr>
@@ -58,7 +53,7 @@
 {% block page_js %}
     <script type="text/javascript">
     	$(document).ready(function() {
-                $("#example1").DataTable();
+                $("#example2").DataTable();
         });
     </script>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+# from djnago.template.defaultfilters import slugify
 # Create your models here.
 
 

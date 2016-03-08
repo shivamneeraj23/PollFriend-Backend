@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load main_extras %}
+{% block title %} {{polling_station.name}} {% endblock %}
+{% block main_page_title %} {{polling_station.name}} {% endblock %}
+{% block main_page %}
+ <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Name</span>
+                  <span class="info-box-number">{{ presiding_officer.full_name }} </span>
+                  <!-- <span class="info-box-number">{{ received_evm }} <small>Online</small></span> -->
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="ion ion-android-done-all"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Mobile</span>
+                 
+                  <span class="info-box-number">{{ presiding_officer.mobile }}</span>
+                  
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Last Login</span>
+                  <span class="info-box-number">{{ presiding_officer.last_login }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Last Logout</span>
+                  <span class="info-box-number">{{presiding_officer.last_logout}}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+</div>
+
+
+	</div>
+{% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript">
+    	$(document).ready(function() {
+                $("#example1").DataTable();
+        });
+    </script>
+{% endblock %}

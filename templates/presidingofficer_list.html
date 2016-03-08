@@ -26,7 +26,7 @@
                                 {% for o in object_list %}
                             	<tr>
                                     <td>{{ o.username }}</td>
-                                    <td>{{ o.full_name }}</td>
+                                    <td><a href = "{% url 'PresidingOfficerView' pk=o.id %}" >{{ o.full_name }}</a></td>
                                     <td>{{ o.polling_station }}</td>
                                     <td>{{ o.last_login }}</td>
                                     <td>{{ o.last_logout }}</td>

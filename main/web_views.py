@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 
@@ -33,7 +34,7 @@ class DashboardView(TemplateView):
 		context['received_evm'] = po_evm
 		context['reached_polling_station'] = po_ps
 		context['poll_starts'] = poll_starts
-		context['poll_ends'] = poll_ends
+		context['poll_ends'] = poll_ends					
 		context['sealed_evm'] = sealed_evm
 		context['received_release'] = received_release
 		context['reached_dc'] = reached_dc
@@ -169,3 +170,35 @@ class PresidingOfficerListAddView(ListView):
 		context = super(PresidingOfficerListAddView, self).get_context_data(**kwargs)
 		return context
 
+
+class PollingStationView(TemplateView):
+	
+	template_name = "pollingstationview.html"
+	def get_context_data(self , **kwargs):
+		context = super(PollingStationView, self).get_context_data(**kwargs)
+		ps = PollingStation.objects.get(id=int(self.kwargs['ps_id']))
+		ps_images = PSImage.objects.order_by('-timestamp').filter(polling_station=ps)
+		officer = PresidingOfficer.objects.get(polling_station = ps)
+		poll_updates = PollUpdate.objects.order_by('-timestamp').filter(polling_station=ps)
+		context['polling_station'] = ps
+		context['ps_images'] = ps_images
+		context['officer'] = officer
+		context['poll_updates'] = poll_updates
+		return context
+
+class PresidingOfficerView(TemplateView):
+	
+	template_name = "presidingofficerview.html"
+
+	def get_context_data(self , **kwargs):
+		context = super(PresidingOfficerView, self).get_context_data(**kwargs)
+		po = PresidingOfficer.objects.get(id=int(self.kwargs['pk']))
+		# ps_images = PSImage.objects.order_by('-timestamp').filter(polling_station=ps)
+		# officer = PresidingOfficer.objects.get(polling_station = ps)
+		# poll_updates = PollUpdate.objects.order_by('-timestamp').filter(polling_station=ps)
+		context['presiding_officer'] = po
+		# context['ps_images'] = ps_images
+		# context['officer'] = officer
+		# context['poll_updates'] = poll_updates
+		return context	
+		
