@@ -8,6 +8,10 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
+import json
+from django.conf import settings
+import requests
+from functions.send_sms import SendSMS
 # Create your views here.
 
 
@@ -243,14 +247,47 @@ class MessageComposeView(View):
 		if msg:
 			msg = msg[0]
 			count = msg.count_id + 1
+
+		mobiles = []
+		gcm_devices = []
 		for po in presiding_officers:
 			PO = PresidingOfficer.objects.get(id=po)
+			if PO.device_key:
+				gcm_devices.append(PO.device_key)
+			else:
+				mobiles.append(PO.mobile)
+
 			msg = Message()
 			msg.user = request.user
 			msg.count_id = count
 			msg.message = message
 			msg.presiding_officer = PO
 			msg.save()
+
+		notification = dict()
+		notification['title'] = "Broadcast Message"
+		notification['message'] = message
+		# Multi-Cast SOS to all WEB ADMINS
+		# Set header
+		headers = dict()
+		headers['Authorization'] = "key="+settings.GCM_AUTH_KEY
+		headers['Content-Type'] = "application/json"
+		# Set POST data
+		data = dict()
+		data['registration_ids'] = gcm_devices
+		data['notification'] = notification
+		data['data'] = notification
+
+		# JSON serialize the dict data-type
+		data = json.dumps(data)
+		# initiate the request
+		r = requests.post(settings.GCM_URL, data=data, headers=headers)
+		if r.status_code == 200:
+			pass
+		# Send SMS notification
+		r = SendSMS(message, mobiles)
+		if r.status_code == 200:
+			pass
 
 		presiding_officers = PresidingOfficer.objects.filter()
 		context = dict()
