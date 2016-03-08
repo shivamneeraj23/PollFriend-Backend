@@ -283,13 +283,15 @@ class MessageComposeView(View):
 		# JSON serialize the dict data-type
 		data = json.dumps(data)
 		# initiate the request
-		r = requests.post(settings.GCM_URL, data=data, headers=headers)
-		if r.status_code == 200:
-			pass
+		if len(gcm_devices) > 0:
+			r = requests.post(settings.GCM_URL, data=data, headers=headers)
+			if r.status_code == 200:
+				pass
 		# Send SMS notification
-		r = SendSMS(message, mobiles)
-		if r.status_code == 200:
-			pass
+		if len(mobiles) > 0:
+			r = SendSMS(message, mobiles)
+			if r.status_code == 200:
+				pass
 
 		presiding_officers = PresidingOfficer.objects.filter()
 		context = dict()
