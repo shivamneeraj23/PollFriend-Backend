@@ -181,8 +181,29 @@ class MessageComposeView(View):
 		return render(request, self.template_name, context)
 
 	def post(self, request):
+		presiding_officers = PresidingOfficer.objects.filter()
+		context = dict()
+		context['presiding_officers'] = presiding_officers
 		presiding_officers = request.POST.getlist('presiding_officers[]')
 		message = request.POST.get('message')
+		if len(presiding_officers) == 0 and not message:
+			context['success'] = False
+			context['message_missing'] = True
+			context['po_missing'] = True
+			return render(request, self.template_name, context)
+
+		if len(presiding_officers) == 0:
+			context['success'] = False
+			context['message_missing'] = False
+			context['po_missing'] = True
+			return render(request, self.template_name, context)
+
+		if not message:
+			context['success'] = False
+			context['message_missing'] = True
+			context['po_missing'] = False
+			return render(request, self.template_name, context)
+
 		count = 1
 		msg = Message.objects.order_by('-count_id').filter()
 		if msg:

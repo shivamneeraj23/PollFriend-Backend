@@ -15,22 +15,44 @@
            {% csrf_token %}
           <div class="row">
             <div class="col-md-12">
+                {% if success == False %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                    Please fix the errors below: <br/>
+                    {% if message_missing == True %}
+                        <li>Message is empty.</li>
+                    {% endif %}
+                    {% if po_missing == True %}
+                        <li>Not selected any presiding officer(s).</li>
+                    {% endif %}
+                </div>
+                {% elif success == True %}
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4>	<i class="icon fa fa-check"></i> Success!</h4>
+                    Message successfully sent!
+                </div>
+                {% endif %}
                 <div class="box box-primary">
                 <div class="box-header with-border">
                   <h3 class="box-title">Compose New Message</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                    <div class="form-group">
-                    <select name="presiding_officers[]" class="form-control select2" multiple="multiple" data-placeholder="Select a Presiding Officer(s)" style="width: 100%;">
+                    <select name="presiding_officers[]" id="po" class="form-control select2" multiple="multiple" data-placeholder="Select a Presiding Officer(s)" style="width: 100%;">
                       {% for ps in presiding_officers %}
                         <option value="{{ ps.id }}">{{ ps.username }} - {{ ps.full_name }} - {{ ps.polling_station.unique_id }} - {{ ps.polling_station.name }}</option>
                       {% endfor %}
                     </select>
                   </div>
                   <div class="form-group">
-                      <input type="radio" name="r1" class="form-control minimal"> Select All &nbsp;
-                      <input type="radio" name="r1" class="form-control minimal"> Select Not Logged In &nbsp;
-                      <input type="radio" name="r1" class="form-control minimal"> Unselect All &nbsp;
+                      <span id="s_all">
+                        <input type="checkbox"  class="form-control minimal"> Select All &nbsp;
+                      </span>
+                      <span id="not_logged">
+                        <input type="checkbox" class="form-control minimal"> Select All non logged-in &nbsp;
+                      </span>
                   </div>
                   <div class="form-group">
                     <textarea name="message" class="form-control" style="height: 300px">Your message here!</textarea>
@@ -54,11 +76,22 @@
     <script src="{% static 'main/js/icheck.min.js' %}"></script>
     <script type="text/javascript">
       //Select2
-      $('.select2').select2();
+      $('#po').select2();
       //iCheck for checkbox and radio inputs
-        $('input[type="radio"].minimal').iCheck({
+        $('input[type="checkbox"].minimal').iCheck({
           checkboxClass: 'icheckbox_minimal-blue',
           radioClass: 'iradio_minimal-blue'
+        });
+       // Select All options in Select2
+
+        $("#s_all > .icheckbox_minimal-blue > ins").click(function(){
+            if($("#s_all > .icheckbox_minimal-blue > input").is(':checked') ){
+                $("#po > option").prop("selected","selected");
+                $("#po").trigger("change");
+            }else{
+                $("#po > option").removeAttr("selected");
+                $("#po").trigger("change");
+             }
         });
     </script>
 {% endblock %}
