@@ -5,7 +5,7 @@ APPDIR=${PWD}
 LOGFILE=$APPDIR'/logs/gunicorn.log'
 ERRORFILE=$APPDIR'/logs/gunicorn-error.log'
 
-NUM_WORKERS=3
+NUM_WORKERS=5
 
 ADDRESS=127.0.0.1:8080
 
