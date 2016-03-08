@@ -523,3 +523,33 @@ class UploadPSImage(View):
 	def dispatch(self, *args, **kwargs):
 		return super(UploadPSImage, self).dispatch(*args, **kwargs)
 
+
+class RegisterMobileDevice(View):
+
+	def post(self, request):
+		flag = False
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			polling_station = presiding_officer.polling_station
+			if "device_id" in request.POST:
+				presiding_officer.device_key = request.POST.get('device_id')
+				presiding_officer.save()
+				flag = True
+
+		except PresidingOfficer.DoesNotExist:
+			pass
+
+		if flag:
+			return JsonResponse({'result': 'ok'})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(RegisterMobileDevice, self).dispatch(*args, **kwargs)
+

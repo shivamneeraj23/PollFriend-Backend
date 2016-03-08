@@ -43,4 +43,5 @@ urlpatterns = [
 	url(r'^polling-station/(?P<ps_id>\d+)/$' , PollingStationView.as_view() , name = 'PollingStationView'),
 	url(r'^president-officer/(?P<pk>\d+)/$' , PresidingOfficerView.as_view() , name = 'PresidingOfficerView'),
 	url(r'^messages/compose/$', MessageComposeView.as_view(), name='MessageCompose'),
+	url(r'^register_mobile_device/$', RegisterMobileDevice.as_view(), name='RegisterMobileDevice'),
 ]
