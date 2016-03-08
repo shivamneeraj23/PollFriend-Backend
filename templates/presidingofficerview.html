@@ -61,6 +61,133 @@
               <!-- /.info-box -->
             </div>
 </div>
+<div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Presiding Officer Status</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body table-responsive">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Polling Station</th>
+                                    <th>Vote %age</th>
+                                    <th>Received EVM</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Reached Polling Station</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Sealed EVM</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Received Release</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Poll Starts</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Poll Ends</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Reached DC</th>
+                                    <!-- <th>Timestamp</th> -->
+                                </tr>
+                            </thead>
+                           
+                            <tbody>
+                              
+                                <tr>
+                                    <td>{{ presiding_officer.username }}</td>
+                                    <td>{{presiding_officer.full_name}}</td>
+                                    <td>{{presiding_officer.polling_station.name}}</td>
+                                    <td>{% current_vote_percentage presiding_officer.polling_station %}%</td>
+                  {% if po_status.received_evm %}
+                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok " style = "color:green; vertical-align:middle" ></span><br>{{po_status.received_evm_timestamp}}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+                  {% if po_status.reached_polling_station %}
+                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{po_status.reached_polling_station_timestamp}}</span></td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+                  
+                  {% if po_status.sealed_evm %}
+                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{po_status.sealed_evm_timestamp}}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+                  
+                  {% if po_status.received_release %}
+                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{po_status.received_release_timestamp}}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+                  
+                  {% if po_status.poll_starts %}
+                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{po_status.poll_starts_timestamp}}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+ 
+                  {% if po_status.poll_ends %}
+                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{po_status.poll_ends_timestamp}}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+                  
+                  {% if po_status.reached_dc %}
+                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{po_status.reached_dc_timestamp}}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+                  
+
+  
+                                </tr>
+                                
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Polling Station</th>
+                                    <th>Vote %age</th>
+                                    <th>Received EVM</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Reached Polling Station</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Sealed EVM</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Received Release</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Poll Starts</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Poll Ends</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Reached DC</th>
+                                    <!-- <th>Timestamp</th> -->
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div>
+        </div>
+
+
+       <div class="row">
+        <div class=" col-xs-offset-2 col-xs-8">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Locations of Presiding Officers</h3>
+                    </div><!-- /.box-header -->
+                    <div id="map" class="box-body table-responsive" style="height:500px;">
+                        
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+         </div>
+      </div>
+
+
 
 
 	</div>
@@ -72,4 +199,44 @@
                 $("#example1").DataTable();
         });
     </script>
+    <script>
+
+
+  function initMap() {
+    var myLatLng = {lat: 24.5, lng: 92.5};
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 8,
+      center: myLatLng
+    });
+
+
+    
+      var a = {% get_current_location presiding_officer %};
+      myLatLng = { lat: a[0] , lng: a[1] };
+      var contentString = '<div id="content">'+
+      '<div id="siteNotice">'+
+      '</div>'+
+      '<h3 id="firstHeading" class="firstHeading">{{k.presiding_officer.polling_station.name}}</h3>'+
+      '<div id="bodyContent">'+
+      '<p><b>Presiding Officer : </b> {{presiding_officer.full_name}}' 
+      '</div>'+
+      '</div>';
+      var infowindow = new google.maps.InfoWindow({
+            content: contentString
+      });
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: '{{presiding_officer.full_name}} ({{presiding_officer.polling_station.name}})'
+      });
+          marker.addListener('click', function() {
+    infowindow.open(map, marker);
+  });
+        
+}
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAteM4P82ZpVfZHUA-greFhVVphVI9UcI0&signed_in=true&callback=initMap"></script>
 {% endblock %}
