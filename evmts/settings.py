@@ -134,7 +134,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 # Google Cloud Messaging
-GCM_AUTH_KEY = "AIzaSyAHhqsPCetC2f0YAb1qu2Kv6v1_FXdbvcI"
+GCM_AUTH_KEY = "AIzaSyCiWERriPUDmodc18o5X7FdSeDV1tUZVc8"
 GCM_URL = "https://gcm-http.googleapis.com/gcm/send"
 
 # SMS API
