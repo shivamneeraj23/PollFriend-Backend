@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 # Create your views here.
 
 
@@ -186,6 +187,7 @@ class PollingStationView(TemplateView):
 		context['poll_updates'] = poll_updates
 		return context
 
+
 class PresidingOfficerView(TemplateView):
 	
 	template_name = "presidingofficerview.html"
@@ -202,3 +204,56 @@ class PresidingOfficerView(TemplateView):
 		# context['poll_updates'] = poll_updates
 		return context	
 		
+
+class MessageComposeView(View):
+	template_name = "messages_compose.html"
+
+	def get(self, request):
+		presiding_officers = PresidingOfficer.objects.filter()
+		context = dict()
+		context['presiding_officers'] = presiding_officers
+		return render(request, self.template_name, context)
+
+	def post(self, request):
+		presiding_officers = PresidingOfficer.objects.filter()
+		context = dict()
+		context['presiding_officers'] = presiding_officers
+		presiding_officers = request.POST.getlist('presiding_officers[]')
+		message = request.POST.get('message')
+		if len(presiding_officers) == 0 and not message:
+			context['success'] = False
+			context['message_missing'] = True
+			context['po_missing'] = True
+			return render(request, self.template_name, context)
+
+		if len(presiding_officers) == 0:
+			context['success'] = False
+			context['message_missing'] = False
+			context['po_missing'] = True
+			return render(request, self.template_name, context)
+
+		if not message:
+			context['success'] = False
+			context['message_missing'] = True
+			context['po_missing'] = False
+			return render(request, self.template_name, context)
+
+		count = 1
+		msg = Message.objects.order_by('-count_id').filter()
+		if msg:
+			msg = msg[0]
+			count = msg.count_id + 1
+		for po in presiding_officers:
+			PO = PresidingOfficer.objects.get(id=po)
+			msg = Message()
+			msg.user = request.user
+			msg.count_id = count
+			msg.message = message
+			msg.presiding_officer = PO
+			msg.save()
+
+		presiding_officers = PresidingOfficer.objects.filter()
+		context = dict()
+		context['presiding_officers'] = presiding_officers
+		context['success'] = True
+		return render(request, self.template_name, context)

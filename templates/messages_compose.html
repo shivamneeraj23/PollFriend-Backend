@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load main_extras %}
+{% block title %} Message Center {% endblock %}
+{% block main_page_title %} Message Center - Compose {% endblock %}
+{% block page_css %}
+    <!-- Select2 CSS - Awesomeness Redefined -->
+    <link rel="stylesheet" href="{% static 'main/css/select2.min.css' %}">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{% static 'main/css/icheck.blue.min.css' %}">
+{% endblock %}
+{% block main_page %}
+
+          <form role="form" method="post" action="{% url 'MessageCompose' %}">
+           {% csrf_token %}
+          <div class="row">
+            <div class="col-md-12">
+                {% if success == False %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                    Please fix the errors below: <br/>
+                    {% if message_missing == True %}
+                        <li>Message is empty.</li>
+                    {% endif %}
+                    {% if po_missing == True %}
+                        <li>Not selected any presiding officer(s).</li>
+                    {% endif %}
+                </div>
+                {% elif success == True %}
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4>	<i class="icon fa fa-check"></i> Success!</h4>
+                    Message successfully sent!
+                </div>
+                {% endif %}
+                <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Compose New Message</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                   <div class="form-group">
+                    <select name="presiding_officers[]" id="po" class="form-control select2" multiple="multiple" data-placeholder="Select a Presiding Officer(s)" style="width: 100%;">
+                      {% for ps in presiding_officers %}
+                        <option value="{{ ps.id }}">{{ ps.username }} - {{ ps.full_name }} - {{ ps.polling_station.unique_id }} - {{ ps.polling_station.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                      <span id="s_all">
+                        <input type="checkbox"  class="form-control minimal"> Select All &nbsp;
+                      </span>
+                      <span id="not_logged">
+                        <input type="checkbox" class="form-control minimal"> Select All non logged-in &nbsp;
+                      </span>
+                  </div>
+                  <div class="form-group">
+                    <textarea name="message" class="form-control" style="height: 300px">Your message here!</textarea>
+                  </div>
+                </div><!-- /.box-body -->
+                <div class="box-footer">
+                  <div class="pull-right">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Send</button>
+                  </div>
+                </div><!-- /.box-footer -->
+              </div><!-- /. box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+          </form>
+
+{% endblock %}
+{% block page_js %}
+    <!-- Select2 JS (responsible for awesomeness in this page) -->
+    <script src="{% static 'main/js/select2.full.min.js' %}"></script>
+    <!-- iCheck for checkboxes and radio inputs -->
+    <script src="{% static 'main/js/icheck.min.js' %}"></script>
+    <script type="text/javascript">
+      //Select2
+      $('#po').select2();
+      //iCheck for checkbox and radio inputs
+        $('input[type="checkbox"].minimal').iCheck({
+          checkboxClass: 'icheckbox_minimal-blue',
+          radioClass: 'iradio_minimal-blue'
+        });
+       // Select All options in Select2
+
+        $("#s_all > .icheckbox_minimal-blue > ins").click(function(){
+            if($("#s_all > .icheckbox_minimal-blue > input").is(':checked') ){
+                $("#po > option").prop("selected","selected");
+                $("#po").trigger("change");
+            }else{
+                $("#po > option").removeAttr("selected");
+                $("#po").trigger("change");
+             }
+        });
+    </script>
+{% endblock %}
