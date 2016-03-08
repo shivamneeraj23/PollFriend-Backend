@@ -9,7 +9,7 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('push', function(event) {
   console.log('Push message', event);
   event.waitUntil(
-    fetch("//localhost/get_sos_notification/").then(function(response){
+    fetch("//pollfriend.org/get_sos_notification/").then(function(response){
         if(response.status!=200){
             console.log('Looks like there was a problem. Status Code: ' + response.status);
             throw new Error();
@@ -21,7 +21,7 @@ self.addEventListener('push', function(event) {
             }
             var title = data.notification.title;
             var message = data.notification.message;
-            var icon = '//localhost/static/main/images/push-notification.png';
+            var icon = '//pollfriend.org/static/main/images/push-notification.png';
             var notificationTag = data.notification.tag;
             return self.registration.showNotification(title, {
               body: message,
@@ -33,7 +33,7 @@ self.addEventListener('push', function(event) {
        console.log('Unable to retrieve data', err);
        var title = 'SOS - Update';
        var message = 'We were unable to get the information, please click here to know the real message.';
-       var icon = '//localhost/static/main/images/push-notification.png';
+       var icon = '//pollfriend.org/static/main/images/push-notification.png';
        var notificationTag = 'notification-error';
        return self.registration.showNotification(title, {
            body: message,
@@ -46,7 +46,7 @@ self.addEventListener('push', function(event) {
 self.addEventListener('notificationclick', function(event) {
     console.log('Notification click: tag ', event.notification.tag);
     event.notification.close();
-    var url = '//localhost/messages/inbox/';
+    var url = '//pollfriend.org/messages/inbox/';
     event.waitUntil(
         clients.matchAll({
             type: 'window'

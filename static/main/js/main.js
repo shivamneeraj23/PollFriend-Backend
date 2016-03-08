@@ -1,6 +1,6 @@
 if ('serviceWorker' in navigator) {
 	 console.log('Service Worker is supported');
-	 navigator.serviceWorker.register('//localhost/static/main/js/sw.js').then(function(reg) {
+	 navigator.serviceWorker.register('//pollfriend.org/static/main/js/sw.js').then(function(reg) {
 	   console.log(':^) Registered Successfully!', reg);
 	   reg.pushManager.subscribe({
 		    userVisibleOnly: true
