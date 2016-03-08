@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load main_extras %}
+{% block title %} Message Center {% endblock %}
+{% block main_page_title %} Message Center - Sent {% endblock %}
+{% block main_page %}
+          <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Sent</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body table-responsive">
+                        <table id="example1" class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Message</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for m in messages %}
+                            	<tr>
+                                    <td>{{ m.count_id }}</td>
+                                    <td>{{ m.message }}</td>
+                                    <td>{{ m.timestamp }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+{% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript">
+    	$(document).ready(function() {
+                $("#example1").DataTable();
+        });
+    </script>
+{% endblock %}

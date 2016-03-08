@@ -12,6 +12,7 @@ import json
 from django.conf import settings
 import requests
 from functions.send_sms import SendSMS
+from django.db.models import Count
 # Create your views here.
 
 
@@ -66,13 +67,11 @@ class MessageInboxView(TemplateView):
 
 
 class MessageSentView(TemplateView):
-	template_name = "messages.html"
+	template_name = "messages_sent.html"
 
 	def get_context_data(self, **kwargs):
-		context = super(MessageInboxView, self).get_context_data(**kwargs)
-		sos = SOSUpdate.objects.order_by('-timestamp').filter()
-		context['sos_messages'] = sos
-
+		context = super(MessageSentView, self).get_context_data(**kwargs)
+		context['messages'] = Message.objects.filter().annotate(dcount=Count('count_id'))
 		return context
 
 
