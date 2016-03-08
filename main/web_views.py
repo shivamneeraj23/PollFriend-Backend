@@ -253,9 +253,10 @@ class MessageComposeView(View):
 		gcm_devices = []
 		for po in presiding_officers:
 			PO = PresidingOfficer.objects.get(id=po)
+
 			if PO.device_key:
 				gcm_devices.append(PO.device_key)
-			else:
+			if PO.mobile:
 				mobiles.append(PO.mobile)
 
 			msg = Message()
