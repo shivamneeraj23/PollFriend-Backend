@@ -195,10 +195,12 @@ class PresidingOfficerView(TemplateView):
 	def get_context_data(self , **kwargs):
 		context = super(PresidingOfficerView, self).get_context_data(**kwargs)
 		po = PresidingOfficer.objects.get(id=int(self.kwargs['pk']))
+		po_status = POStatus.objects.get(presiding_officer = po)
 		# ps_images = PSImage.objects.order_by('-timestamp').filter(polling_station=ps)
 		# officer = PresidingOfficer.objects.get(polling_station = ps)
 		# poll_updates = PollUpdate.objects.order_by('-timestamp').filter(polling_station=ps)
 		context['presiding_officer'] = po
+		context['po_status'] = po_status
 		# context['ps_images'] = ps_images
 		# context['officer'] = officer
 		# context['poll_updates'] = poll_updates
