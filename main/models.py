@@ -24,7 +24,7 @@ class PollingStation(models.Model):
 		(2, 'OK'),
 		(3, 'BAD'),
 	)
-	condition = models.SmallIntegerField(choices=CONDITIONS)
+	condition = models.SmallIntegerField(choices=CONDITIONS, null=True, blank=True)
 
 	def __str__(self):
 		return '%s of LAC %s' % (self.name, self.lac)
