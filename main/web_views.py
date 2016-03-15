@@ -71,7 +71,7 @@ class MessageSentView(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(MessageSentView, self).get_context_data(**kwargs)
-		context['messages'] = Message.objects.filter().annotate(dcount=Count('count_id'))
+		context['messages'] = Message.objects.order_by('count_id').filter().distinct('count_id')
 		return context
 
 
