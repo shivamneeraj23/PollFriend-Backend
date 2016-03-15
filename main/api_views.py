@@ -237,7 +237,7 @@ class UpdatePoll(View):
 					poll_update = PollUpdate()
 					poll_update.current_votes = current_voters
 					poll_update.polling_station = polling_station
-					poll_update.time_field = int(request.POST.get("current_voters"))
+					poll_update.time_field = int(request.POST.get("time_field"))
 					poll_update.timestamp = datetime.now()
 					poll_update.save()
 				else:
