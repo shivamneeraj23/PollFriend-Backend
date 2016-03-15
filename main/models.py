@@ -64,6 +64,7 @@ class PresidingOfficer(models.Model):
 class PollUpdate(models.Model):
 	polling_station = models.ForeignKey(PollingStation)
 	current_votes = models.PositiveIntegerField()
+	time_field = models.SmallIntegerField(null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
