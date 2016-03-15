@@ -43,7 +43,7 @@ class PresidingOfficer(models.Model):
 	polling_station = models.OneToOneField(PollingStation)
 	mobile = models.BigIntegerField(unique=True)
 	api_key = models.CharField(max_length=70, null=True, blank=True)
-	device_key = models.CharField(max_length=300, unique=True, null=True, blank=True)
+	device_key = models.CharField(max_length=300, null=True, blank=True)
 	last_login = models.DateTimeField(blank=True, null=True)
 	last_logout = models.DateTimeField(blank=True, null=True)
 
