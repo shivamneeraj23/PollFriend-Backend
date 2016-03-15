@@ -27,7 +27,7 @@ def current_voters(polling_station):
 @register.simple_tag
 def get_current_location(presiding_officer):
 	po_location = POLocation.objects.order_by('-timestamp').filter(presiding_officer=presiding_officer)
-	lat, long = None, None
+	lat, long = 0.0, 0.0
 
 	if po_location:
 		po_location = po_location[0]

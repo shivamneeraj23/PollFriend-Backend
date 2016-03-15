@@ -304,30 +304,32 @@
 
 		{% for k in all %}
 		  var a = {% get_current_location k.presiding_officer %};
-		  myLatLng = { lat: a[0] , lng: a[1] };
-		  var contentString = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
-      '<h3 id="firstHeading" class="firstHeading">{{k.presiding_officer.polling_station.name}}</h3>'+
-      '<div id="bodyContent">'+
-      '<p><b>Presiding Officer : </b> {{k.presiding_officer.full_name}}' +
-      '<br/><b>Total Voters : </b> {{k.presiding_officer.polling_station.total_voters}}' +
-      '<br/><b>Current Voters : </b> {% current_voters k.presiding_officer.polling_station %}' +
-      '<br/><b>Current Voting %age : </b> {% current_vote_percentage k.presiding_officer.polling_station %}' +
-      '</p>'+
-      '</div>'+
-      '</div>';
-      var infowindow = new google.maps.InfoWindow({
-            content: contentString
-      });
-		  var marker = new google.maps.Marker({
-		    position: myLatLng,
-		    map: map,
-		    title: '{{k.presiding_officer.full_name}} ({{k.presiding_officer.polling_station.name}})'
-		  });
-          marker.addListener('click', function() {
-    infowindow.open(map, marker);
-  });
+		  if(a[0] != 0.0 && a[1] != 0.0){
+              myLatLng = { lat: a[0] , lng: a[1] };
+              var contentString = '<div id="content">'+
+              '<div id="siteNotice">'+
+              '</div>'+
+              '<h3 id="firstHeading" class="firstHeading">{{k.presiding_officer.polling_station.name}}</h3>'+
+              '<div id="bodyContent">'+
+              '<p><b>Presiding Officer : </b> {{k.presiding_officer.full_name}}' +
+              '<br/><b>Total Voters : </b> {{k.presiding_officer.polling_station.total_voters}}' +
+              '<br/><b>Current Voters : </b> {% current_voters k.presiding_officer.polling_station %}' +
+              '<br/><b>Current Voting %age : </b> {% current_vote_percentage k.presiding_officer.polling_station %}' +
+              '</p>'+
+              '</div>'+
+              '</div>';
+              var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+              });
+              var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                title: '{{k.presiding_officer.full_name}} ({{k.presiding_officer.polling_station.name}})'
+              });
+              marker.addListener('click', function() {
+                infowindow.open(map, marker);
+              });
+          }
         {% endfor %}
 }
 
