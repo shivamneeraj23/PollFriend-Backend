@@ -11,7 +11,7 @@ def current_vote_percentage(polling_station):
 	if len(pu) > 0 and polling_station.total_voters:
 		pu = pu[0]
 		percentage = (pu.current_votes * 100)/polling_station.total_voters
-	return percentage
+	return round(percentage, 2)
 
 
 @register.simple_tag
@@ -39,7 +39,7 @@ def get_current_location(presiding_officer):
 @register.simple_tag
 def get_percentage(total, current):
 	if total and current:
-		return (current * 100)/total
+		return round((current * 100)/total, 2)
 	else:
 		return 0
 
