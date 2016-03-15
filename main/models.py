@@ -159,3 +159,9 @@ class Message(models.Model):
 	message = models.TextField()
 	presiding_officer = models.ForeignKey(PresidingOfficer)
 	timestamp = models.DateTimeField(auto_now=True)
+
+
+class OtherDetails(models.Model):
+	faq = models.TextField()
+	guidelines = models.TextField()
+	timestamp = models.DateTimeField(auto_now=True)

@@ -536,6 +536,9 @@ class RegisterMobileDevice(View):
 				presiding_officer.save()
 				flag = True
 
+			if "latitude" in request.POST and "longitude" in request.POST:
+				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+
 		except PresidingOfficer.DoesNotExist:
 			pass
 
@@ -551,3 +554,40 @@ class RegisterMobileDevice(View):
 	def dispatch(self, *args, **kwargs):
 		return super(RegisterMobileDevice, self).dispatch(*args, **kwargs)
 
+
+class GetOtherDetails(View):
+
+	def post(self, request):
+		flag = False
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+
+		except PresidingOfficer.DoesNotExist:
+			pass
+
+		try:
+			od = OtherDetails.objects.order_by('-timestamp').get()
+			if "faq" in request.POST:
+				return JsonResponse({'result': 'ok', 'faq': od.faq})
+			if "guidelines" in request.POST:
+				return JsonResponse({'result': 'ok', 'guidelines': od.guidelines})
+
+		except OtherDetails.DoesNotExist:
+			return JsonResponse({'result': 'fail'})
+
+		if flag:
+			return JsonResponse({'result': 'ok'})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(GetOtherDetails, self).dispatch(*args, **kwargs)
