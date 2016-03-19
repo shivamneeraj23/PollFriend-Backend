@@ -4,15 +4,16 @@
 {% block title %} Dashboard {% endblock %}
 {% block main_page_title %} Dashboard {% endblock %}
 {% block main_page %}
+
         <div class="row">
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
                 <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
 
                 <div class="info-box-content">
-                  <span class="info-box-text">Presiding Officers</span>
-                  <span class="info-box-number">{{ received_evm }} <small>Registered</small></span>
-                  <span class="info-box-number">{{ received_evm }} <small>Online</small></span>
+                  <span class="info-box-text">Total Presiding Officers</span>
+                  <span class="info-box-number"> {{ presiding_officer_no }}</span>
+                  <!-- <span class="info-box-number">{{ received_evm }} <small>Online</small></span> -->
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -26,7 +27,7 @@
 
                 <div class="info-box-content">
                   <span class="info-box-text">Overall Poll</span>
-                  <span class="info-box-number">90<small>%</small></span>
+                  <span class="info-box-number">{{ percentage }}<small>%</small></span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -38,8 +39,21 @@
                 <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
 
                 <div class="info-box-content">
-                  <span class="info-box-text">Received EVM</span>
-                  <span class="info-box-number">{{ received_evm }}</span>
+                  <span class="info-box-text">Active Presiding Officers</span>
+                  <span class="info-box-number">{{ device_key }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Mock Poll Completed</span>
+                  <span class="info-box-number">{{ mock_poll }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -89,7 +103,7 @@
                 <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
 
                 <div class="info-box-content">
-                  <span class="info-box-text">Reached DC</span>
+                  <span class="info-box-text">Reached Strongroom</span>
                   <span class="info-box-number">{{ reached_dc }}</span>
                 </div>
                 <!-- /.info-box-content -->
@@ -97,7 +111,7 @@
               <!-- /.info-box -->
             </div>
         </div>
-        <div class="col-md-3 col-sm-6 col-xs-12" id="donut-example" style="height: 200px;"></div>
+        <div class="col-md-3 col-sm-6 col-xs-12" id="donut-example" style="height: 250px;"></div>
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">
@@ -115,16 +129,17 @@
                                     <th>Received EVM</th>
                                     <!-- <th>Timestamp</th> -->
                                     <th>Reached Polling Station</th>
+                                    <th>Completed Mock Poll</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Poll Start</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Poll Ends</th>
                                     <!-- <th>Timestamp</th> -->
                                     <th>Sealed EVM</th>
                                     <!-- <th>Timestamp</th> -->
                                     <th>Received Release</th>
                                     <!-- <th>Timestamp</th> -->
-                                    <th>Poll Starts</th>
-                                    <!-- <th>Timestamp</th> -->
-                                    <th>Poll Ends</th>
-                                    <!-- <th>Timestamp</th> -->
-                                    <th>Reached DC</th>
+                                    <th>Reached Strongroom</th>
                                     <!-- <th>Timestamp</th> -->
                                 </tr>
                             </thead>
@@ -146,18 +161,15 @@
 									{% else %}
 										<td></td>
 									{% endif %}
+
 									
-									{% if k.sealed_evm %}
-									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.sealed_evm_timestamp}}</td>
+									{% if k.mock_poll_ends %}
+									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.mock_poll_ends_timestamp }}</td>
 									{% else %}
 										<td></td>
 									{% endif %}
 									
-									{% if k.received_release %}
-									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.received_release_timestamp}}</td>
-									{% else %}
-										<td></td>
-									{% endif %}
+									
 									
 									{% if k.poll_starts %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.poll_starts_timestamp}}</td>
@@ -170,7 +182,19 @@
 									{% else %}
 										<td></td>
 									{% endif %}
+
+                  {% if k.sealed_evm %}
+                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.sealed_evm_timestamp}}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
 									
+                  {% if k.received_release %}
+                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.received_release_timestamp}}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+
 									{% if k.reached_dc %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.reached_dc_timestamp}}</td>
 									{% else %}
@@ -191,16 +215,17 @@
                                     <th>Received EVM</th>
                                     <!-- <th>Timestamp</th> -->
                                     <th>Reached Polling Station</th>
+                                    <th>Completed Mock Poll</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Poll Start</th>
+                                    <!-- <th>Timestamp</th> -->
+                                    <th>Poll Ends</th>
                                     <!-- <th>Timestamp</th> -->
                                     <th>Sealed EVM</th>
                                     <!-- <th>Timestamp</th> -->
                                     <th>Received Release</th>
                                     <!-- <th>Timestamp</th> -->
-                                    <th>Poll Starts</th>
-                                    <!-- <th>Timestamp</th> -->
-                                    <th>Poll Ends</th>
-                                    <!-- <th>Timestamp</th> -->
-                                    <th>Reached DC</th>
+                                    <th>Reached Strongroom</th>
                                     <!-- <th>Timestamp</th> -->
                                 </tr>
                             </tfoot>
@@ -245,7 +270,11 @@
                                     <td>{{k.polling_station.total_voters}}</td>
                                     <td>{{k.current_votes}}</td>
                                     <td>{% get_percentage k.polling_station.total_voters k.current_votes %}</td>
-                                    <td>{{k.timestamp|time:"h A"}}</td>
+                                    {% if k.time_field == 1 or k.time_field == 3 or k.time_field == 5 %}
+                                      <td>{{k.time_field}} PM</td>
+                                   {% elif k.time_field == 9 or k.time_field == 11 %}
+                                      <td>{{k.time_field}} AM</td>
+                                    {% endif %}
 	
                                 </tr>
                                 {% endfor %}
@@ -274,10 +303,11 @@
 <script type="text/javascript">
 	  Morris.Donut({
   element: 'donut-example',
+  colors: ["#00a65a", "#3c8dbc", "#f56954"],
   data: [
-    {label: "Good", value: {{good}}},
-    {label: "Ok", value: {{ok}}},
-    {label: "Bad", value: {{bad}}}
+    {label: "Polling Station Condition\nGood", value: {{good}}},
+    {label: "Polling Station Condition\nOk", value: {{ok}}},
+    {label: "Polling Station Condition\nBad", value: {{bad}}}
   ]
 });
 

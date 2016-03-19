@@ -13,6 +13,8 @@ from django.conf import settings
 import requests
 from functions.send_sms import SendSMS
 from django.db.models import Count
+from django.db.models import Sum
+from django.db.models import F
 # Create your views here.
 
 
@@ -22,17 +24,43 @@ class DashboardView(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(DashboardView, self).get_context_data(**kwargs)
 		po_status = POStatus.objects.all()
-		poll_updates = PollUpdate.objects.order_by('timestamp')
-		po_evm = len(POStatus.objects.filter(received_evm = True))
-		po_ps = len(POStatus.objects.filter(reached_polling_station = True))
-		poll_starts = len(POStatus.objects.filter(poll_starts = True))
-		poll_ends = len(POStatus.objects.filter(poll_ends = True))
-		sealed_evm = len(POStatus.objects.filter(sealed_evm = True))
-		received_release = len(POStatus.objects.filter(received_release = True))
-		reached_dc = len(POStatus.objects.filter(reached_dc = True))
+		poll_updates = PollUpdate.objects.order_by('-timestamp')
+		polling_station = PollingStation.objects.all()
+		po_evm = po_ps = poll_starts = poll_ends = sealed_evm= mock_poll  = received_release = reached_dc = 0
+		total_voters = current_voters =  0
+		
+		for ps in polling_station:
+			if ps.total_voters: total_voters+=ps.total_voters
+			try:
+				pu = PollUpdate.objects.order_by('-timestamp').filter(polling_station=ps)[0]
+				current_voters += pu.current_votes
+			except IndexError:
+				pass
+		for po in po_status:
+			if po.received_evm: po_evm+=1
+			if po.reached_polling_station :  po_ps+=1
+			if po.poll_starts: poll_starts+=1
+			if po.poll_ends : poll_ends +=1
+			if po.sealed_evm : sealed_evm +=1
+			if po.received_release : received_release +=1
+			if po.reached_dc : reached_dc +=1
+			if po.mock_poll_resetted : mock_poll+=1
+
+		percentage = round(((current_voters/total_voters)*100),2)
+		# po_evm = len(POStatus.objects.filter(received_evm = True))
+		# po_ps = len(POStatus.objects.filter(reached_polling_station = True))
+		# poll_starts = len(POStatus.objects.filter(poll_starts = True))
+		# poll_ends = len(POStatus.objects.filter(poll_ends = True))
+		# sealed_evm = len(POStatus.objects.filter(sealed_evm = True))
+		# received_release = len(POStatus.objects.filter(received_release = True))
+		# reached_dc = len(POStatus.objects.filter(reached_dc = True))
 		good = len(PollingStation.objects.filter(condition = 1))
 		ok = len(PollingStation.objects.filter(condition = 2))
 		bad = len(PollingStation.objects.filter(condition = 3))
+		total_logged_in = len(PresidingOfficer.objects.filter(last_login__gt=F('last_logout')))
+		presiding_officer_no = PresidingOfficer.objects.count()
+		total_voters = PollingStation.objects.aggregate(Sum('total_voters'))
+		current_voters = PollUpdate.objects.aggregate(Sum('current_votes'))
 
 
 		context['all'] = po_status
@@ -47,7 +75,12 @@ class DashboardView(TemplateView):
 		context['good'] = good
 		context['ok'] = ok
 		context['bad'] = bad
-
+		context['presiding_officer_no'] = presiding_officer_no
+		context['mock_poll'] = mock_poll
+		# context['current_voters'] = current_voters
+		# context['total_voters'] = total_voters
+		context['percentage'] = percentage
+		context['device_key'] = total_logged_in
 		return context
 
 
