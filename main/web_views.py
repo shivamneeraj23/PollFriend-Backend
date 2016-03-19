@@ -11,7 +11,7 @@ import json
 from django.conf import settings
 import requests
 from functions.send_sms import SendSMS
-from django.db.models import Count
+from django.views.decorators.cache import never_cache
 from django.db.models import Sum
 from django.db.models import F
 from django.http import HttpResponseRedirect
@@ -100,7 +100,7 @@ class MessageInboxView(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(MessageInboxView, self).get_context_data(**kwargs)
 		sos = SOSUpdate.objects.order_by('-timestamp').filter()
-		context['sos_messages'] = sos
+		context['sos_messages'] = list(sos)
 
 		return context
 
@@ -114,7 +114,7 @@ class MessageSentView(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(MessageSentView, self).get_context_data(**kwargs)
-		context['messages'] = Message.objects.order_by('count_id').filter().distinct('count_id')
+		context['messages'] = Message.objects.order_by('-count_id').filter().distinct('count_id')
 		return context
 
 
@@ -153,6 +153,10 @@ class AdminLogin(View):
 			return HttpResponseRedirect(reverse_lazy("DashboardView"))
 		else:
 			return render(request, self.template_name, {'login_failed': False})
+
+	@method_decorator(never_cache)
+	def dispatch(self, *args, **kwargs):
+		return super(AdminLogin, self).dispatch(*args, **kwargs)
 
 
 class RegisterWebDevice(View):
