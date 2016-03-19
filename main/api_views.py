@@ -84,15 +84,13 @@ class UpdatePOStatus(View):
 					flag = False
 			elif "mock_poll_starts" in request.POST:
 				if request.POST.get("mock_poll_starts") == "true":
-					latitude = request.POST.get("latitude")
-					longitude = request.POST.get("longitude")
-					distance = getDistBetweenTwoPoints(polling_station.latitude, polling_station.longitude, latitude, longitude)
-					if distance < 200.00:
-						po_status.mock_poll_starts = True
-						po_status.mock_poll_starts_timestamp = datetime.now()
-						po_status.save()
-					else:
-						flag = False
+					# latitude = request.POST.get("latitude")
+					# longitude = request.POST.get("longitude")
+					# distance = getDistBetweenTwoPoints(polling_station.latitude, polling_station.longitude, latitude, longitude)
+					# if distance < 200.00:
+					po_status.mock_poll_starts = True
+					po_status.mock_poll_starts_timestamp = datetime.now()
+					po_status.save()
 				else:
 					flag = False
 			elif "mock_poll_ends" in request.POST:
@@ -111,15 +109,13 @@ class UpdatePOStatus(View):
 					flag = False
 			elif "poll_starts" in request.POST:
 				if request.POST.get("poll_starts") == "true":
-					latitude = request.POST.get("latitude")
-					longitude = request.POST.get("longitude")
-					distance = getDistBetweenTwoPoints(polling_station.latitude, polling_station.longitude, latitude, longitude)
-					if distance < 200.00:
-						po_status.poll_starts = True
-						po_status.poll_starts_timestamp = datetime.now()
-						po_status.save()
-					else:
-						flag = False
+					# latitude = request.POST.get("latitude")
+					# longitude = request.POST.get("longitude")
+					# distance = getDistBetweenTwoPoints(polling_station.latitude, polling_station.longitude, latitude, longitude)
+					# if distance < 200.00:
+					po_status.poll_starts = True
+					po_status.poll_starts_timestamp = datetime.now()
+					po_status.save()
 				else:
 					flag = False
 			elif "poll_ends" in request.POST:

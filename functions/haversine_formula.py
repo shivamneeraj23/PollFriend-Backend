@@ -16,6 +16,5 @@ def getDistBetweenTwoPoints(lat1, long1, lat2, long2):
 	a = ((math.sin(dLat/2))**2) + ((math.sin(dLong/2))**2) * (math.cos(degToRad(lat1)) * math.cos(degToRad(lat2)))
 	b = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
 	c = R * b # distance in meter
-	# return c
-	return 1
+	return c
 
