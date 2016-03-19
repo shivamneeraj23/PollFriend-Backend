@@ -26,17 +26,24 @@
   <body class="hold-transition login-page">
     <div class="login-box">
       <div class="login-logo">
-        <a href="/signin/"><b>Poll</b>Friend</a>
+        <a href="{% url 'AdminLoginView' %}"><b>Poll</b>Friend</a>
       </div><!-- /.login-logo -->
+      {% if login_failed %}
+        <div class="callout callout-danger">
+          <h4>Authentication Failed!</h4>
+          <p>Please enter correct username and password.</p>
+        </div>
+      {% endif %}
       <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
-        <form action="/signin/" method="post">
+        <form role="form" method="post" action="{% url 'AdminLoginView' %}">
+          {% csrf_token %}
           <div class="form-group has-feedback">
-            <input type="text" class="form-control" placeholder="Username">
+            <input type="text" class="form-control" placeholder="Username" name="username">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
           </div>
           <div class="form-group has-feedback">
-            <input type="password" class="form-control" placeholder="Password">
+            <input type="password" class="form-control" placeholder="Password" name="password">
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
           <div class="row">

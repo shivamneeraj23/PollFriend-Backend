@@ -6,13 +6,15 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
+from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 import json
 from django.conf import settings
 import requests
 from functions.send_sms import SendSMS
-from django.db.models import Count
+from django.http import HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 
@@ -75,8 +77,38 @@ class MessageSentView(TemplateView):
 		return context
 
 
-class AdminLogin(TemplateView):
+class AdminLogin(View):
 	template_name = "login.html"
+
+	def post(self, request):
+		flag = False
+		user = request.user
+		if user.is_authenticated():
+			flag = True
+		else:
+			username = request.POST.get('username')
+			password = request.POST.get('password')
+			user = authenticate(username=username, password=password)
+			if user:
+				if user.is_active:
+					login(request, user)
+					flag = True
+				else:
+					flag = False
+			else:
+				flag = False
+
+		if flag:
+			return HttpResponseRedirect(reverse_lazy("DashboardView"))
+		else:
+			return render(request, self.template_name, {'login_failed': True})
+
+	def get(self, request):
+		user = request.user
+		if user.is_authenticated():
+			return HttpResponseRedirect(reverse_lazy("DashboardView"))
+		else:
+			return render(request, self.template_name, {'login_failed': False})
 
 
 class RegisterWebDevice(View):
