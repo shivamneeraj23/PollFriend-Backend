@@ -141,3 +141,7 @@ GCM_URL = "https://gcm-http.googleapis.com/gcm/send"
 SMS_URL = "http://message.bizgrow.in/app/smsapi/index.php"
 SMS_KEY = "54abc98a9428a"
 SMS_SENDER = "NITSMS"
+
+# Login Required model will use below LOGIN_URL to redirect if not logged in
+
+LOGIN_URL = '/'

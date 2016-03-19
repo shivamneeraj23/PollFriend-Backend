@@ -6,7 +6,6 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
-from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 import json
 from django.conf import settings
@@ -15,6 +14,9 @@ from functions.send_sms import SendSMS
 from django.db.models import Count
 from django.db.models import Sum
 from django.db.models import F
+from django.http import HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -83,6 +85,10 @@ class DashboardView(TemplateView):
 		context['device_key'] = total_logged_in
 		return context
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(DashboardView, self).dispatch(*args, **kwargs)
+
 
 class MessageView(RedirectView):
 	url = reverse_lazy("MessageInbox")
@@ -98,6 +104,10 @@ class MessageInboxView(TemplateView):
 
 		return context
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(MessageInboxView, self).dispatch(*args, **kwargs)
+
 
 class MessageSentView(TemplateView):
 	template_name = "messages_sent.html"
@@ -108,8 +118,41 @@ class MessageSentView(TemplateView):
 		return context
 
 
-class AdminLogin(TemplateView):
+class AdminLogin(View):
 	template_name = "login.html"
+
+	def post(self, request):
+		flag = False
+		user = request.user
+		if user.is_authenticated():
+			flag = True
+		else:
+			username = request.POST.get('username')
+			password = request.POST.get('password')
+			user = authenticate(username=username, password=password)
+			if user:
+				if user.is_active:
+					login(request, user)
+					flag = True
+				else:
+					flag = False
+			else:
+				flag = False
+
+		if flag:
+			if "next" in request.POST:
+				return HttpResponseRedirect(request.POST.get("next"))
+			else:
+				return HttpResponseRedirect(reverse_lazy("DashboardView"))
+		else:
+			return render(request, self.template_name, {'login_failed': True})
+
+	def get(self, request):
+		user = request.user
+		if user.is_authenticated():
+			return HttpResponseRedirect(reverse_lazy("DashboardView"))
+		else:
+			return render(request, self.template_name, {'login_failed': False})
 
 
 class RegisterWebDevice(View):
@@ -331,3 +374,14 @@ class MessageComposeView(View):
 		context['presiding_officers'] = presiding_officers
 		context['success'] = True
 		return render(request, self.template_name, context)
+
+
+class AdminLogout(View):
+
+	def post(self, request):
+		logout(request)
+		return HttpResponseRedirect(reverse_lazy("AdminLoginView"))
+
+	def get(self, request):
+		logout(request)
+		return HttpResponseRedirect(reverse_lazy("AdminLoginView"))
