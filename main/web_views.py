@@ -330,3 +330,14 @@ class MessageComposeView(View):
 		context['presiding_officers'] = presiding_officers
 		context['success'] = True
 		return render(request, self.template_name, context)
+
+
+class AdminLogout(View):
+
+	def post(self, request):
+		logout(request)
+		return HttpResponseRedirect(reverse_lazy("AdminLoginView"))
+
+	def get(self, request):
+		logout(request)
+		return HttpResponseRedirect(reverse_lazy("AdminLoginView"))

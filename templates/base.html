@@ -55,11 +55,9 @@
           <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Monitoring Center</a></li>
-                <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
-              </ul>
+              <!-- hidden-xs hides the username on small devices so only the image appears. -->
+              <li><a href="#"><b>{{ user.first_name }}</b></a></li>
+              <li><a href="{% url 'AdminLogout' %}">Logout</a></li>
             </ul>
           </div>
         </nav>

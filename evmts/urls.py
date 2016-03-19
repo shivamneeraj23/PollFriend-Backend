@@ -45,4 +45,5 @@ urlpatterns = [
 	url(r'^messages/compose/$', MessageComposeView.as_view(), name='MessageCompose'),
 	url(r'^register_mobile_device/$', RegisterMobileDevice.as_view(), name='RegisterMobileDevice'),
 	url(r'^get_other_details/$', GetOtherDetails.as_view(), name='GetOtherDetails'),
+	url(r'^admin-logout/$', AdminLogout.as_view(), name='AdminLogout'),
 ]
