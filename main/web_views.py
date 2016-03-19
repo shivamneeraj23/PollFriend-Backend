@@ -117,6 +117,10 @@ class MessageSentView(TemplateView):
 		context['messages'] = Message.objects.order_by('-count_id').filter().distinct('count_id')
 		return context
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(MessageSentView, self).dispatch(*args, **kwargs)
+
 
 class AdminLogin(View):
 	template_name = "login.html"
@@ -195,6 +199,10 @@ class PollingStationListView(ListView):
 		context = super(PollingStationListView, self).get_context_data(**kwargs)
 		return context
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PollingStationListView, self).dispatch(*args, **kwargs)
+
 
 class GetSOSNotification(View):
 	notif_id = 0
@@ -236,6 +244,10 @@ class PollingStationListAddView(ListView):
 		context = super(PollingStationListAddView, self).get_context_data(**kwargs)
 		return context
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PollingStationListAddView, self).dispatch(*args, **kwargs)
+
 
 class PresidingOfficerListView(ListView):
 	template_name = "presidingofficer_list.html"
@@ -244,6 +256,10 @@ class PresidingOfficerListView(ListView):
 	def get_context_data(self, **kwargs):
 		context = super(PresidingOfficerListView, self).get_context_data(**kwargs)
 		return context
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PresidingOfficerListView, self).dispatch(*args, **kwargs)
 
 
 class PresidingOfficerListAddView(ListView):
@@ -254,10 +270,15 @@ class PresidingOfficerListAddView(ListView):
 		context = super(PresidingOfficerListAddView, self).get_context_data(**kwargs)
 		return context
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PresidingOfficerListAddView, self).dispatch(*args, **kwargs)
+
 
 class PollingStationView(TemplateView):
 	
 	template_name = "pollingstationview.html"
+
 	def get_context_data(self , **kwargs):
 		context = super(PollingStationView, self).get_context_data(**kwargs)
 		ps = PollingStation.objects.get(id=int(self.kwargs['ps_id']))
@@ -269,6 +290,10 @@ class PollingStationView(TemplateView):
 		context['officer'] = officer
 		context['poll_updates'] = poll_updates
 		return context
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PollingStationView, self).dispatch(*args, **kwargs)
 
 
 class PresidingOfficerView(TemplateView):
@@ -287,7 +312,11 @@ class PresidingOfficerView(TemplateView):
 		# context['ps_images'] = ps_images
 		# context['officer'] = officer
 		# context['poll_updates'] = poll_updates
-		return context	
+		return context
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PresidingOfficerView, self).dispatch(*args, **kwargs)
 		
 
 class MessageComposeView(View):
@@ -378,6 +407,10 @@ class MessageComposeView(View):
 		context['presiding_officers'] = presiding_officers
 		context['success'] = True
 		return render(request, self.template_name, context)
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(MessageComposeView, self).dispatch(*args, **kwargs)
 
 
 class AdminLogout(View):

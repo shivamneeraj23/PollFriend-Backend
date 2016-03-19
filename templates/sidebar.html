@@ -17,32 +17,31 @@
             </li>
          </ul>
     </li>
-    <li {% if page == 'polling_station' %} class=" treeview active" {% else %} class="treeview" {% endif %}>
+    <li {% if parent == 'polling-station' %} class=" treeview active" {% else %} class="treeview" {% endif %}>
         <a href="#"><i class="fa fa-archive"></i> <span>Polling Stations</span><i class = "fa fa-angle-left pull-right"></i></a>
         <ul class="treeview-menu">
-            <li {% if page = "#" %} class = "active" {% endif%} >
-                <a href= "/polling-station/view"><i class="fa fa-eye"></i><span>View</span></a>
-                <li {% if page = "#" %} class="active" {% endif %} >
-                <a href="/polling-station/add"><i class = "fa fa-plus"></i><span>Add</span></a>
+            <li {% if page = "/polling-station/view/" %} class = "active" {% endif%} >
+                <a href= "/polling-station/view/"><i class="fa fa-eye"></i><span>View</span></a>
+            </li>
         </ul>
     </li>
-    <li {% if page == "/presiding-officers/" %} class="active" {% endif %}>
-        <a href="/presiding-officers/"><i class="fa fa-group"></i> <span>Presiding Officers</span><i class = "fa fa-angle-left pull-right"></i></a>
+    <li {% if parent == "presiding-officer" %} class=" treeview active" {% else %} class="treeview" {% endif %}>
+        <a href="#"><i class="fa fa-group"></i> <span>Presiding Officers</span><i class = "fa fa-angle-left pull-right"></i></a>
         <ul class="treeview-menu">
-            <li {% if page = "#" %} class = "active" {% endif%} >
-                <a href= "/presiding-officer/view"><i class="fa fa-eye"></i><span>View</span></a>
-        
-            <li {% if page = "#" %} class="active" {% endif %} >
-                <a href="/presiding-officer/add"><i class = "fa fa-plus"></i><span>Add</span></a>    
+            <li {% if page = "/presiding-officers/view/" %} class = "active" {% endif%} >
+                <a href= "/presiding-officer/view/"><i class="fa fa-eye"></i><span>View</span></a>
+            </li>
         </ul>
     </li>
+    {% comment %}
     <li {% if page == "/analytics/" %} class="active" {% endif %}>
         <a href="/analytics/"><i class="fa fa-pie-chart"></i> <span>Analytics</span></a>
     </li>
     <li {% if page == "/documentation/" %} class="active" {% endif %}>
         <a href="/documentation/"><i class="fa fa-book"></i> <span>Documentation</span></a>
     </li>
+    {% endcomment %}
     <li>
-        <a href="/signout/"><i class="fa fa-external-link"></i> <span>Sign Out</span></a>
+        <a href="{% url 'AdminLogout' %}"><i class="fa fa-external-link"></i> <span>Log Out</span></a>
     </li>
 </ul><!-- /.sidebar-menu -->
