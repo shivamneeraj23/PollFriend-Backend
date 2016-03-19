@@ -46,4 +46,5 @@ urlpatterns = [
 	url(r'^register_mobile_device/$', RegisterMobileDevice.as_view(), name='RegisterMobileDevice'),
 	url(r'^get_other_details/$', GetOtherDetails.as_view(), name='GetOtherDetails'),
 	url(r'^admin-logout/$', AdminLogout.as_view(), name='AdminLogout'),
+	url(r'^sos_acknowledgement/$', SOSAcknowledgement.as_view(), name='SOSAcknowledgement'),
 ]

@@ -591,3 +591,39 @@ class GetOtherDetails(View):
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
 		return super(GetOtherDetails, self).dispatch(*args, **kwargs)
+
+
+class SOSAcknowledgement(View):
+
+	def post(self, request):
+		flag = False
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			polling_station = presiding_officer.polling_station
+			sos = SOSUpdate.objects.filter(polling_station=polling_station)
+			for x in sos:
+				x.solved = True
+				x.save()
+
+			flag = True
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+
+		except PresidingOfficer.DoesNotExist:
+			pass
+
+		if flag:
+			return JsonResponse({'result': 'ok'})
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(SOSAcknowledgement, self).dispatch(*args, **kwargs)
+
