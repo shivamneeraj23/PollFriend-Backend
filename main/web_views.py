@@ -6,8 +6,6 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormView
-from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 import json
 from django.conf import settings
@@ -15,6 +13,7 @@ import requests
 from functions.send_sms import SendSMS
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -52,6 +51,10 @@ class DashboardView(TemplateView):
 
 		return context
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(DashboardView, self).dispatch(*args, **kwargs)
+
 
 class MessageView(RedirectView):
 	url = reverse_lazy("MessageInbox")
@@ -66,6 +69,10 @@ class MessageInboxView(TemplateView):
 		context['sos_messages'] = sos
 
 		return context
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(MessageInboxView, self).dispatch(*args, **kwargs)
 
 
 class MessageSentView(TemplateView):
@@ -99,7 +106,10 @@ class AdminLogin(View):
 				flag = False
 
 		if flag:
-			return HttpResponseRedirect(reverse_lazy("DashboardView"))
+			if "next" in request.POST:
+				return HttpResponseRedirect(request.POST.get("next"))
+			else:
+				return HttpResponseRedirect(reverse_lazy("DashboardView"))
 		else:
 			return render(request, self.template_name, {'login_failed': True})
 

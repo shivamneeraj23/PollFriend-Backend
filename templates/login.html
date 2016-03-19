@@ -38,6 +38,9 @@
         <p class="login-box-msg">Sign in to start your session</p>
         <form role="form" method="post" action="{% url 'AdminLoginView' %}">
           {% csrf_token %}
+          {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+          {% endif %}
           <div class="form-group has-feedback">
             <input type="text" class="form-control" placeholder="Username" name="username">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
