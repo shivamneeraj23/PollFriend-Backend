@@ -11,7 +11,7 @@ import requests
 import json
 from django.conf import settings
 from functions.send_sms import SendSMS
-
+from django.contrib.auth.models import User
 # Create your views here.
 
 
