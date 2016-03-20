@@ -11,7 +11,7 @@ import json
 from django.conf import settings
 import requests
 from functions.send_sms import SendSMS
-from django.db.models import Count
+from django.views.decorators.cache import never_cache
 from django.db.models import Sum
 from django.db.models import F
 from django.http import HttpResponseRedirect
@@ -100,7 +100,7 @@ class MessageInboxView(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(MessageInboxView, self).get_context_data(**kwargs)
 		sos = SOSUpdate.objects.order_by('-timestamp').filter()
-		context['sos_messages'] = sos
+		context['sos_messages'] = list(sos)
 
 		return context
 
@@ -114,8 +114,12 @@ class MessageSentView(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(MessageSentView, self).get_context_data(**kwargs)
-		context['messages'] = Message.objects.order_by('count_id').filter().distinct('count_id')
+		context['messages'] = Message.objects.order_by('-count_id').filter().distinct('count_id')
 		return context
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(MessageSentView, self).dispatch(*args, **kwargs)
 
 
 class AdminLogin(View):
@@ -154,6 +158,10 @@ class AdminLogin(View):
 		else:
 			return render(request, self.template_name, {'login_failed': False})
 
+	@method_decorator(never_cache)
+	def dispatch(self, *args, **kwargs):
+		return super(AdminLogin, self).dispatch(*args, **kwargs)
+
 
 class RegisterWebDevice(View):
 	def post(self, request):
@@ -190,6 +198,10 @@ class PollingStationListView(ListView):
 	def get_context_data(self, **kwargs):
 		context = super(PollingStationListView, self).get_context_data(**kwargs)
 		return context
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PollingStationListView, self).dispatch(*args, **kwargs)
 
 
 class GetSOSNotification(View):
@@ -232,6 +244,10 @@ class PollingStationListAddView(ListView):
 		context = super(PollingStationListAddView, self).get_context_data(**kwargs)
 		return context
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PollingStationListAddView, self).dispatch(*args, **kwargs)
+
 
 class PresidingOfficerListView(ListView):
 	template_name = "presidingofficer_list.html"
@@ -240,6 +256,10 @@ class PresidingOfficerListView(ListView):
 	def get_context_data(self, **kwargs):
 		context = super(PresidingOfficerListView, self).get_context_data(**kwargs)
 		return context
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PresidingOfficerListView, self).dispatch(*args, **kwargs)
 
 
 class PresidingOfficerListAddView(ListView):
@@ -250,10 +270,15 @@ class PresidingOfficerListAddView(ListView):
 		context = super(PresidingOfficerListAddView, self).get_context_data(**kwargs)
 		return context
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PresidingOfficerListAddView, self).dispatch(*args, **kwargs)
+
 
 class PollingStationView(TemplateView):
 	
 	template_name = "pollingstationview.html"
+
 	def get_context_data(self , **kwargs):
 		context = super(PollingStationView, self).get_context_data(**kwargs)
 		ps = PollingStation.objects.get(id=int(self.kwargs['ps_id']))
@@ -265,6 +290,10 @@ class PollingStationView(TemplateView):
 		context['officer'] = officer
 		context['poll_updates'] = poll_updates
 		return context
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PollingStationView, self).dispatch(*args, **kwargs)
 
 
 class PresidingOfficerView(TemplateView):
@@ -283,97 +312,111 @@ class PresidingOfficerView(TemplateView):
 		# context['ps_images'] = ps_images
 		# context['officer'] = officer
 		# context['poll_updates'] = poll_updates
-		return context	
+		return context
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(PresidingOfficerView, self).dispatch(*args, **kwargs)
 		
 
 class MessageComposeView(View):
 	template_name = "messages_compose.html"
 
 	def get(self, request):
-		presiding_officers = PresidingOfficer.objects.filter()
-		context = dict()
-		context['presiding_officers'] = presiding_officers
-		return render(request, self.template_name, context)
+		if request.user.has_perm("main.add_message"):
+			presiding_officers = PresidingOfficer.objects.filter()
+			context = dict()
+			context['presiding_officers'] = presiding_officers
+			return render(request, self.template_name, context)
+		else:
+			return HttpResponseRedirect(reverse_lazy("MessageInbox"))
 
 	def post(self, request):
-		presiding_officers = PresidingOfficer.objects.filter()
-		context = dict()
-		context['presiding_officers'] = presiding_officers
-		presiding_officers = request.POST.getlist('presiding_officers[]')
-		message = request.POST.get('message')
-		if len(presiding_officers) == 0 and not message:
-			context['success'] = False
-			context['message_missing'] = True
-			context['po_missing'] = True
+		if request.user.has_perm("main.add_message"):
+			presiding_officers = PresidingOfficer.objects.filter()
+			context = dict()
+			context['presiding_officers'] = presiding_officers
+			presiding_officers = request.POST.getlist('presiding_officers[]')
+			message = request.POST.get('message')
+			if len(presiding_officers) == 0 and not message:
+				context['success'] = False
+				context['message_missing'] = True
+				context['po_missing'] = True
+				return render(request, self.template_name, context)
+
+			if len(presiding_officers) == 0:
+				context['success'] = False
+				context['message_missing'] = False
+				context['po_missing'] = True
+				return render(request, self.template_name, context)
+
+			if not message:
+				context['success'] = False
+				context['message_missing'] = True
+				context['po_missing'] = False
+				return render(request, self.template_name, context)
+
+			count = 1
+			msg = Message.objects.order_by('-count_id').filter()
+			if msg:
+				msg = msg[0]
+				count = msg.count_id + 1
+
+			mobiles = []
+			gcm_devices = []
+			for po in presiding_officers:
+				PO = PresidingOfficer.objects.get(id=po)
+
+				if PO.device_key:
+					gcm_devices.append(PO.device_key)
+				if PO.mobile:
+					mobiles.append(PO.mobile)
+
+				msg = Message()
+				msg.user = request.user
+				msg.count_id = count
+				msg.message = message
+				msg.presiding_officer = PO
+				msg.save()
+
+			notification = dict()
+			notification['title'] = "Broadcast Message"
+			notification['body'] = message
+			# Multi-Cast SOS to all WEB ADMINS
+			# Set header
+			headers = dict()
+			headers['Authorization'] = "key="+settings.GCM_AUTH_KEY
+			headers['Content-Type'] = "application/json"
+			# Set POST data
+			data = dict()
+			data['registration_ids'] = gcm_devices
+			data['notification'] = notification
+			data['data'] = notification
+
+			# JSON serialize the dict data-type
+			data = json.dumps(data)
+			# initiate the request
+			if len(gcm_devices) > 0:
+				r = requests.post(settings.GCM_URL, data=data, headers=headers)
+				if r.status_code == 200:
+					pass
+			# Send SMS notification
+			if len(mobiles) > 0:
+				r = SendSMS(message, mobiles)
+				if r.status_code == 200:
+					pass
+
+			presiding_officers = PresidingOfficer.objects.filter()
+			context = dict()
+			context['presiding_officers'] = presiding_officers
+			context['success'] = True
 			return render(request, self.template_name, context)
+		else:
+			return HttpResponseRedirect(reverse_lazy("MessageInbox"))
 
-		if len(presiding_officers) == 0:
-			context['success'] = False
-			context['message_missing'] = False
-			context['po_missing'] = True
-			return render(request, self.template_name, context)
-
-		if not message:
-			context['success'] = False
-			context['message_missing'] = True
-			context['po_missing'] = False
-			return render(request, self.template_name, context)
-
-		count = 1
-		msg = Message.objects.order_by('-count_id').filter()
-		if msg:
-			msg = msg[0]
-			count = msg.count_id + 1
-
-		mobiles = []
-		gcm_devices = []
-		for po in presiding_officers:
-			PO = PresidingOfficer.objects.get(id=po)
-
-			if PO.device_key:
-				gcm_devices.append(PO.device_key)
-			if PO.mobile:
-				mobiles.append(PO.mobile)
-
-			msg = Message()
-			msg.user = request.user
-			msg.count_id = count
-			msg.message = message
-			msg.presiding_officer = PO
-			msg.save()
-
-		notification = dict()
-		notification['title'] = "Broadcast Message"
-		notification['body'] = message
-		# Multi-Cast SOS to all WEB ADMINS
-		# Set header
-		headers = dict()
-		headers['Authorization'] = "key="+settings.GCM_AUTH_KEY
-		headers['Content-Type'] = "application/json"
-		# Set POST data
-		data = dict()
-		data['registration_ids'] = gcm_devices
-		data['notification'] = notification
-		data['data'] = notification
-
-		# JSON serialize the dict data-type
-		data = json.dumps(data)
-		# initiate the request
-		if len(gcm_devices) > 0:
-			r = requests.post(settings.GCM_URL, data=data, headers=headers)
-			if r.status_code == 200:
-				pass
-		# Send SMS notification
-		if len(mobiles) > 0:
-			r = SendSMS(message, mobiles)
-			if r.status_code == 200:
-				pass
-
-		presiding_officers = PresidingOfficer.objects.filter()
-		context = dict()
-		context['presiding_officers'] = presiding_officers
-		context['success'] = True
-		return render(request, self.template_name, context)
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(MessageComposeView, self).dispatch(*args, **kwargs)
 
 
 class AdminLogout(View):
