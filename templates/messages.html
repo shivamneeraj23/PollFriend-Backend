@@ -16,7 +16,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Polling Station</th>
-                                    <th>Subject</th>
+                                    <th>Solved</th>
                                     <th>Message</th>
                                     <th>Condition</th>
                                     <th>Image</th>
@@ -30,8 +30,10 @@
                                     <td>{{ s.id }}</td>
                                     <td>{{ s.polling_station.name }}</td>
                                     <td>
-                                        {% if s.subject %}
-                                            {{ s.get_subject_display }}
+                                        {% if s.solved %}
+                                            Solved
+                                        {% elseif %}
+                                            Not Solved
                                         {% endif %}
                                     </td>
                                     <td>{{ s.message }}</td>
@@ -61,7 +63,7 @@
     <script type="text/javascript">
     	$(document).ready(function() {
                 $("#example1").DataTable({
-                    "order": [[ 5, "desc" ]]
+                    "order": [[ 6, "desc" ]]
                 });
         });
     </script>
