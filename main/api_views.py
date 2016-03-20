@@ -639,3 +639,58 @@ class SOSAcknowledgement(View):
 	def dispatch(self, *args, **kwargs):
 		return super(SOSAcknowledgement, self).dispatch(*args, **kwargs)
 
+
+class EmergencyContacts(View):
+
+	def post(self, request):
+		flag = False
+		poid = request.POST.get('poid')
+		access_token = request.POST.get('access_token')
+		out = dict()
+		contacts = list()
+		try:
+			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+			polling_station = presiding_officer.polling_station
+			try:
+				temp = dict()
+				temp["name"] = "CM : " + polling_station.sector_office.lac.constituent_magistrate
+				temp["contact"] = polling_station.sector_office.lac.constituent_magistrate_mobile
+				contacts.append(temp)
+				temp = dict()
+				temp["name"] = "SO : " + polling_station.sector_office.sector_officer
+				temp["contact"] = polling_station.sector_office.sector_officer_mobile
+				contacts.append(temp)
+				temp = dict()
+				admin_m = User.objects.get(username="monitoring_admin")
+				temp["name"] = "Admin1 : " + admin_m.first_name
+				temp["contact"] = int(admin_m.last_name)
+				contacts.append(temp)
+				temp = dict()
+				admin_m = User.objects.get(username="viewing_admin")
+				temp["name"] = "Admin2 : " + admin_m.first_name
+				temp["contact"] = int(admin_m.last_name)
+				contacts.append(temp)
+
+				out["contacts"] = contacts
+				out["result"] = "ok"
+				flag = True
+			except Exception:
+				pass
+
+			if "latitude" in request.POST and "longitude" in request.POST:
+				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+
+		except PresidingOfficer.DoesNotExist:
+			pass
+
+		if flag:
+			return JsonResponse(out)
+		else:
+			return JsonResponse({'result': 'fail'})
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'})
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(EmergencyContacts, self).dispatch(*args, **kwargs)

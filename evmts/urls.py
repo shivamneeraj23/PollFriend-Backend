@@ -47,4 +47,5 @@ urlpatterns = [
 	url(r'^get_other_details/$', GetOtherDetails.as_view(), name='GetOtherDetails'),
 	url(r'^admin-logout/$', AdminLogout.as_view(), name='AdminLogout'),
 	url(r'^sos_acknowledgement/$', SOSAcknowledgement.as_view(), name='SOSAcknowledgement'),
+	url(r'^emergency_contacts/$', EmergencyContacts.as_view(), name='EmergencyContacts'),
 ]
