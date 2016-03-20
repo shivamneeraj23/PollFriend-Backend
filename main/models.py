@@ -7,14 +7,26 @@ from django.contrib.auth.models import User
 class LAC(models.Model):
 	name = models.CharField(max_length=50, unique=True)
 	unique_id = models.PositiveIntegerField(unique=True)
+	constituent_magistrate = models.CharField(max_length=100)
+	constituent_magistrate_mobile = models.BigIntegerField()
 
 	def __str__(self):
 		return '%s - %s' % (self.unique_id, self.name)
 
 
+class SectorOffice(models.Model):
+	name = models.CharField(max_length=50)
+	lac = models.ForeignKey(LAC)
+	sector_officer = models.CharField(max_length=100)
+	sector_officer_mobile = models.BigIntegerField()
+
+	def __str__(self):
+		return '%s' % self.name
+
+
 class PollingStation(models.Model):
 	unique_id = models.CharField(max_length=10)
-	lac = models.ForeignKey(LAC)
+	sector_office = models.ForeignKey(SectorOffice)
 	name = models.CharField(max_length=100, unique=True)
 	total_voters = models.PositiveIntegerField(blank=True, null=True)
 	latitude = models.DecimalField(max_digits=13,  decimal_places=10)
@@ -27,7 +39,7 @@ class PollingStation(models.Model):
 	condition = models.SmallIntegerField(choices=CONDITIONS, null=True, blank=True)
 
 	def __str__(self):
-		return '%s of LAC %s' % (self.name, self.lac)
+		return '%s of Sector Office %s of LAC %s' % (self.name, self.sector_office.name, self.sector_office.lac.name)
 
 
 class PresidingOfficer(models.Model):
@@ -69,19 +81,6 @@ class PollUpdate(models.Model):
 
 	def __str__(self):
 		return '%s reported %s votes at %s' % (self.polling_station.name, self.current_votes, self.timestamp)
-
-
-class EmergencyContact(models.Model):
-	lac = models.ForeignKey(LAC)
-	name = models.CharField(max_length=100)
-	mobile = models.BigIntegerField(unique=True)
-	# higher the level value higher is priority used to contact.
-	LEVELS = (
-		(1, 'Police'),
-		(2, 'Sector Officer'),
-		(3, 'District Election Officer'),
-	)
-	designation = models.SmallIntegerField(choices=LEVELS)
 
 
 class POStatus(models.Model):

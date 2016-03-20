@@ -10,6 +10,7 @@ from django.core.files.images import ImageFile
 import requests
 import json
 from django.conf import settings
+from functions.send_sms import SendSMS
 
 # Create your views here.
 
@@ -388,6 +389,21 @@ class SOSUpdateView(View):
 			r = requests.post(settings.GCM_URL, data=data, headers=headers)
 			if r.status_code == 200:
 				pass
+
+			# Send SMS to all hierarchy
+			mobiles = list()
+			mobiles.append(polling_station.sector_office.sector_officer_mobile)
+			mobiles.append(polling_station.sector_office.lac.constituent_magistrate_mobile)
+
+			admin_user = User.objects.get(username="monitoring_admin")
+			mobiles.append(int(admin_user.last_name))
+
+			message = "SOS: Contact +91" + presiding_officer.mobile + " Name: " + presiding_officer.name
+
+			if "message" in request.POST:
+				message += " Message: " + request.POST.get("message")
+
+			SendSMS(message, mobiles)
 
 			if "latitude" in request.POST and "longitude" in request.POST:
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
