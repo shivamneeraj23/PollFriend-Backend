@@ -323,90 +323,96 @@ class MessageComposeView(View):
 	template_name = "messages_compose.html"
 
 	def get(self, request):
-		presiding_officers = PresidingOfficer.objects.filter()
-		context = dict()
-		context['presiding_officers'] = presiding_officers
-		return render(request, self.template_name, context)
+		if request.user.has_perm("main.add_message"):
+			presiding_officers = PresidingOfficer.objects.filter()
+			context = dict()
+			context['presiding_officers'] = presiding_officers
+			return render(request, self.template_name, context)
+		else:
+			return HttpResponseRedirect(reverse_lazy("MessageInbox"))
 
 	def post(self, request):
-		presiding_officers = PresidingOfficer.objects.filter()
-		context = dict()
-		context['presiding_officers'] = presiding_officers
-		presiding_officers = request.POST.getlist('presiding_officers[]')
-		message = request.POST.get('message')
-		if len(presiding_officers) == 0 and not message:
-			context['success'] = False
-			context['message_missing'] = True
-			context['po_missing'] = True
+		if request.user.has_perm("main.add_message"):
+			presiding_officers = PresidingOfficer.objects.filter()
+			context = dict()
+			context['presiding_officers'] = presiding_officers
+			presiding_officers = request.POST.getlist('presiding_officers[]')
+			message = request.POST.get('message')
+			if len(presiding_officers) == 0 and not message:
+				context['success'] = False
+				context['message_missing'] = True
+				context['po_missing'] = True
+				return render(request, self.template_name, context)
+
+			if len(presiding_officers) == 0:
+				context['success'] = False
+				context['message_missing'] = False
+				context['po_missing'] = True
+				return render(request, self.template_name, context)
+
+			if not message:
+				context['success'] = False
+				context['message_missing'] = True
+				context['po_missing'] = False
+				return render(request, self.template_name, context)
+
+			count = 1
+			msg = Message.objects.order_by('-count_id').filter()
+			if msg:
+				msg = msg[0]
+				count = msg.count_id + 1
+
+			mobiles = []
+			gcm_devices = []
+			for po in presiding_officers:
+				PO = PresidingOfficer.objects.get(id=po)
+
+				if PO.device_key:
+					gcm_devices.append(PO.device_key)
+				if PO.mobile:
+					mobiles.append(PO.mobile)
+
+				msg = Message()
+				msg.user = request.user
+				msg.count_id = count
+				msg.message = message
+				msg.presiding_officer = PO
+				msg.save()
+
+			notification = dict()
+			notification['title'] = "Broadcast Message"
+			notification['body'] = message
+			# Multi-Cast SOS to all WEB ADMINS
+			# Set header
+			headers = dict()
+			headers['Authorization'] = "key="+settings.GCM_AUTH_KEY
+			headers['Content-Type'] = "application/json"
+			# Set POST data
+			data = dict()
+			data['registration_ids'] = gcm_devices
+			data['notification'] = notification
+			data['data'] = notification
+
+			# JSON serialize the dict data-type
+			data = json.dumps(data)
+			# initiate the request
+			if len(gcm_devices) > 0:
+				r = requests.post(settings.GCM_URL, data=data, headers=headers)
+				if r.status_code == 200:
+					pass
+			# Send SMS notification
+			if len(mobiles) > 0:
+				r = SendSMS(message, mobiles)
+				if r.status_code == 200:
+					pass
+
+			presiding_officers = PresidingOfficer.objects.filter()
+			context = dict()
+			context['presiding_officers'] = presiding_officers
+			context['success'] = True
 			return render(request, self.template_name, context)
-
-		if len(presiding_officers) == 0:
-			context['success'] = False
-			context['message_missing'] = False
-			context['po_missing'] = True
-			return render(request, self.template_name, context)
-
-		if not message:
-			context['success'] = False
-			context['message_missing'] = True
-			context['po_missing'] = False
-			return render(request, self.template_name, context)
-
-		count = 1
-		msg = Message.objects.order_by('-count_id').filter()
-		if msg:
-			msg = msg[0]
-			count = msg.count_id + 1
-
-		mobiles = []
-		gcm_devices = []
-		for po in presiding_officers:
-			PO = PresidingOfficer.objects.get(id=po)
-
-			if PO.device_key:
-				gcm_devices.append(PO.device_key)
-			if PO.mobile:
-				mobiles.append(PO.mobile)
-
-			msg = Message()
-			msg.user = request.user
-			msg.count_id = count
-			msg.message = message
-			msg.presiding_officer = PO
-			msg.save()
-
-		notification = dict()
-		notification['title'] = "Broadcast Message"
-		notification['body'] = message
-		# Multi-Cast SOS to all WEB ADMINS
-		# Set header
-		headers = dict()
-		headers['Authorization'] = "key="+settings.GCM_AUTH_KEY
-		headers['Content-Type'] = "application/json"
-		# Set POST data
-		data = dict()
-		data['registration_ids'] = gcm_devices
-		data['notification'] = notification
-		data['data'] = notification
-
-		# JSON serialize the dict data-type
-		data = json.dumps(data)
-		# initiate the request
-		if len(gcm_devices) > 0:
-			r = requests.post(settings.GCM_URL, data=data, headers=headers)
-			if r.status_code == 200:
-				pass
-		# Send SMS notification
-		if len(mobiles) > 0:
-			r = SendSMS(message, mobiles)
-			if r.status_code == 200:
-				pass
-
-		presiding_officers = PresidingOfficer.objects.filter()
-		context = dict()
-		context['presiding_officers'] = presiding_officers
-		context['success'] = True
-		return render(request, self.template_name, context)
+		else:
+			return HttpResponseRedirect(reverse_lazy("MessageInbox"))
 
 	@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
