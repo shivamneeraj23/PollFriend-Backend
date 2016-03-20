@@ -13,7 +13,7 @@ import requests
 from functions.send_sms import SendSMS
 from django.views.decorators.cache import never_cache
 from django.db.models import Sum
-from django.db.models import F
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -62,7 +62,7 @@ class DashboardView(TemplateView):
 		good = len(PollingStation.objects.filter(condition = 1))
 		ok = len(PollingStation.objects.filter(condition = 2))
 		bad = len(PollingStation.objects.filter(condition = 3))
-		total_logged_in = len(PresidingOfficer.objects.filter(last_login__gt=F('last_logout')))
+		total_logged_in = len(PresidingOfficer.objects.filter(~Q(device_key = None) & ~Q(device_key = '')))
 		presiding_officer_no = PresidingOfficer.objects.count()
 		total_voters = PollingStation.objects.aggregate(Sum('total_voters'))
 		current_voters = PollUpdate.objects.aggregate(Sum('current_votes'))
