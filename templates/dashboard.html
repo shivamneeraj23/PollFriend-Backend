@@ -346,7 +346,10 @@
             }
         {% endfor %}
         loc_size = i;
-        var origin = new google.maps.LatLng(locations[0][2], locations[0][3]);
+        if(loc_size > 0)
+            var origin = new google.maps.LatLng(locations[0][2], locations[0][3]);
+        else
+            var origin = new google.maps.LatLng(24.5, 92.5);
 
         function initMap(){
             var mapOptions = {
