@@ -29,7 +29,7 @@ class DashboardView(TemplateView):
 		poll_updates = PollUpdate.objects.order_by('-timestamp')
 		polling_station = PollingStation.objects.all()
 		po_evm = po_ps = poll_starts = poll_ends = sealed_evm= mock_poll  = received_release = reached_dc = 0
-		total_voters = current_voters =  0
+		total_voters = current_voters = 0
 		
 		for ps in polling_station:
 			if ps.total_voters: total_voters+=ps.total_voters
@@ -48,7 +48,10 @@ class DashboardView(TemplateView):
 			if po.reached_dc : reached_dc +=1
 			if po.mock_poll_resetted : mock_poll+=1
 
-		percentage = round(((current_voters/total_voters)*100),2)
+		if total_voters and current_voters:
+			percentage = round(((current_voters/total_voters)*100),2)
+		else:
+			percentage = 0.00
 		# po_evm = len(POStatus.objects.filter(received_evm = True))
 		# po_ps = len(POStatus.objects.filter(reached_polling_station = True))
 		# poll_starts = len(POStatus.objects.filter(poll_starts = True))
