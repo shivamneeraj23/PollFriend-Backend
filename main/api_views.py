@@ -398,7 +398,7 @@ class SOSUpdateView(View):
 			admin_user = User.objects.get(username="monitoring_admin")
 			mobiles.append(int(admin_user.last_name))
 
-			message = "SOS: Contact +91" + presiding_officer.mobile + " Name: " + presiding_officer.first_name
+			message = "SOS: Contact +91" + str(presiding_officer.mobile) + " Name: " + presiding_officer.first_name
 
 			if "message" in request.POST:
 				message += " Message: " + request.POST.get("message")
