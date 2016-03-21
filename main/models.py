@@ -125,7 +125,7 @@ class SOSUpdate(models.Model):
 		(3, 'OTHER'),
 	)
 	subject = models.SmallIntegerField(choices=SUBJECTS, null=True, blank=True)
-	timestamp = models.DateTimeField(auto_now=True, null=True, blank=True)
+	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
 	solved = models.BooleanField(default=False)
 
 
