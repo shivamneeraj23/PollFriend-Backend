@@ -122,25 +122,18 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>EVM</th>
                                     <th>Name</th>
                                     <th>Polling Station</th>
                                     <th>Vote %age</th>
                                     <th>Received EVM</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Reached Polling Station</th>
                                     <th>Completed Mock Poll</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Poll Start</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Poll Ends</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Sealed EVM</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Received Release</th>
-                                    <!-- <th>Timestamp</th> -->
-                                    <th>Reached Strongroom</th>
-                                    <!-- <th>Timestamp</th> -->
+                                    <th>Reached StrongRoom</th>
                                 </tr>
                             </thead>
                            
@@ -150,6 +143,7 @@
                                     <td>{{ k.presiding_officer.username }}</td>
                                     <td>{{k.presiding_officer.full_name}}</td>
                                     <td>{{k.presiding_officer.polling_station.name}}</td>
+                                    <!-- TODO remove below query causing delay in response -->
                                     <td>{% current_vote_percentage k.presiding_officer.polling_station %}%</td>
 									{% if k.received_evm %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok " style = "color:green; vertical-align:middle" ></span><br>{{k.received_evm_timestamp}}</td>
@@ -162,21 +156,21 @@
 										<td></td>
 									{% endif %}
 
-									
+
 									{% if k.mock_poll_ends %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.mock_poll_ends_timestamp }}</td>
 									{% else %}
 										<td></td>
 									{% endif %}
-									
-									
-									
+
+
+
 									{% if k.poll_starts %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.poll_starts_timestamp}}</td>
 									{% else %}
 										<td></td>
 									{% endif %}
- 
+
 									{% if k.poll_ends %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.poll_ends_timestamp}}</td>
 									{% else %}
@@ -188,7 +182,7 @@
                   {% else %}
                     <td></td>
                   {% endif %}
-									
+
                   {% if k.received_release %}
                   <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.received_release_timestamp}}</td>
                   {% else %}
@@ -200,33 +194,26 @@
 									{% else %}
 										<td></td>
 									{% endif %}
-									
 
-	
+
+
                                 </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>EVM</th>
                                     <th>Name</th>
                                     <th>Polling Station</th>
                                     <th>Vote %age</th>
                                     <th>Received EVM</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Reached Polling Station</th>
                                     <th>Completed Mock Poll</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Poll Start</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Poll Ends</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Sealed EVM</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Received Release</th>
-                                    <!-- <th>Timestamp</th> -->
                                     <th>Reached Strongroom</th>
-                                    <!-- <th>Timestamp</th> -->
                                 </tr>
                             </tfoot>
                         </table>
@@ -239,7 +226,7 @@
             <div class="col-xs-6">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Locations of Presiding Officers</h3>
+                        <h3 class="box-title">Location of Presiding Officers</h3>
                     </div><!-- /.box-header -->
                     <div id="map" class="box-body table-responsive" style="height:500px;">
                         
@@ -272,10 +259,13 @@
                                     <td>{% get_percentage k.polling_station.total_voters k.current_votes %}</td>
                                     {% if k.time_field == 1 or k.time_field == 3 or k.time_field == 5 %}
                                       <td>{{k.time_field}} PM</td>
-                                   {% elif k.time_field == 9 or k.time_field == 11 %}
+                                    {% elif k.time_field == 9 or k.time_field == 11 %}
                                       <td>{{k.time_field}} AM</td>
+                                    {% elif k.time_field == 0 %}
+                                      <td>6 PM</td>
+                                    {% else %}
+                                      <td></td>
                                     {% endif %}
-	
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -324,7 +314,7 @@
         var locations = {};
         var i = 0;
         var loc_size;
-        {% for k in all %}
+        {% for k in po_locations %}
             var a = {% get_current_location k.presiding_officer %};
             if(a[0] != 0.0 && a[1] != 0.0){
                 var title = '{{k.presiding_officer.full_name}} ({{k.presiding_officer.polling_station.name}})';
@@ -353,7 +343,7 @@
 
         function initMap(){
             var mapOptions = {
-                zoom: 10,
+                zoom: 12,
                 center: origin
             };
             map = new google.maps.Map(document.getElementById('map'), mapOptions);

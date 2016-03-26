@@ -25,8 +25,8 @@ class DashboardView(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(DashboardView, self).get_context_data(**kwargs)
-		po_status = POStatus.objects.all()
-		poll_updates = PollUpdate.objects.order_by('-timestamp')
+		po_status = POStatus.objects.all().select_related()
+		poll_updates = PollUpdate.objects.order_by('-timestamp').filter().select_related()
 		polling_station = PollingStation.objects.all()
 		po_evm = po_ps = poll_starts = poll_ends = sealed_evm = mock_poll = received_release = reached_dc = 0
 		total_voters = current_voters = 0
@@ -46,6 +46,8 @@ class DashboardView(TemplateView):
 
 		for p in pu:
 			current_voters += p['current_votes']
+
+		pl = POLocation.objects.order_by('presiding_officer', '-timestamp').filter().distinct('presiding_officer').select_related()
 
 		for po in po_status:
 			if po.received_evm:
@@ -89,6 +91,7 @@ class DashboardView(TemplateView):
 		context['mock_poll'] = mock_poll
 		context['percentage'] = percentage
 		context['device_key'] = total_logged_in
+		context['po_locations'] = pl
 		return context
 
 	@method_decorator(login_required)
