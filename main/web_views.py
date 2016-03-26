@@ -46,13 +46,13 @@ class DashboardView(TemplateView):
 				elif ps.condition == 3:
 					bad += 1
 
-		pu = PollUpdate.objects.values('current_votes', 'polling_station', 'polling_station__total_voters').order_by('polling_station', '-timestamp', '-time_field').filter().distinct('polling_station')
+		pu = PollUpdate.objects.values('current_votes', 'polling_station__unique_id', 'polling_station__total_voters').order_by('polling_station', '-timestamp', '-time_field').filter().distinct('polling_station')
 		for p in pu:
 			current_voters += p['current_votes']
 			p_cv = p['current_votes']
-			ps_cv[p['polling_station']] = p_cv
+			ps_cv[p['polling_station__unique_id']] = p_cv
 			p_tv = p['polling_station__total_voters']
-			ps_percentage[p['polling_station']] = round(((p_cv/p_tv)*100), 2)
+			ps_percentage[p['polling_station__unique_id']] = round(((p_cv/p_tv)*100), 2)
 
 		pl = POLocation.objects.order_by('presiding_officer', '-timestamp').filter().distinct('presiding_officer').select_related()
 
