@@ -45,7 +45,7 @@ class DashboardView(TemplateView):
 		pu = PollUpdate.objects.values('current_votes').order_by('polling_station', '-timestamp', '-time_field').filter().distinct('polling_station')
 
 		for p in pu:
-			current_voters += p.current_votes
+			current_voters += p['current_votes']
 
 		for po in po_status:
 			if po.received_evm:
