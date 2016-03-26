@@ -267,12 +267,13 @@ class PollingStationListAddView(ListView):
 		return super(PollingStationListAddView, self).dispatch(*args, **kwargs)
 
 
-class PresidingOfficerListView(ListView):
+class PresidingOfficerListView(TemplateView):
 	template_name = "presidingofficer_list.html"
-	model = PresidingOfficer
 
 	def get_context_data(self, **kwargs):
 		context = super(PresidingOfficerListView, self).get_context_data(**kwargs)
+		object_list = PresidingOfficer.objects.filter().select_related()
+		context['object_list'] = object_list
 		return context
 
 	@method_decorator(login_required)
@@ -342,7 +343,7 @@ class MessageComposeView(View):
 
 	def get(self, request):
 		if request.user.has_perm("main.add_message"):
-			presiding_officers = PresidingOfficer.objects.filter()
+			presiding_officers = PresidingOfficer.objects.filter().select_related()
 			context = dict()
 			context['presiding_officers'] = presiding_officers
 			return render(request, self.template_name, context)
