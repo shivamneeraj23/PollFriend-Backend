@@ -49,3 +49,8 @@ def get_sidebar(context):
 	request = context['request']
 	parent_page = request.path.split('/')[1]
 	return {'page': request.path, 'parent': parent_page}
+
+
+@register.filter
+def get_item(dictionary, key):
+	return dictionary.get(key)

@@ -28,18 +28,14 @@ class DashboardView(TemplateView):
 		po_status = POStatus.objects.all().select_related()
 		poll_updates = PollUpdate.objects.order_by('-timestamp').filter().select_related()
 		polling_station = PollingStation.objects.all()
-		ps_cv = list()
-		ps_percentage = list()
-		ps_cv.append(0)
-		ps_percentage.append(0.00)
-		for x in range(1, len(polling_station)+1):
-			ps_cv.append(0)
-			ps_percentage.append(0.00)
+		ps_cv = dict()
+		ps_percentage = dict()
 		po_evm = po_ps = poll_starts = poll_ends = sealed_evm = mock_poll = received_release = reached_dc = 0
 		total_voters = current_voters = 0
 		good = ok = bad = 0
 		for ps in polling_station:
-
+			ps_cv[ps.unique_id] = 0
+			ps_percentage[ps.unique_id] = 0.00
 			if ps.total_voters:
 				total_voters += ps.total_voters
 			if ps.condition:
