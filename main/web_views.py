@@ -28,10 +28,18 @@ class DashboardView(TemplateView):
 		po_status = POStatus.objects.all().select_related()
 		poll_updates = PollUpdate.objects.order_by('-timestamp').filter().select_related()
 		polling_station = PollingStation.objects.all()
+		ps_cv = list()
+		ps_percentage = list()
+		ps_cv.append(0)
+		ps_percentage.append(0.00)
+		for x in range(1, len(polling_station)+1):
+			ps_cv.append(0)
+			ps_percentage.append(0.00)
 		po_evm = po_ps = poll_starts = poll_ends = sealed_evm = mock_poll = received_release = reached_dc = 0
 		total_voters = current_voters = 0
 		good = ok = bad = 0
 		for ps in polling_station:
+
 			if ps.total_voters:
 				total_voters += ps.total_voters
 			if ps.condition:
@@ -42,10 +50,13 @@ class DashboardView(TemplateView):
 				elif ps.condition == 3:
 					bad += 1
 
-		pu = PollUpdate.objects.values('current_votes').order_by('polling_station', '-timestamp', '-time_field').filter().distinct('polling_station')
-
+		pu = PollUpdate.objects.values('current_votes', 'polling_station', 'polling_station__total_voters').order_by('polling_station', '-timestamp', '-time_field').filter().distinct('polling_station')
 		for p in pu:
 			current_voters += p['current_votes']
+			p_cv = p['current_votes']
+			ps_cv[p['polling_station']] = p_cv
+			p_tv = p['polling_station__total_voters']
+			ps_percentage[p['polling_station']] = round(((p_cv/p_tv)*100), 2)
 
 		pl = POLocation.objects.order_by('presiding_officer', '-timestamp').filter().distinct('presiding_officer').select_related()
 
@@ -92,6 +103,8 @@ class DashboardView(TemplateView):
 		context['percentage'] = percentage
 		context['device_key'] = total_logged_in
 		context['po_locations'] = pl
+		context['ps_cv'] = ps_cv
+		context['ps_percentage'] = ps_percentage
 		return context
 
 	@method_decorator(login_required)

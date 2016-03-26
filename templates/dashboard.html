@@ -144,7 +144,7 @@
                                     <td>{{k.presiding_officer.full_name}}</td>
                                     <td>{{k.presiding_officer.polling_station.name}}</td>
                                     <!-- TODO remove below query causing delay in response -->
-                                    <td>{% current_vote_percentage k.presiding_officer.polling_station %}%</td>
+                                    <td>{% ps_percentage[k.presiding_officer.polling_station.id] %}%</td>
 									{% if k.received_evm %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok " style = "color:green; vertical-align:middle" ></span><br>{{k.received_evm_timestamp}}</td>
 									{% else %}
@@ -325,8 +325,8 @@
                     '<div id="bodyContent">'+
                     '<p><b>Presiding Officer : </b> {{k.presiding_officer.full_name}}' +
                     '<br/><b>Total Voters : </b> {{k.presiding_officer.polling_station.total_voters}}' +
-                    '<br/><b>Current Voters : </b> {% current_voters k.presiding_officer.polling_station %}' +
-                    '<br/><b>Current Voting %age : </b> {% current_vote_percentage k.presiding_officer.polling_station %}' +
+                    '<br/><b>Current Voters : </b> {% ps_cv[k.presiding_officer.polling_station.id] %}' +
+                    '<br/><b>Current Voting %age : </b> {% ps_percentage[k.presiding_officer.polling_station.id] %}%' +
                     '</p>'+
                     '</div>'+
                     '</div>';
@@ -343,7 +343,7 @@
 
         function initMap(){
             var mapOptions = {
-                zoom: 12,
+                zoom: 11,
                 center: origin
             };
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
