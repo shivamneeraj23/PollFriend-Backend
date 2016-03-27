@@ -149,7 +149,7 @@ class PSImage(models.Model):
 
 class WebDevice(models.Model):
 	user = models.OneToOneField(User)
-	device_key = models.CharField(max_length=300, unique=True, null=True, blank=True)
+	device_key = models.CharField(max_length=300, unique=False, null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=True)
 
 
