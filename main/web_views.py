@@ -343,9 +343,30 @@ class MessageComposeView(View):
 
 	def get(self, request):
 		if request.user.has_perm("main.add_message"):
-			presiding_officers = PresidingOfficer.objects.filter().select_related()
+			presiding_officers = None
+			if "sortBy" in request.GET:
+				sort_by = request.GET.get("sortBy")
+				if sort_by == "loggedIn":
+					presiding_officers = PresidingOfficer.objects.filter(~Q(api_key=None) & ~Q(api_key='')).select_related()
+				elif sort_by == "notLoggedIn":
+					presiding_officers = PresidingOfficer.objects.filter(Q(api_key=None) | Q(api_key='')).select_related()
+				else:
+					presiding_officers = PresidingOfficer.objects.filter().select_related()
+			else:
+				presiding_officers = PresidingOfficer.objects.filter().select_related()
 			context = dict()
 			context['presiding_officers'] = presiding_officers
+			if request.is_ajax():
+				reply = dict()
+				for po in presiding_officers:
+					reply[po.id] = dict()
+					reply[po.id]["id"] = po.id
+					reply[po.id]["full_name"] = po.full_name
+					reply[po.id]["username"] = po.username
+					reply[po.id]["ps_unique_id"] = po.polling_station.unique_id
+					reply[po.id]["ps_name"] = po.polling_station.name
+
+				return JsonResponse(reply)
 			return render(request, self.template_name, context)
 		else:
 			return HttpResponseRedirect(reverse_lazy("MessageInbox"))

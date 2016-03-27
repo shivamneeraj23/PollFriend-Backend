@@ -50,8 +50,11 @@
                       <span id="s_all">
                         <input type="checkbox"  class="form-control minimal"> Select All &nbsp;
                       </span>
-                      <span id="not_logged">
-                        <input type="checkbox" class="form-control minimal"> Select All non logged-in &nbsp;
+                      <span id="logged_in">
+                        <input type="checkbox" class="form-control minimal"> Select all logged-in &nbsp;
+                      </span>
+                      <span id="not_logged_in">
+                        <input type="checkbox" class="form-control minimal"> Select all non logged-in &nbsp;
                       </span>
                   </div>
                   <div class="form-group">
@@ -86,8 +89,67 @@
 
         $("#s_all > .icheckbox_minimal-blue > ins").click(function(){
             if($("#s_all > .icheckbox_minimal-blue > input").is(':checked') ){
-                $("#po > option").prop("selected","selected");
+                $.ajax({
+                    url: "/messages/compose/",
+                    type: "GET",
+                    cache: false,
+                    dataType: "json",
+                    success: function(response){
+                        $("#po").html("");
+                        for (y in response){
+                            x = response[y]
+                            $("#po").append("<option value="+x.id+">"+ x.username + "-" + x.full_name + "-" + x.ps_unique_id + "-" + x.ps_name +"</option>");
+                        }
+                        $("#po > option").prop("selected","selected");
+                        $("#po").trigger("change");
+                    }
+                });
+            }else{
+                $("#po > option").removeAttr("selected");
                 $("#po").trigger("change");
+             }
+        });
+        $("#logged_in > .icheckbox_minimal-blue > ins").click(function(){
+            if($("#logged_in > .icheckbox_minimal-blue > input").is(':checked') ){
+                $.ajax({
+                    url: "/messages/compose/",
+                    type: "GET",
+                    data: {"sortBy": "loggedIn"},
+                    cache: false,
+                    dataType: "json",
+                    success: function(response){
+                        $("#po").html("");
+                        for (y in response){
+                            x = response[y]
+                            $("#po").append("<option value="+x.id+">"+ x.username + "-" + x.full_name + "-" + x.ps_unique_id + "-" + x.ps_name +"</option>");
+                        }
+                        $("#po > option").prop("selected","selected");
+                        $("#po").trigger("change");
+                    }
+                });
+            }else{
+                $("#po > option").removeAttr("selected");
+                $("#po").trigger("change");
+             }
+        });
+        $("#not_logged_in > .icheckbox_minimal-blue > ins").click(function(){
+            if($("#not_logged_in > .icheckbox_minimal-blue > input").is(':checked') ){
+                $.ajax({
+                    url: "/messages/compose/",
+                    type: "GET",
+                    data: {"sortBy": "notLoggedIn"},
+                    cache: false,
+                    dataType: "json",
+                    success: function(response){
+                        $("#po").html("");
+                        for (y in response){
+                            x = response[y]
+                            $("#po").append("<option value="+x.id+">"+ x.username + "-" + x.full_name + "-" + x.ps_unique_id + "-" + x.ps_name +"</option>");
+                        }
+                        $("#po > option").prop("selected","selected");
+                        $("#po").trigger("change");
+                    }
+                });
             }else{
                 $("#po > option").removeAttr("selected");
                 $("#po").trigger("change");
