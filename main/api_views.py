@@ -229,12 +229,21 @@ class UpdatePoll(View):
 				else:
 					flag = False
 			elif "current_voters" in request.POST and "time_field" in request.POST:
+				last_count = 0
+				try:
+					pu = PollUpdate.objects.values('current_votes').order_by('-timestamp', '-time_field').filter(polling_station=ps)[0]
+					last_count = pu['current_votes']
+				except IndexError:
+					last_count = 0
 				current_voters = int(request.POST.get("current_voters"))
-				if 0 < current_voters <= polling_station.total_voters:
+				time_field = int(request.POST.get("time_field"))
+				if time_field == 0:
+					time_field = 6
+				if 0 < current_voters <= polling_station.total_voters and current_voters >= last_count:
 					poll_update = PollUpdate()
 					poll_update.current_votes = current_voters
 					poll_update.polling_station = polling_station
-					poll_update.time_field = int(request.POST.get("time_field"))
+					poll_update.time_field = time_field
 					poll_update.timestamp = datetime.now()
 					poll_update.save()
 				else:
@@ -479,7 +488,10 @@ class AllPollUpdateofPO(View):
 			if len(poll_update) > 0:
 				current_count = len(poll_update)
 				for pu in poll_update:
-					current_voters[pu.time_field] = pu.current_votes
+					time_field = pu.time_field
+					if time_field == 6:
+						time_field = 0
+					current_voters[time_field] = pu.current_votes
 
 			if "latitude" in request.POST and "longitude" in request.POST:
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
