@@ -80,7 +80,7 @@ class DashboardView(TemplateView):
 			percentage = 0.00
 
 		total_logged_in = len(PresidingOfficer.objects.filter(~Q(api_key=None) & ~Q(api_key='')))
-		presiding_officer_no = PresidingOfficer.objects.count()
+		presiding_officer_no = len(po_status)
 
 		context['all'] = po_status
 		context['up'] = poll_updates
