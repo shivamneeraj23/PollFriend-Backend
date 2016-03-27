@@ -231,7 +231,7 @@ class UpdatePoll(View):
 			elif "current_voters" in request.POST and "time_field" in request.POST:
 				last_count = 0
 				try:
-					pu = PollUpdate.objects.values('current_votes').order_by('-timestamp', '-time_field').filter(polling_station=ps)[0]
+					pu = PollUpdate.objects.values('current_votes').order_by('-timestamp', '-time_field').filter(polling_station=polling_station)[0]
 					last_count = pu['current_votes']
 				except IndexError:
 					last_count = 0
