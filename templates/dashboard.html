@@ -323,7 +323,7 @@
         var i = 0;
         var loc_size;
         {% for k in po_locations %}
-            var a = {% get_current_location k.presiding_officer %};
+            var a = [ {{ k.latitude  }}, {{ k.longitude }} ]
             if(a[0] != 0.0 && a[1] != 0.0){
                 var title = '{{k.presiding_officer.full_name}} ({{k.presiding_officer.polling_station.name}})';
                 var contentString = '<div id="content">'+
