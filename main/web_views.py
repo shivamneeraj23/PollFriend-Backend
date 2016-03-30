@@ -97,7 +97,8 @@ class DashboardView(TemplateView):
 		context['presiding_officer_no'] = presiding_officer_no
 		context['mock_poll'] = mock_poll
 		context['percentage'] = percentage
-		context['device_key'] = total_logged_in
+		context['active_po'] = total_logged_in
+		context['inactive_po'] = presiding_officer_no - total_logged_in
 		context['po_locations'] = pl
 		context['ps_cv'] = ps_cv
 		context['ps_percentage'] = ps_percentage

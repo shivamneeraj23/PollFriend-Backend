@@ -23,24 +23,11 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
-                <span class="info-box-icon bg-green"><i class="ion ion-android-done-all"></i></span>
-
-                <div class="info-box-content">
-                  <span class="info-box-text">Overall Poll</span>
-                  <span class="info-box-number">{{ percentage }}<small>%</small></span>
-                </div>
-                <!-- /.info-box-content -->
-              </div>
-              <!-- /.info-box -->
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-xs-12">
-              <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+                <span class="info-box-icon bg-green"><i class="ion-android-happy"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Active Presiding Officers</span>
-                  <span class="info-box-number">{{ device_key }}</span>
+                  <span class="info-box-number">{{ active_po }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -49,7 +36,20 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+                <span class="info-box-icon bg-red"><i class="ion-android-sad"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Inactive Presiding Officers</span>
+                  <span class="info-box-number">{{ inactive_po }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-erlenmeyer-flask"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Mock Poll Completed</span>
@@ -62,7 +62,7 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+                <span class="info-box-icon bg-olive"><i class="ion ion-flash"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Poll Started</span>
@@ -75,7 +75,7 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+                <span class="info-box-icon bg-blue"><i class="ion ion-flash-off"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Poll Ended</span>
@@ -86,25 +86,27 @@
               <!-- /.info-box -->
             </div>
 
-            <div class="col-md-3 col-sm-6 col-xs-12">
+             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+                <span class="info-box-icon bg-maroon"><i class="ion ion-android-walk"></i></span>
 
                 <div class="info-box-content">
-                  <span class="info-box-text">Sealed EVM</span>
-                  <span class="info-box-number">{{ sealed_evm }}</span>
+                  <span class="info-box-text">Reached Strongroom</span>
+                  <span class="info-box-number">{{ reached_dc }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
               <!-- /.info-box -->
             </div>
-             <div class="col-md-3 col-sm-6 col-xs-12">
+
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+                <span class="info-box-icon bg-purple"><i class="ion ion-cube"></i></span>
 
                 <div class="info-box-content">
-                  <span class="info-box-text">Reached Strongroom</span>
-                  <span class="info-box-number">{{ reached_dc }}</span>
+                  <span class="info-box-text">Submitted EVM</span>
+                  <span class="info-box-number">{{ sealed_evm }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -122,6 +124,18 @@
                     </div><!-- /.box-body -->
                 </div>
             </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Overall Poll Percentage</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <div style="line-height:3em; text-align:center; font-size:6em; position: relative; height: 300px;">{{ percentage }} %</div>
+                    </div><!-- /.box-body -->
+                </div>
+            </div>
+
         </div>
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -187,17 +201,17 @@
 										<td></td>
 									{% endif %}
 
-                  {% if k.sealed_evm %}
-                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.sealed_evm_timestamp}}</td>
-                  {% else %}
-                    <td></td>
-                  {% endif %}
+                                      {% if k.sealed_evm %}
+                                      <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.sealed_evm_timestamp}}</td>
+                                      {% else %}
+                                        <td></td>
+                                      {% endif %}
 
-                  {% if k.received_release %}
-                  <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.received_release_timestamp}}</td>
-                  {% else %}
-                    <td></td>
-                  {% endif %}
+                                      {% if k.received_release %}
+                                      <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.received_release_timestamp}}</td>
+                                      {% else %}
+                                        <td></td>
+                                      {% endif %}
 
 									{% if k.reached_dc %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.reached_dc_timestamp}}</td>
