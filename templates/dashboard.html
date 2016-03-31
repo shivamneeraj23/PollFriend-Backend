@@ -116,8 +116,12 @@
         <div class="row">
             <div class="col-md-4 col-sm-6 col-xs-12">
                 <div class="box">
-                    <div class="box-header">
+                    <div class="box-header with-border">
                         <h3 class="box-title">Polling Station Condition</h3>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <div id="donut-example" style="position: relative; height: 300px;"></div>
@@ -127,11 +131,30 @@
 
             <div class="col-md-4 col-sm-6 col-xs-12">
                 <div class="box">
-                    <div class="box-header">
+                    <div class="box-header with-border">
                         <h3 class="box-title">Overall Poll Percentage</h3>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <div style="line-height:3em; text-align:center; font-size:6em; position: relative; height: 300px;">{{ percentage }} %</div>
+                    </div><!-- /.box-body -->
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Vote %age - Time Chart</h3>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <div id="line_chart" style="position: relative; height: 300px;"></div>
                     </div><!-- /.box-body -->
                 </div>
             </div>
@@ -313,22 +336,45 @@
 {% block page_js %}
 
 <script type="text/javascript">
-	  Morris.Donut({
-  element: 'donut-example',
-  colors: ["#00a65a", "#3c8dbc", "#f56954"],
-  data: [
-    {label: "Good", value: {{good}}},
-    {label: "Normal", value: {{ok}}},
-    {label: "Bad", value: {{bad}}}
-  ]
-});
+  //Polling Station Condition Pie-Chart
+  Morris.Donut({
+              element: 'donut-example',
+              colors: ["#00a65a", "#3c8dbc", "#f56954"],
+              data: [
+                {label: "Good", value: {{good}}},
+                {label: "Normal", value: {{ok}}},
+                {label: "Bad", value: {{bad}}}
+              ]
+            });
+  // Vote %age - Time Line Chart
+    var line = new Morris.Line({
+      element: 'line_chart',
+      resize: true,
+      data: [
+        {y: '2015-04-04 09:00', item1: {{total_9}} },
+        {y: '2015-04-04 11:00', item1: {{total_11}} },
+        {y: '2015-04-04 13:00', item1: {{total_1}} },
+        {y: '2015-04-04 15:00', item1: {{total_3}} },
+        {y: '2015-04-04 17:00', item1: {{total_5}} },
+        {y: '2015-04-04 18:00', item1: {{total_last}} }
+      ],
+      xkey: 'y',
+      ykeys: ['item1'],
+      labels: ['Voting %age'],
+      lineColors: ['#3c8dbc'],
+      hideHover: 'auto'
+    });
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAteM4P82ZpVfZHUA-greFhVVphVI9UcI0&signed_in=true"></script>
 	<script type="text/javascript">
     	$(document).ready(function() {
-                $("#example1").DataTable();
-                $("#example2").DataTable();
+                $("#example1").DataTable({
+                    "order": [[ 3, "desc" ]]
+                });
+                $("#example2").DataTable({
+                    "order": [[ 4, "desc" ]]
+                });
         });
 
         var map;

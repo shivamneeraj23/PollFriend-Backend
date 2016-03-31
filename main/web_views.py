@@ -26,13 +26,14 @@ class DashboardView(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(DashboardView, self).get_context_data(**kwargs)
 		po_status = POStatus.objects.all().select_related()
-		poll_updates = PollUpdate.objects.order_by('-timestamp').filter().select_related()
+		poll_updates = PollUpdate.objects.order_by('polling_station', '-timestamp', '-time_field').filter().select_related()
 		polling_station = PollingStation.objects.all()
 		ps_cv = dict()
 		ps_percentage = dict()
 		po_evm = po_ps = poll_starts = poll_ends = sealed_evm = mock_poll = received_release = reached_dc = 0
 		total_voters = current_voters = 0
 		good = ok = bad = 0
+		total_9 = total_11 = total_1 = total_3 = total_5 = total_last = 0
 		for ps in polling_station:
 			ps_cv[ps.unique_id] = 0
 			ps_percentage[ps.unique_id] = 0.00
@@ -53,6 +54,28 @@ class DashboardView(TemplateView):
 			ps_cv[p['polling_station__unique_id']] = p_cv
 			p_tv = p['polling_station__total_voters']
 			ps_percentage[p['polling_station__unique_id']] = round(((p_cv/p_tv)*100), 2)
+
+		last_ps = None
+		last_time_field = 0
+
+		for p in poll_updates:
+			if p.time_field == last_time_field and p.polling_station == last_ps:
+				continue
+			if p.time_field == 9:
+				total_9 += p.current_votes
+			elif p.time_field == 11:
+				total_11 += p.current_votes
+			elif p.time_field == 1:
+				total_1 += p.current_votes
+			elif p.time_field == 3:
+				total_3 += p.current_votes
+			elif p.time_field == 5:
+				total_5 += p.current_votes
+			elif p.time_field == 6:
+				total_last += p.current_votes
+
+			last_time_field = p.time_field
+			last_ps = p.polling_station
 
 		pl = POLocation.objects.order_by('presiding_officer', '-timestamp').filter().distinct('presiding_officer').select_related()
 
@@ -102,6 +125,12 @@ class DashboardView(TemplateView):
 		context['po_locations'] = pl
 		context['ps_cv'] = ps_cv
 		context['ps_percentage'] = ps_percentage
+		context['total_9'] = round(((total_9/total_voters)*100), 2)
+		context['total_11'] = round(((total_11/total_voters)*100), 2)
+		context['total_1'] = round(((total_1/total_voters)*100), 2)
+		context['total_3'] = round(((total_3/total_voters)*100), 2)
+		context['total_5'] = round(((total_5/total_voters)*100), 2)
+		context['total_last'] = round(((total_last/total_voters)*100), 2)
 		return context
 
 	@method_decorator(login_required)
