@@ -69,7 +69,7 @@ def get_current_distance(presiding_officer):
 	if lat == 0.0 and long == 0.0:
 		return "----"
 
-	ps_lat, ps_long = presiding_officer.polling_station.latitude, presiding_officer.polling_station.latitude
+	ps_lat, ps_long = presiding_officer.polling_station.latitude, presiding_officer.polling_station.longitude
 	distance = getDistBetweenTwoPoints(lat, long, ps_lat, ps_long)
 
 	if distance >= 1000:

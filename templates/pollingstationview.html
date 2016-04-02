@@ -117,7 +117,13 @@
                                     <td>{{k.polling_station.total_voters}}</td>
                                     <td>{{k.current_votes}}</td>
                                     <td>{% get_percentage k.polling_station.total_voters k.current_votes %}</td>
-                                    <td>{{k.timestamp|time:"h A"}}</td>
+                                    {% if k.time_field == 1 or k.time_field == 3 or k.time_field == 5 or k.time_field == 6 %}
+                                      <td>{{k.time_field}} PM</td>
+                                    {% elif k.time_field == 9 or k.time_field == 11 %}
+                                      <td>{{k.time_field}} AM</td>
+                                    {% else %}
+                                      <td></td>
+                                    {% endif %}
 	
                                 </tr>
                                 {% endfor %}
