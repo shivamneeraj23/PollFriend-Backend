@@ -15,7 +15,7 @@ class LAC(models.Model):
 
 
 class SectorOffice(models.Model):
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=50, null=True, blank=True)
 	lac = models.ForeignKey(LAC)
 	sector_officer = models.CharField(max_length=100)
 	sector_officer_mobile = models.BigIntegerField()
@@ -54,6 +54,7 @@ class PresidingOfficer(models.Model):
 	full_name = property(_get_full_name)
 	polling_station = models.OneToOneField(PollingStation)
 	mobile = models.BigIntegerField(unique=True)
+	second_mobile = models.BigIntegerField(unique=True, null=True, blank=True)
 	api_key = models.CharField(max_length=70, null=True, blank=True)
 	device_key = models.CharField(max_length=300, null=True, blank=True)
 	last_login = models.DateTimeField(blank=True, null=True)
