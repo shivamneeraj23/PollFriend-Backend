@@ -457,6 +457,8 @@ class MessageComposeView(View):
 					gcm_devices.append(PO.device_key)
 				if PO.mobile:
 					mobiles.append(PO.mobile)
+				if PO.second_mobile:
+					mobiles.append(PO.second_mobile)
 
 				msg = Message()
 				msg.user = request.user
