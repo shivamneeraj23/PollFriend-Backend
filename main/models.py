@@ -27,7 +27,7 @@ class SectorOffice(models.Model):
 class PollingStation(models.Model):
 	unique_id = models.CharField(max_length=10)
 	sector_office = models.ForeignKey(SectorOffice)
-	name = models.CharField(max_length=100, unique=True)
+	name = models.CharField(max_length=100, unique=False)
 	total_voters = models.PositiveIntegerField(blank=True, null=True)
 	latitude = models.DecimalField(max_digits=13,  decimal_places=10)
 	longitude = models.DecimalField(max_digits=13,  decimal_places=10)
@@ -46,15 +46,15 @@ class PresidingOfficer(models.Model):
 	# username can be used as presiding officers unique id format " 9/001 to 15/198 "
 	username = models.CharField(max_length=50, null=True, blank=True)
 	first_name = models.CharField(max_length=50)
-	last_name = models.CharField(max_length=50)
+	last_name = models.CharField(max_length=50, null=True, blank=True)
 
 	def _get_full_name(self):
 		return '%s %s' % (self.first_name, self.last_name)
 
 	full_name = property(_get_full_name)
 	polling_station = models.OneToOneField(PollingStation)
-	mobile = models.BigIntegerField(unique=True, null=True, blank=True)
-	second_mobile = models.BigIntegerField(unique=True, null=True, blank=True)
+	mobile = models.BigIntegerField(null=True, blank=True)
+	second_mobile = models.BigIntegerField(null=True, blank=True)
 	api_key = models.CharField(max_length=70, null=True, blank=True)
 	device_key = models.CharField(max_length=300, null=True, blank=True)
 	last_login = models.DateTimeField(blank=True, null=True)

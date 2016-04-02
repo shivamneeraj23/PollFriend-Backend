@@ -125,12 +125,20 @@ class DashboardView(TemplateView):
 		context['po_locations'] = pl
 		context['ps_cv'] = ps_cv
 		context['ps_percentage'] = ps_percentage
-		context['total_9'] = round(((total_9/total_voters)*100), 2)
-		context['total_11'] = round(((total_11/total_voters)*100), 2)
-		context['total_1'] = round(((total_1/total_voters)*100), 2)
-		context['total_3'] = round(((total_3/total_voters)*100), 2)
-		context['total_5'] = round(((total_5/total_voters)*100), 2)
-		context['total_last'] = round(((total_last/total_voters)*100), 2)
+		try:
+			context['total_9'] = round(((total_9/total_voters)*100), 2)
+			context['total_11'] = round(((total_11/total_voters)*100), 2)
+			context['total_1'] = round(((total_1/total_voters)*100), 2)
+			context['total_3'] = round(((total_3/total_voters)*100), 2)
+			context['total_5'] = round(((total_5/total_voters)*100), 2)
+			context['total_last'] = round(((total_last/total_voters)*100), 2)
+		except ZeroDivisionError:
+			context['total_9'] = 0.00
+			context['total_11'] = 0.00
+			context['total_1'] = 0.00
+			context['total_3'] = 0.00
+			context['total_5'] = 0.00
+			context['total_last'] = 0.00
 		return context
 
 	@method_decorator(login_required)
