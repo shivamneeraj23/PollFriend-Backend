@@ -189,6 +189,8 @@
                     '<br/><b>Total Voters : </b> {{presiding_officer.polling_station.total_voters}}' +
                     '<br/><b>Current Voters : </b> {% current_voters presiding_officer.polling_station %}' +
                     '<br/><b>Current Voting %age : </b> {% current_vote_percentage presiding_officer.polling_station %}' +
+                    '<hr/>' +
+                    '<br/><b>{% get_current_distance presiding_officer %}</b> away from Polling Station' +
                     '</p>'+
                     '</div>'+
                     '</div>';
@@ -201,7 +203,7 @@
 
         function initMap(){
             var mapOptions = {
-                zoom: 10,
+                zoom: 13,
                 center: origin
             };
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
