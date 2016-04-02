@@ -664,23 +664,24 @@ class EmergencyContacts(View):
 			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
 			polling_station = presiding_officer.polling_station
 			try:
-				temp = dict()
-				temp["name"] = "CM : " + polling_station.sector_office.lac.constituent_magistrate
-				temp["contact"] = polling_station.sector_office.lac.constituent_magistrate_mobile
-				contacts.append(temp)
-				temp = dict()
-				temp["name"] = "SO : " + polling_station.sector_office.sector_officer
-				temp["contact"] = polling_station.sector_office.sector_officer_mobile
-				contacts.append(temp)
+
 				temp = dict()
 				admin_m = User.objects.get(username="monitoring_admin")
-				temp["name"] = "Admin1 : " + admin_m.first_name
+				temp["name"] = "Admin1 : "
 				temp["contact"] = int(admin_m.last_name)
 				contacts.append(temp)
 				temp = dict()
 				admin_m = User.objects.get(username="viewing_admin")
-				temp["name"] = "Admin2 : " + admin_m.first_name
+				temp["name"] = "Admin2 : "
 				temp["contact"] = int(admin_m.last_name)
+				contacts.append(temp)
+				temp = dict()
+				temp["name"] = "SO : " + polling_station.sector_office.sector_officer + " "
+				temp["contact"] = polling_station.sector_office.sector_officer_mobile
+				contacts.append(temp)
+				temp = dict()
+				temp["name"] = "CM : " + polling_station.sector_office.lac.constituent_magistrate
+				temp["contact"] = polling_station.sector_office.lac.constituent_magistrate_mobile
 				contacts.append(temp)
 
 				out["contacts"] = contacts
