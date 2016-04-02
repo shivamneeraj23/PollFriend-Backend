@@ -36,14 +36,14 @@ class UpdatePOStatus(View):
 			if "latitude" in request.POST and "longitude" in request.POST:
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
-			if "received_evm" in request.POST:
+			if "received_evm" in request.POST and not po_status.received_evm:
 				if request.POST.get("received_evm") == "true":
 					po_status.received_evm = True
 					po_status.received_evm_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
-			elif "reached_polling_station" in request.POST:
+			elif "reached_polling_station" in request.POST and not po_status.reached_polling_station:
 				if request.POST.get("reached_polling_station") == "true":
 					po_status.reached_polling_station = True
 					po_status.reached_polling_station_timestamp = datetime.now()
@@ -69,21 +69,21 @@ class UpdatePOStatus(View):
 						flag = False
 				else:
 					flag = False
-			elif "sealed_evm" in request.POST:
+			elif "sealed_evm" in request.POST and not po_status.sealed_evm:
 				if request.POST.get("sealed_evm") == "true":
 					po_status.sealed_evm = True
 					po_status.sealed_evm_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
-			elif "received_release" in request.POST:
+			elif "received_release" in request.POST and not po_status.received_release:
 				if request.POST.get("received_release") == "true":
 					po_status.received_release = True
 					po_status.received_release_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
-			elif "mock_poll_starts" in request.POST:
+			elif "mock_poll_starts" in request.POST and not po_status.mock_poll_starts:
 				if request.POST.get("mock_poll_starts") == "true":
 					# latitude = request.POST.get("latitude")
 					# longitude = request.POST.get("longitude")
@@ -94,21 +94,21 @@ class UpdatePOStatus(View):
 					po_status.save()
 				else:
 					flag = False
-			elif "mock_poll_ends" in request.POST:
+			elif "mock_poll_ends" in request.POST and not po_status.mock_poll_ends:
 				if request.POST.get("mock_poll_ends") == "true":
 					po_status.mock_poll_ends = True
 					po_status.mock_poll_ends_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
-			elif "mock_poll_resetted" in request.POST:
+			elif "mock_poll_resetted" in request.POST and not po_status.mock_poll_resetted:
 				if request.POST.get("mock_poll_resetted") == "true":
 					po_status.mock_poll_resetted = True
 					po_status.mock_poll_resetted_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
-			elif "poll_starts" in request.POST:
+			elif "poll_starts" in request.POST and not po_status.poll_starts:
 				if request.POST.get("poll_starts") == "true":
 					# latitude = request.POST.get("latitude")
 					# longitude = request.POST.get("longitude")
@@ -119,14 +119,14 @@ class UpdatePOStatus(View):
 					po_status.save()
 				else:
 					flag = False
-			elif "poll_ends" in request.POST:
+			elif "poll_ends" in request.POST and not po_status.poll_ends:
 				if request.POST.get("poll_ends") == "true":
 					po_status.poll_ends = True
 					po_status.poll_ends_timestamp = datetime.now()
 					po_status.save()
 				else:
 					flag = False
-			elif "reached_dc" in request.POST:
+			elif "reached_dc" in request.POST and not po_status.reached_dc:
 				if request.POST.get("reached_dc") == "true":
 					po_status.reached_dc = True
 					po_status.reached_dc_timestamp = datetime.now()
@@ -221,7 +221,7 @@ class UpdatePoll(View):
 		try:
 			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
 			polling_station = presiding_officer.polling_station
-			if "total_voters" in request.POST:
+			if ("total_voters" in request.POST) and not polling_station.total_voters:
 				total_voters = int(request.POST.get("total_voters"))
 				if total_voters > 0:
 					polling_station.total_voters = total_voters
