@@ -44,7 +44,7 @@ class PollingStation(models.Model):
 
 class PresidingOfficer(models.Model):
 	# username can be used as presiding officers unique id format " 9/001 to 15/198 "
-	username = models.CharField(max_length=50, unique=True)
+	username = models.CharField(max_length=50, null=True, blank=True)
 	first_name = models.CharField(max_length=50)
 	last_name = models.CharField(max_length=50)
 
@@ -53,7 +53,7 @@ class PresidingOfficer(models.Model):
 
 	full_name = property(_get_full_name)
 	polling_station = models.OneToOneField(PollingStation)
-	mobile = models.BigIntegerField(unique=True)
+	mobile = models.BigIntegerField(unique=True, null=True, blank=True)
 	second_mobile = models.BigIntegerField(unique=True, null=True, blank=True)
 	api_key = models.CharField(max_length=70, null=True, blank=True)
 	device_key = models.CharField(max_length=300, null=True, blank=True)
