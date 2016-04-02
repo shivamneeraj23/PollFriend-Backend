@@ -22,7 +22,7 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
-                <span class="info-box-icon bg-green"><i class="ion ion-android-done-all"></i></span>
+                <span class="info-box-icon bg-green"><i class="ion ion-ios-person"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Current Voters</span>
@@ -46,9 +46,10 @@
               <!-- /.info-box -->
             </div>
 
+            <a href = "{% url 'PresidingOfficerView' pk=officer.id %}" class="no-deco">
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="ion ion-android-archive"></i></span>
+                <span class="info-box-icon bg-purple"><i class="ion ion-android-contact"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Presiding Officer</span>
@@ -58,13 +59,14 @@
               </div>
               <!-- /.info-box -->
             </div>
+            </a>
 </div>
 
 <div class="row">
 	<div class="col-sm-6">
 		<div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Polling Station Status</h3>
+                        <h3 class="box-title">Polling Station Image(s)</h3>
                     </div><!-- /.box-header -->
                     <div  class="box-body table-responsive">
                     <table id="psimages" class="table table-bordered table-striped">
@@ -94,7 +96,7 @@
   <div class="col-sm-6">
     <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Polling Station Status</h3>
+                        <h3 class="box-title">Polling Station Update(s)</h3>
                     </div><!-- /.box-header -->
                     <div  class="box-body table-responsive">
                     <table id="example2" class="table table-bordered table-striped">

@@ -6,6 +6,7 @@
 {% block main_page %}
 
         <div class="row">
+            <a href= "/presiding-officer/view/" class="no-deco">
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
                 <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
@@ -19,8 +20,9 @@
               </div>
               <!-- /.info-box -->
             </div>
+            </a>
 
-
+            <a href= "/presiding-officer/view/?sortBy=loggedIn" class="no-deco">
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
                 <span class="info-box-icon bg-green"><i class="ion-android-happy"></i></span>
@@ -33,7 +35,8 @@
               </div>
               <!-- /.info-box -->
             </div>
-
+            </a>
+            <a href= "/presiding-officer/view/?sortBy=notLoggedIn" class="no-deco">
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
                 <span class="info-box-icon bg-red"><i class="ion-android-sad"></i></span>
@@ -46,7 +49,7 @@
               </div>
               <!-- /.info-box -->
             </div>
-
+            </a>
             <div class="col-md-3 col-sm-6 col-xs-12">
               <div class="info-box">
                 <span class="info-box-icon bg-aqua"><i class="ion ion-erlenmeyer-flask"></i></span>
@@ -170,27 +173,25 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>EVM</th>
                                     <th>Name</th>
                                     <th>Polling Station</th>
                                     <th>Vote %age</th>
                                     <th>Received EVM</th>
                                     <th>Reached Polling Station</th>
                                     <th>Completed Mock Poll</th>
-                                    <th>Poll Start</th>
-                                    <th>Poll Ends</th>
-                                    <th>Sealed EVM</th>
+                                    <th>Poll Started</th>
+                                    <th>Poll Ended</th>
+                                    <th>Reached Strong Room</th>
+                                    <th>Submitted EVM</th>
                                     <th>Received Release</th>
-                                    <th>Reached StrongRoom</th>
                                 </tr>
                             </thead>
                            
                             <tbody>
                             	{% for k in all %}
                                 <tr>
-                                    <td>{{ k.presiding_officer.username }}</td>
-                                    <td>{{k.presiding_officer.full_name}}</td>
-                                    <td>{{k.presiding_officer.polling_station.name}}</td>
+                                    <td><a href = "{% url 'PresidingOfficerView' pk=k.presiding_officer.id %}" >{{k.presiding_officer.full_name}}</a></td>
+                                    <td><a href = "{% url 'PollingStationView' ps_id=k.presiding_officer.polling_station.id %}" >{{k.presiding_officer.polling_station.name}}</a></td>
                                     <td>{{ ps_percentage|get_item:k.presiding_officer.polling_station.unique_id }}%</td>
 									{% if k.received_evm %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok " style = "color:green; vertical-align:middle" ></span><br>{{k.received_evm_timestamp}}</td>
@@ -224,6 +225,13 @@
 										<td></td>
 									{% endif %}
 
+
+									{% if k.reached_dc %}
+									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.reached_dc_timestamp}}</td>
+									{% else %}
+										<td></td>
+									{% endif %}
+
                                       {% if k.sealed_evm %}
                                       <td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.sealed_evm_timestamp}}</td>
                                       {% else %}
@@ -236,11 +244,6 @@
                                         <td></td>
                                       {% endif %}
 
-									{% if k.reached_dc %}
-									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok" style = "color:green" ></span><br>{{k.reached_dc_timestamp}}</td>
-									{% else %}
-										<td></td>
-									{% endif %}
 
 
 
@@ -249,18 +252,17 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>EVM</th>
                                     <th>Name</th>
                                     <th>Polling Station</th>
                                     <th>Vote %age</th>
                                     <th>Received EVM</th>
                                     <th>Reached Polling Station</th>
                                     <th>Completed Mock Poll</th>
-                                    <th>Poll Start</th>
-                                    <th>Poll Ends</th>
-                                    <th>Sealed EVM</th>
+                                    <th>Poll Started</th>
+                                    <th>Poll Ended</th>
+                                    <th>Reached Strong Room</th>
+                                    <th>Submitted EVM</th>
                                     <th>Received Release</th>
-                                    <th>Reached Strongroom</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -370,7 +372,7 @@
 	<script type="text/javascript">
     	$(document).ready(function() {
                 $("#example1").DataTable({
-                    "order": [[ 3, "desc" ]]
+                    "order": [[ 2, "desc" ]]
                 });
                 $("#example2").DataTable({
                     "order": [[ 4, "desc" ]]

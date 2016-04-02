@@ -8,13 +8,13 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title"></h3>
+                        <h3 class="box-title">{{ po_filter }} Presiding Officer(s)</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body table-responsive">
                         <table id="example1" class="table">
                             <thead>
                                 <tr>
-                                    <th>Username</th>
+                                    <th>EVM</th>
                                     <th>Name</th>
                                     <th>Polling Station</th>
                                     <th>Last Login</th>
@@ -27,7 +27,7 @@
                             	<tr>
                                     <td>{{ o.username }}</td>
                                     <td><a href = "{% url 'PresidingOfficerView' pk=o.id %}" >{{ o.full_name }}</a></td>
-                                    <td>{{ o.polling_station.name }}</td>
+                                    <td><a href = "{% url 'PollingStationView' ps_id=o.polling_station.id %}" >{{ o.polling_station.name }}</a></td>
                                     <td>{{ o.last_login }}</td>
                                     <td>{{ o.last_logout }}</td>
                                 </tr>

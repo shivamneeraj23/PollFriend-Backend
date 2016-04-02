@@ -297,14 +297,30 @@ class PollingStationListAddView(ListView):
 		return super(PollingStationListAddView, self).dispatch(*args, **kwargs)
 
 
-class PresidingOfficerListView(TemplateView):
+class PresidingOfficerListView(View):
 	template_name = "presidingofficer_list.html"
 
-	def get_context_data(self, **kwargs):
-		context = super(PresidingOfficerListView, self).get_context_data(**kwargs)
-		object_list = PresidingOfficer.objects.filter().select_related()
+	def get(self, request):
+		object_list = None
+		context = dict()
+		po_filter = None
+		if "sortBy" in request.GET:
+			sort_by = request.GET.get("sortBy")
+			if sort_by == "loggedIn":
+				object_list = PresidingOfficer.objects.filter(~Q(api_key=None) & ~Q(api_key='')).select_related()
+				po_filter = "Logged In"
+			elif sort_by == "notLoggedIn":
+				object_list = PresidingOfficer.objects.filter(Q(api_key=None) | Q(api_key='')).select_related()
+				po_filter = "Not Logged In"
+			else:
+				po_filter = "All"
+				object_list = PresidingOfficer.objects.filter().select_related()
+		else:
+			po_filter = "All"
+			object_list = PresidingOfficer.objects.filter().select_related()
+		context['po_filter'] = po_filter
 		context['object_list'] = object_list
-		return context
+		return render(request, self.template_name, context)
 
 	@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
@@ -351,7 +367,7 @@ class PresidingOfficerView(TemplateView):
 
 	def get_context_data(self , **kwargs):
 		context = super(PresidingOfficerView, self).get_context_data(**kwargs)
-		po = PresidingOfficer.objects.get(id=int(self.kwargs['pk']))
+		po = PresidingOfficer.objects.get(id=int(self.kwargs['pk'])).select_related()
 		po_status = POStatus.objects.get(presiding_officer = po)
 		# ps_images = PSImage.objects.order_by('-timestamp').filter(polling_station=ps)
 		# officer = PresidingOfficer.objects.get(polling_station = ps)
