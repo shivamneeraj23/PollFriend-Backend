@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="{% static 'main/css/select2.min.css' %}">
     <!-- iCheck for checkboxes and radio inputs -->
     <link rel="stylesheet" href="{% static 'main/css/icheck.blue.min.css' %}">
+    <!-- Pace style -->
+    <link rel="stylesheet" href="{% static 'main/css/pace.min.css' %}">
 {% endblock %}
 {% block main_page %}
 
@@ -73,12 +75,15 @@
 
 {% endblock %}
 {% block page_js %}
+    <script src="{% static 'main/js/pace.min.js' %}"></script>
     <!-- Select2 JS (responsible for awesomeness in this page) -->
     <script src="{% static 'main/js/select2.full.min.js' %}"></script>
     <!-- iCheck for checkboxes and radio inputs -->
     <script src="{% static 'main/js/icheck.min.js' %}"></script>
+
     <script type="text/javascript">
       //Select2
+      $(document).ajaxStart(function() { Pace.restart(); });
       $('#po').select2();
       //iCheck for checkbox and radio inputs
         $('input[type="checkbox"].minimal').iCheck({

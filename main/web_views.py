@@ -94,7 +94,7 @@ class DashboardView(TemplateView):
 				received_release += 1
 			if po.reached_dc:
 				reached_dc += 1
-			if po.mock_poll_resetted:
+			if po.mock_poll_ends:
 				mock_poll += 1
 
 		if total_voters and current_voters:
