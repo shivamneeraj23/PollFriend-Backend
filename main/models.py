@@ -132,7 +132,7 @@ class SOSUpdate(models.Model):
 
 class EVM(models.Model):
 	polling_station = models.ForeignKey(PollingStation)
-	unique_id = models.CharField(max_length=50, unique=True)
+	unique_id = models.CharField(max_length=50)
 
 
 class POLocation(models.Model):
