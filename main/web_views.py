@@ -102,7 +102,7 @@ class DashboardView(TemplateView):
 		else:
 			percentage = 0.00
 
-		total_logged_in = len(PresidingOfficer.objects.filter(~Q(api_key=None) & ~Q(api_key='')))
+		total_logged_in = len(PresidingOfficer.objects.filter(~Q(last_login=None)))
 		presiding_officer_no = len(po_status)
 
 		context['all'] = po_status
@@ -315,10 +315,10 @@ class PresidingOfficerListView(View):
 		if "sortBy" in request.GET:
 			sort_by = request.GET.get("sortBy")
 			if sort_by == "loggedIn":
-				object_list = PresidingOfficer.objects.filter(~Q(api_key=None) & ~Q(api_key='')).select_related()
+				object_list = PresidingOfficer.objects.filter(~Q(last_login=None)).select_related()
 				po_filter = "Logged In"
 			elif sort_by == "notLoggedIn":
-				object_list = PresidingOfficer.objects.filter(Q(api_key=None) | Q(api_key='')).select_related()
+				object_list = PresidingOfficer.objects.filter(Q(last_login=None)).select_related()
 				po_filter = "Not Logged In"
 			else:
 				po_filter = "All"
@@ -401,9 +401,9 @@ class MessageComposeView(View):
 			if "sortBy" in request.GET:
 				sort_by = request.GET.get("sortBy")
 				if sort_by == "loggedIn":
-					presiding_officers = PresidingOfficer.objects.filter(~Q(api_key=None) & ~Q(api_key='')).select_related()
+					presiding_officers = PresidingOfficer.objects.filter(~Q(last_login=None)).select_related()
 				elif sort_by == "notLoggedIn":
-					presiding_officers = PresidingOfficer.objects.filter(Q(api_key=None) | Q(api_key='')).select_related()
+					presiding_officers = PresidingOfficer.objects.filter(Q(last_login=None)).select_related()
 				else:
 					presiding_officers = PresidingOfficer.objects.filter().select_related()
 			else:
