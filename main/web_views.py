@@ -14,9 +14,10 @@ from functions.send_sms import SendSMS
 from django.views.decorators.cache import never_cache
 from django.db.models import Sum
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.template import loader, Context
 # Create your views here.
 
 
@@ -53,7 +54,10 @@ class DashboardView(TemplateView):
 			p_cv = p['current_votes']
 			ps_cv[p['polling_station__unique_id']] = p_cv
 			p_tv = p['polling_station__total_voters']
-			ps_percentage[p['polling_station__unique_id']] = round(((p_cv/p_tv)*100), 2)
+			try:
+				ps_percentage[p['polling_station__unique_id']] = round(((p_cv/p_tv)*100), 2)
+			except TypeError:
+				ps_percentage[p['polling_station__unique_id']] = 0.00
 
 		last_ps = None
 		last_time_field = 0
@@ -524,3 +528,20 @@ class AdminLogout(View):
 	def get(self, request):
 		logout(request)
 		return HttpResponseRedirect(reverse_lazy("AdminLoginView"))
+
+
+class DownloadCSV(View):
+	
+	def get(self, request):
+		response = HttpResponse(content_type='text/csv')
+		response['Content-Disposition'] = 'attachment; filename="CurrentData.csv"'
+		all_po = POStatus.objects.order_by('presiding_officer__polling_station').select_related()
+		t = loader.get_template('excel_data_dumps.txt')
+		c = Context({'data': all_po,})
+		response.write(t.render(c))
+		return response 
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(DownloadCSV, self).dispatch(*args, **kwargs)
+	

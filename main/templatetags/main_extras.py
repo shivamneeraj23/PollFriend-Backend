@@ -76,3 +76,15 @@ def get_current_distance(presiding_officer):
 		return str(round((distance / 1000.00), 2)) + " KM"
 	else:
 		return str(distance) + " Meter"
+
+
+@register.simple_tag
+def current_voters_timefield(polling_station, timefield):
+	pu = PollUpdate.objects.order_by('-timestamp').filter(polling_station=polling_station, time_field=timefield)
+	current_votes = 0
+	if len(pu) > 0:
+		pu = pu[0]
+		current_votes = pu.current_votes
+		return current_votes
+	else:
+		return " "

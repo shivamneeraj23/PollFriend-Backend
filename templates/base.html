@@ -61,6 +61,7 @@
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
+              <li><a href="{% url 'DownloadCSV' %}"><i class="fa fa-download"></i> Download CSV</a></li>
               <li><a href="#"><b>{{ user.first_name }}</b></a></li>
               <li><a href="{% url 'AdminLogout' %}">Logout</a></li>
             </ul>

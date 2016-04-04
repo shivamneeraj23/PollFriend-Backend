@@ -48,4 +48,5 @@ urlpatterns = [
 	url(r'^admin-logout/$', AdminLogout.as_view(), name='AdminLogout'),
 	url(r'^sos_acknowledgement/$', SOSAcknowledgement.as_view(), name='SOSAcknowledgement'),
 	url(r'^emergency_contacts/$', EmergencyContacts.as_view(), name='EmergencyContacts'),
+	url(r'^download_csv/$', DownloadCSV.as_view(), name='DownloadCSV'),
 ]
