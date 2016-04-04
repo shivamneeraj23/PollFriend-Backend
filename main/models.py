@@ -21,7 +21,7 @@ class SectorOffice(models.Model):
 	sector_officer_mobile = models.BigIntegerField()
 
 	def __str__(self):
-		return '%s' % self.sector_officer_name
+		return '%s' % self.sector_officer
 
 
 class PollingStation(models.Model):
