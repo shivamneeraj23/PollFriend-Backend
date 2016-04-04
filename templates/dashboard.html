@@ -318,6 +318,7 @@
                     <table id="example2" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Polling Station</th>                                   
                                     <th>Total Voters</th>
                                     <th>Current Voters</th>
@@ -329,7 +330,8 @@
                             <tbody>
                             	{% for k in up %}
                                 <tr>
-                                    <td>{{k.polling_station.name}}</td>
+                                    <td><a href = "{% url 'PollingStationView' ps_id=k.polling_station.id %}" >{{k.polling_station.unique_id}}</a></td>
+                                    <td><a href = "{% url 'PollingStationView' ps_id=k.polling_station.id %}" >{{k.polling_station.name}}</a></td>
                                     <td>{{k.polling_station.total_voters}}</td>
                                     <td>{{k.current_votes}}</td>
                                     <td>{% get_percentage k.polling_station.total_voters k.current_votes %}</td>
@@ -345,6 +347,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th>#</th>
                                     <th>Polling Station</th>                                   
                                     <th>Total Voters</th>
                                     <th>Current Voters</th>
