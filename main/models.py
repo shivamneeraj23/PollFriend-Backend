@@ -39,7 +39,7 @@ class PollingStation(models.Model):
 	condition = models.SmallIntegerField(choices=CONDITIONS, null=True, blank=True)
 
 	def __str__(self):
-		return '%s of Sector Office %s of LAC %s' % (self.name, self.sector_office.name, self.sector_office.lac.name)
+		return '%s - %s' % (self.unique_id, self.name)
 
 
 class PresidingOfficer(models.Model):
