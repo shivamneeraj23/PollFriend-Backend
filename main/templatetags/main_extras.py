@@ -75,7 +75,7 @@ def get_current_distance(presiding_officer):
 	if distance >= 1000:
 		return str(round((distance / 1000.00), 2)) + " KM"
 	else:
-		return str(distance) + " Meter"
+		return str(round(distance, 2)) + " Meter"
 
 
 @register.simple_tag
