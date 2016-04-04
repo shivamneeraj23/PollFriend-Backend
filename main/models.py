@@ -21,7 +21,7 @@ class SectorOffice(models.Model):
 	sector_officer_mobile = models.BigIntegerField()
 
 	def __str__(self):
-		return '%s' % self.name
+		return '%s' % self.sector_officer_name
 
 
 class PollingStation(models.Model):
@@ -81,7 +81,7 @@ class PollUpdate(models.Model):
 	timestamp = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		return '%s reported %s votes at %s' % (self.polling_station.name, self.current_votes, self.timestamp)
+		return '%s reported %s votes at %s' % (self.polling_station, self.current_votes, self.time_field)
 
 
 class POStatus(models.Model):
