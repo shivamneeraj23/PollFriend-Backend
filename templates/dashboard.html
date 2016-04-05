@@ -218,7 +218,7 @@
                             	{% for k in all %}
                                 <tr>
                                     <td><a href = "{% url 'PresidingOfficerView' pk=k.presiding_officer.id %}" >{{k.presiding_officer.full_name}}</a></td>
-                                    <td><a href = "{% url 'PollingStationView' ps_id=k.presiding_officer.polling_station.id %}" >{{k.polling_station.unique_id}} - {{k.presiding_officer.polling_station.name}}</a></td>
+                                    <td><a href = "{% url 'PollingStationView' ps_id=k.presiding_officer.polling_station.id %}" >{{k.presiding_officer.polling_station.unique_id}} - {{k.presiding_officer.polling_station.name}}</a></td>
                                     <td>{{ ps_percentage|get_item:k.presiding_officer.polling_station.unique_id }}%</td>
 									{% if k.received_evm %}
 									<td style="text-align : center"> <span class ="glyphicon glyphicon-ok " style = "color:green; vertical-align:middle" ></span><br>{{k.received_evm_timestamp}}</td>
