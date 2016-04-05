@@ -175,7 +175,8 @@ class LoginPO(View):
 			if "latitude" in request.POST and "longitude" in request.POST:
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
-			return JsonResponse({'result': 'ok', 'access_token': presiding_officer.api_key})
+			# return JsonResponse({'result': 'ok', 'access_token': presiding_officer.api_key})
+			return JsonResponse({'result': 'fail'})
 		except PresidingOfficer.DoesNotExist:
 			return JsonResponse({'result': 'fail'})
 		except PollingStation.DoesNotExist:
