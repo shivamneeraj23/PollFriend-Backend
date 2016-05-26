@@ -37,7 +37,9 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-	'main',  # Main EVMTS
+	'main',  # Main EVMTS, includes models and admin site config for whole project
+	'web',  # Web based views app
+	'api'  # API based views app
 )
 
 MIDDLEWARE_CLASSES = (

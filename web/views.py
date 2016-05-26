@@ -544,4 +544,3 @@ class DownloadCSV(View):
 	@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
 		return super(DownloadCSV, self).dispatch(*args, **kwargs)
-	
