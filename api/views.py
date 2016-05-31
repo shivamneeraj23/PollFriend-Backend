@@ -137,18 +137,18 @@ class UpdatePOStatus(View):
 				flag = False
 
 		except PresidingOfficer.DoesNotExist:
-			flag = False
+			return JsonResponse({'result': 'fail'}, status=401)
 		except POStatus.DoesNotExist:
-			flag = False
+			return JsonResponse({'result': 'fail'}, status=401)
 		except PollingStation.DoesNotExist:
-			flag = False
+			return JsonResponse({'result': 'fail'}, status=401)
 		if flag:
 			return JsonResponse({'result': 'ok'})
 		else:
 			return JsonResponse({'result': 'fail'})
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -158,7 +158,7 @@ class UpdatePOStatus(View):
 class LoginPO(View):
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	def post(self, request):
 		poid = request.POST.get('poid')
@@ -176,11 +176,11 @@ class LoginPO(View):
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
 			# return JsonResponse({'result': 'ok', 'access_token': presiding_officer.api_key})
-			return JsonResponse({'result': 'fail'})
+			return JsonResponse({'result': 'fail'}, status=401)  # login disabled after polling day
 		except PresidingOfficer.DoesNotExist:
-			return JsonResponse({'result': 'fail'})
+			return JsonResponse({'result': 'fail'}, status=401)
 		except PollingStation.DoesNotExist:
-			return JsonResponse({'result': 'fail'})
+			return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -203,10 +203,10 @@ class LogoutPO(View):
 
 			return JsonResponse({'result': 'ok'})
 		except PresidingOfficer.DoesNotExist:
-			return JsonResponse({'result': 'fail'})
+			return JsonResponse({'result': 'fail'}, status=401)
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -256,9 +256,9 @@ class UpdatePoll(View):
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
 		except PresidingOfficer.DoesNotExist:
-			flag = False
+			return JsonResponse({'result': 'fail'}, status=401)
 		except PollingStation.DoesNotExist:
-			flag = False
+			return JsonResponse({'result': 'fail'}, status=401)
 
 		if flag:
 			return JsonResponse({'result': 'ok'})
@@ -266,7 +266,7 @@ class UpdatePoll(View):
 			return JsonResponse({'result': 'fail'})
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -335,10 +335,10 @@ class CheckEarlyStatus(View):
 			response = {'result': 'ok', 'received_evm': received_evm, 'reached_polling_station': reached_polling_station, 'evm_number': evm_number, 'mock_poll_starts': mock_poll_starts, 'mock_poll_ends': mock_poll_ends, 'mock_poll_resetted': mock_poll_resetted, 'poll_starts': poll_starts, 'poll_ends': poll_ends, 'sealed_evm': sealed_evm, 'received_release': received_release, 'reached_dc': reached_dc, 'polling_station_condition': polling_station_condition, 'total_voters': total_voters}
 			return JsonResponse(response)
 		else:
-			return JsonResponse({'result': 'fail'})
+			return JsonResponse({'result': 'fail'}, status=401)
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -419,7 +419,7 @@ class SOSUpdateView(View):
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
 		except PresidingOfficer.DoesNotExist:
-			flag = False
+			return JsonResponse({'result': 'fail'}, status=401)
 
 		if flag:
 			return JsonResponse({'result': 'ok'})
@@ -427,7 +427,7 @@ class SOSUpdateView(View):
 			return JsonResponse({'result': 'fail'})
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -460,10 +460,10 @@ class AllEVMofPO(View):
 		if flag:
 			return JsonResponse({'result': 'ok', 'evms': evms, 'total_evms': total_evms})
 		else:
-			return JsonResponse({'result': 'fail'})
+			return JsonResponse({'result': 'fail'}, status=401)
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -503,10 +503,10 @@ class AllPollUpdateofPO(View):
 		if flag:
 			return JsonResponse({'result': 'ok', 'total_voters': total_voters, 'current_count': current_count, 'current_voters': current_voters})
 		else:
-			return JsonResponse({'result': 'fail'})
+			return JsonResponse({'result': 'fail'}, status=401)
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -532,7 +532,7 @@ class UploadPSImage(View):
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
 		except PresidingOfficer.DoesNotExist:
-			pass
+			return JsonResponse({'result': 'fail'}, status=401)
 
 		if flag:
 			return JsonResponse({'result': 'ok'})
@@ -540,7 +540,7 @@ class UploadPSImage(View):
 			return JsonResponse({'result': 'fail'})
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -565,7 +565,7 @@ class RegisterMobileDevice(View):
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
 		except PresidingOfficer.DoesNotExist:
-			pass
+			return JsonResponse({'result': 'fail'}, status=401)
 
 		if flag:
 			return JsonResponse({'result': 'ok'})
@@ -573,7 +573,7 @@ class RegisterMobileDevice(View):
 			return JsonResponse({'result': 'fail'})
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -593,7 +593,7 @@ class GetOtherDetails(View):
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
 		except PresidingOfficer.DoesNotExist:
-			pass
+			return JsonResponse({'result': 'fail'}, status=401)
 
 		try:
 			od = OtherDetails.objects.order_by('-timestamp').get()
@@ -605,13 +605,8 @@ class GetOtherDetails(View):
 		except OtherDetails.DoesNotExist:
 			return JsonResponse({'result': 'fail'})
 
-		if flag:
-			return JsonResponse({'result': 'ok'})
-		else:
-			return JsonResponse({'result': 'fail'})
-
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -638,7 +633,7 @@ class SOSAcknowledgement(View):
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
 		except PresidingOfficer.DoesNotExist:
-			pass
+			return JsonResponse({'result': 'fail'}, status=401)
 
 		if flag:
 			return JsonResponse({'result': 'ok'})
@@ -646,7 +641,7 @@ class SOSAcknowledgement(View):
 			return JsonResponse({'result': 'fail'})
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
@@ -695,7 +690,7 @@ class EmergencyContacts(View):
 				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
 		except PresidingOfficer.DoesNotExist:
-			pass
+			return JsonResponse({'result': 'fail'}, status=401)
 
 		if flag:
 			return JsonResponse(out)
@@ -703,7 +698,7 @@ class EmergencyContacts(View):
 			return JsonResponse({'result': 'fail'})
 
 	def get(self, request):
-		return JsonResponse({'result': 'fail'})
+		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
