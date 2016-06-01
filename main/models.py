@@ -3,6 +3,13 @@ from django.contrib.auth.models import User
 # from djnago.template.defaultfilters import slugify
 # Create your models here.
 
+USER_TYPE_CHOICES = (
+	(1, 'Presiding Officer'),
+	(2, 'Sector Officer'),
+	(3, 'Admin Manual'),
+	(4, 'Admin Bot'),
+)
+
 
 class LAC(models.Model):
 	name = models.CharField(max_length=50, unique=True)
@@ -19,6 +26,9 @@ class SectorOffice(models.Model):
 	lac = models.ForeignKey(LAC)
 	sector_officer = models.CharField(max_length=100)
 	sector_officer_mobile = models.BigIntegerField()
+	username = models.CharField(max_length=50, null=True, blank=True, unique=True)
+	password = models.CharField(max_length=50, null=True, blank=True)
+	api_key = models.CharField(max_length=70, null=True, blank=True)
 
 	def __str__(self):
 		return '%s' % self.sector_officer
@@ -78,6 +88,7 @@ class PollUpdate(models.Model):
 	polling_station = models.ForeignKey(PollingStation)
 	current_votes = models.PositiveIntegerField()
 	time_field = models.SmallIntegerField(null=True, blank=True)
+	updated_by = models.SmallIntegerField(choices=USER_TYPE_CHOICES, null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):

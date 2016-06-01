@@ -155,62 +155,89 @@ class UpdatePOStatus(View):
 		return super(UpdatePOStatus, self).dispatch(*args, **kwargs)
 
 
-class LoginPO(View):
+class LoginUser(View):
 
 	def get(self, request):
 		return JsonResponse({'result': 'fail'}, status=401)
 
 	def post(self, request):
-		poid = request.POST.get('poid')
-		psid = request.POST.get('psid')
-		try:
-			ps = PollingStation.objects.get(unique_id=psid)
-			presiding_officer = PresidingOfficer.objects.get(polling_station=ps, username=poid)
-			password = (psid+'@#'+poid+str(datetime.date(datetime.now()))).encode('utf-8')
-			key = hashlib.sha256(password)
-			presiding_officer.api_key = key.hexdigest()
-			presiding_officer.last_login = datetime.now()
-			presiding_officer.save()
+		# return JsonResponse({'result': 'fail'}, status=401)  # login disabled after polling day
+		user_type = request.POST.get('type')
+		if user_type == "SO":
+			username = request.POST.get('so_username')
+			password = request.POST.get('so_password')
+			try:
+				sector_office = SectorOffice.objects.get(username=username, password=password)
+				password = (username+'@#'+password+str(datetime.date(datetime.now()))).encode('utf-8')
+				key = hashlib.sha256(password)
+				sector_office.api_key = key.hexdigest()
+				sector_office.save()
 
-			if "latitude" in request.POST and "longitude" in request.POST:
-				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+				return JsonResponse({'result': 'ok', 'access_token': sector_office.api_key})
+			except SectorOffice.DoesNotExist:
+				return JsonResponse({'result': 'fail'}, status=401)
+		else:
+			poid = request.POST.get('poid')
+			psid = request.POST.get('psid')
+			try:
+				ps = PollingStation.objects.get(unique_id=psid)
+				presiding_officer = PresidingOfficer.objects.get(polling_station=ps, username=poid)
+				password = (psid+'@#'+poid+str(datetime.date(datetime.now()))).encode('utf-8')
+				key = hashlib.sha256(password)
+				presiding_officer.api_key = key.hexdigest()
+				presiding_officer.last_login = datetime.now()
+				presiding_officer.save()
 
-			# return JsonResponse({'result': 'ok', 'access_token': presiding_officer.api_key})
-			return JsonResponse({'result': 'fail'}, status=401)  # login disabled after polling day
-		except PresidingOfficer.DoesNotExist:
-			return JsonResponse({'result': 'fail'}, status=401)
-		except PollingStation.DoesNotExist:
-			return JsonResponse({'result': 'fail'}, status=401)
+				if "latitude" in request.POST and "longitude" in request.POST:
+					SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+
+				return JsonResponse({'result': 'ok', 'access_token': presiding_officer.api_key})
+			except PresidingOfficer.DoesNotExist:
+				return JsonResponse({'result': 'fail'}, status=401)
+			except PollingStation.DoesNotExist:
+				return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
-		return super(LoginPO, self).dispatch(*args, **kwargs)
+		return super(LoginUser, self).dispatch(*args, **kwargs)
 
 
-class LogoutPO(View):
+class LogoutUser(View):
 
 	def post(self, request):
-		poid = request.POST.get('poid')
-		access_token = request.POST.get('access_token')
-		try:
-			presiding_officer = PresidingOfficer.objects.get(username=poid)
-			presiding_officer.api_key = ""
-			presiding_officer.last_logout = datetime.now()
-			presiding_officer.save()
+		user_type = request.POST.get('type')
+		if user_type == "SO":
+			username = request.POST.get('so_username')
+			access_token = request.POST.get('access_token')
+			try:
+				sector_office = SectorOffice.objects.get(username=username, api_key=access_token)
+				sector_office.api_key = ""
+				sector_office.save()
+				return JsonResponse({'result': 'ok'})
+			except SectorOffice.DoesNotExist:
+				return JsonResponse({'result': 'fail'}, status=401)
+		else:
+			poid = request.POST.get('poid')
+			access_token = request.POST.get('access_token')
+			try:
+				presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+				presiding_officer.api_key = ""
+				presiding_officer.last_logout = datetime.now()
+				presiding_officer.save()
 
-			if "latitude" in request.POST and "longitude" in request.POST:
-				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+				if "latitude" in request.POST and "longitude" in request.POST:
+					SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
-			return JsonResponse({'result': 'ok'})
-		except PresidingOfficer.DoesNotExist:
-			return JsonResponse({'result': 'fail'}, status=401)
+				return JsonResponse({'result': 'ok'})
+			except PresidingOfficer.DoesNotExist:
+				return JsonResponse({'result': 'fail'}, status=401)
 
 	def get(self, request):
 		return JsonResponse({'result': 'fail'}, status=401)
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
-		return super(LogoutPO, self).dispatch(*args, **kwargs)
+		return super(LogoutUser, self).dispatch(*args, **kwargs)
 
 
 class UpdatePoll(View):

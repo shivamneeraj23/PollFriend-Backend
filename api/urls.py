@@ -2,9 +2,9 @@ from django.conf.urls import url
 from api.views import *
 
 urlpatterns = [
-	url(r'^login/$', LoginPO.as_view(), name="loginPO"),
+	url(r'^login/$', LoginUser.as_view(), name="loginUser"),
 	url(r'^po_status/$', UpdatePOStatus.as_view(), name="UpdatePOStatus"),
-	url(r'^logout/$', LogoutPO.as_view(), name="logoutPO"),
+	url(r'^logout/$', LogoutUser.as_view(), name="logoutUser"),
 	url(r'^poll_update/$', UpdatePoll.as_view(), name="PollUpdate"),
 	url(r'^check_status/$', CheckEarlyStatus.as_view(), name="checkEarlyStatus"),
 	url(r'^sos_update/$', SOSUpdateView.as_view(), name="SOSUpdate"),
