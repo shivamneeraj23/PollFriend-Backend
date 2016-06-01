@@ -244,48 +244,69 @@ class UpdatePoll(View):
 
 	def post(self, request):
 		flag = True
+		user_type = request.POST.get('type')
+		so_username = request.POST.get('so_username')
 		poid = request.POST.get('poid')
 		access_token = request.POST.get('access_token')
-		try:
-			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
-			polling_station = presiding_officer.polling_station
-			if ("total_voters" in request.POST) and not polling_station.total_voters:
-				total_voters = int(request.POST.get("total_voters"))
-				if total_voters > 0:
-					polling_station.total_voters = total_voters
-					polling_station.save()
-				else:
-					flag = False
-			elif "current_voters" in request.POST and "time_field" in request.POST:
-				last_count = 0
-				try:
-					pu = PollUpdate.objects.values('current_votes').order_by('-timestamp', '-time_field').filter(polling_station=polling_station)[0]
-					last_count = pu['current_votes']
-				except IndexError:
-					last_count = 0
-				current_voters = int(request.POST.get("current_voters"))
-				time_field = int(request.POST.get("time_field"))
-				if time_field == 0:
-					time_field = 6
-				if 0 < current_voters <= polling_station.total_voters and current_voters >= last_count:
-					poll_update = PollUpdate()
-					poll_update.current_votes = current_voters
-					poll_update.polling_station = polling_station
-					poll_update.time_field = time_field
-					poll_update.timestamp = datetime.now()
-					poll_update.save()
-				else:
-					flag = False
+		ps_unique_id = request.POST.get('ps_unique_id')
+		if user_type == "SO":
+			try:
+				sector_office = SectorOffice.objects.get(username=so_username, api_key=access_token)
+				user_type_choice = 2
+			except SectorOffice.DoesNotExist:
+				return JsonResponse({'result': 'fail'}, status=401)
+			try:
+				polling_station = PollingStation.objects.get(unique_id=ps_unique_id)
+				if polling_station.sector_office != sector_office:
+					return JsonResponse({'result': 'fail'}, status=403)
+			except PollingStation.DoesNotExist:
+				return JsonResponse({'result': 'fail'})
+		else:
+			try:
+				presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+				polling_station = presiding_officer.polling_station
+				user_type_choice = 1
+
+				if "latitude" in request.POST and "longitude" in request.POST:
+					SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+
+			except PresidingOfficer.DoesNotExist:
+				return JsonResponse({'result': 'fail'}, status=401)
+			except PollingStation.DoesNotExist:
+				return JsonResponse({'result': 'fail'})
+
+		if ("total_voters" in request.POST) and not polling_station.total_voters:
+			total_voters = int(request.POST.get("total_voters"))
+			if total_voters > 0:
+				polling_station.total_voters = total_voters
+				polling_station.save()
 			else:
 				flag = False
+		elif "current_voters" in request.POST and "time_field" in request.POST:
+			last_count = 0
+			try:
+				pu = PollUpdate.objects.values('current_votes').order_by('-timestamp', '-time_field').filter(polling_station=polling_station)[0]
+				last_count = pu['current_votes']
+			except IndexError:
+				last_count = 0
 
-			if "latitude" in request.POST and "longitude" in request.POST:
-				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+			current_voters = int(request.POST.get("current_voters"))
+			time_field = int(request.POST.get("time_field"))
 
-		except PresidingOfficer.DoesNotExist:
-			return JsonResponse({'result': 'fail'}, status=401)
-		except PollingStation.DoesNotExist:
-			return JsonResponse({'result': 'fail'}, status=401)
+			if time_field == 0:
+				time_field = 6
+			if 0 < current_voters <= polling_station.total_voters and current_voters >= last_count:
+				poll_update = PollUpdate()
+				poll_update.current_votes = current_voters
+				poll_update.polling_station = polling_station
+				poll_update.time_field = time_field
+				poll_update.timestamp = datetime.now()
+				poll_update.updated_by = user_type_choice
+				poll_update.save()
+			else:
+				flag = False
+		else:
+			flag = False
 
 		if flag:
 			return JsonResponse({'result': 'ok'})
