@@ -730,3 +730,33 @@ class EmergencyContacts(View):
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
 		return super(EmergencyContacts, self).dispatch(*args, **kwargs)
+
+
+class GetPollingStations(View):
+
+	def post(self, request):
+		username = request.POST.get('so_username')
+		access_token = request.POST.get('access_token')
+		try:
+			sector_office = SectorOffice.objects.get(username=username, api_key=access_token)
+			polling_stations = PollingStation.objects.order_by('unique_id').filter(sector_office=sector_office)
+			output = dict()
+			total_ps = len(polling_stations)
+			output["count"] = total_ps
+			output["data"] = dict()
+			data_dict = output["data"]
+			curr_count = 1
+			for polling_station in polling_stations:
+				data_dict[curr_count] = {"unique_id": polling_station.unique_id, "name": polling_station.name}
+				curr_count += 1
+			return JsonResponse(output)
+
+		except SectorOffice.DoesNotExist:
+			return JsonResponse({'result': 'fail'}, status=401)
+
+	def get(self, request):
+		return JsonResponse({'result': 'fail'}, status=401)
+
+	@method_decorator(csrf_exempt)
+	def dispatch(self, *args, **kwargs):
+		return super(GetPollingStations, self).dispatch(*args, **kwargs)

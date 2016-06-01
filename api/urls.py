@@ -15,4 +15,5 @@ urlpatterns = [
 	url(r'^get_other_details/$', GetOtherDetails.as_view(), name='GetOtherDetails'),
 	url(r'^sos_acknowledgement/$', SOSAcknowledgement.as_view(), name='SOSAcknowledgement'),
 	url(r'^emergency_contacts/$', EmergencyContacts.as_view(), name='EmergencyContacts'),
+	url(r'^list_polling_stations/$', GetPollingStations.as_view(), name='GetPollingStations'),
 ]
