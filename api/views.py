@@ -518,35 +518,55 @@ class AllEVMofPO(View):
 		return super(AllEVMofPO, self).dispatch(*args, **kwargs)
 
 
-class AllPollUpdateofPO(View):
+class AllPollUpdateofPS(View):
 
 	def post(self, request):
 		flag = True
+		user_type = request.POST.get('type')
+		so_username = request.POST.get('so_username')
 		poid = request.POST.get('poid')
 		access_token = request.POST.get('access_token')
+		ps_unique_id = request.POST.get('ps_unique_id')
+		polling_station = None
 		total_voters = 0
 		current_count = 0
 		current_voters = dict()
-		try:
-			presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
-			polling_station = presiding_officer.polling_station
-			if polling_station.total_voters:
-				total_voters = polling_station.total_voters
-			poll_update = PollUpdate.objects.order_by('time_field', '-timestamp').filter(polling_station=polling_station).distinct('time_field')
+		if user_type == "SO":
+			try:
+				sector_office = SectorOffice.objects.get(username=so_username, api_key=access_token)
+			except SectorOffice.DoesNotExist:
+				return JsonResponse({'result': 'fail'}, status=401)
+			try:
+				polling_station = PollingStation.objects.get(unique_id=ps_unique_id)
+				if polling_station.sector_office != sector_office:
+					return JsonResponse({'result': 'fail'}, status=403)
+			except PollingStation.DoesNotExist:
+				return JsonResponse({'result': 'fail'})
+		else:
+			try:
+				presiding_officer = PresidingOfficer.objects.get(username=poid, api_key=access_token)
+				polling_station = presiding_officer.polling_station
 
-			if len(poll_update) > 0:
-				current_count = len(poll_update)
-				for pu in poll_update:
-					time_field = pu.time_field
-					if time_field == 6:
-						time_field = 0
-					current_voters[time_field] = pu.current_votes
+				if "latitude" in request.POST and "longitude" in request.POST:
+					SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
 
-			if "latitude" in request.POST and "longitude" in request.POST:
-				SavePOLocation(request.POST.get("latitude"), request.POST.get("longitude"), presiding_officer)
+			except PresidingOfficer.DoesNotExist:
+				flag = False
+			except PollingStation.DoesNotExist:
+				return JsonResponse({'result': 'fail'})
 
-		except PresidingOfficer.DoesNotExist:
-			flag = False
+		if polling_station.total_voters:
+			total_voters = polling_station.total_voters
+
+		poll_update = PollUpdate.objects.order_by('time_field', '-timestamp').filter(polling_station=polling_station).distinct('time_field')
+
+		if len(poll_update) > 0:
+			current_count = len(poll_update)
+			for pu in poll_update:
+				time_field = pu.time_field
+				if time_field == 6:
+					time_field = 0
+				current_voters[time_field] = pu.current_votes
 
 		if flag:
 			return JsonResponse({'result': 'ok', 'total_voters': total_voters, 'current_count': current_count, 'current_voters': current_voters})
@@ -558,7 +578,7 @@ class AllPollUpdateofPO(View):
 
 	@method_decorator(csrf_exempt)
 	def dispatch(self, *args, **kwargs):
-		return super(AllPollUpdateofPO, self).dispatch(*args, **kwargs)
+		return super(AllPollUpdateofPS, self).dispatch(*args, **kwargs)
 
 
 class UploadPSImage(View):
