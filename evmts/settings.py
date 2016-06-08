@@ -86,6 +86,7 @@ DATABASES = {
 }
 '''
 
+# Below is postgreSQL settings. TODO : make this values to be in environment variables for security
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -103,7 +104,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = 'Asia/Kolkata'  # Indian Time Zone
 
 USE_I18N = True
 
@@ -116,14 +117,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
-# ADDED BY ME
-
-
 STATIC_PATH = os.path.join(BASE_DIR, 'static')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+# For handling uploaded images and to show in a web view
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

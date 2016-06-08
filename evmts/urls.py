@@ -16,6 +16,14 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+
+"""Separate apps for web and API
+It is in order such that if /admin/ comes first it uses admin app,
+then if /api/ comes then it uses API app
+and then unmatched URLs will be passed to WEB app,
+because we know it belongs to web and if it will not be a valid URL then it will return 404
+"""
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include('api.urls')),
